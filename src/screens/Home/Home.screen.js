@@ -10,12 +10,8 @@ import {
 import styles from './Home.style'
 import Icon from 'react-native-vector-icons/Ionicons'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchUser, selectAll } from '../../../src/stores/user.reducer'
 
 const Home = ({ navigation }) => {
-  const dispatch = useDispatch()
-  const users = useSelector(selectAll)
-
   function ListUser() {
     return users.map(data => {
       return (
@@ -33,17 +29,14 @@ const Home = ({ navigation }) => {
       <StatusBar barStyle="dark-content" backgroundColor={'#f9f9f9'} />
       <SafeAreaView style={styles.SafeAreaView1} />
       <SafeAreaView style={styles.SafeAreaView2}>
-        <View style={styles.outerWrapper}>
+        <View className="bg-blue-400 flex-[1]">
           <Icon name={'ios-person'} size={100} color={'purple'} />
           <Icon name={'ios-home'} size={100} color={'purple'} />
 
           <View>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => dispatch(fetchUser())}>
+            <TouchableOpacity style={styles.buttonStyle}>
               <Text style={styles.text}>Click here to show User data:</Text>
             </TouchableOpacity>
-            <ListUser />
           </View>
         </View>
       </SafeAreaView>

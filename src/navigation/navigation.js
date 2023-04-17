@@ -2,9 +2,13 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { useSelector } from 'react-redux'
+
+import Icon from 'react-native-vector-icons/Ionicons'
+
 import Home from '../screens/Home/Home.screen'
 import Profile from '../screens/Profile/Profile.screen'
-import Icon from 'react-native-vector-icons/Ionicons'
+import LoginScreen from '../screens/Login'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -37,14 +41,23 @@ function MyTabs() {
 }
 
 const MainNavigation = () => {
+  const { isFetching, error, isLogin } = useSelector(state => state.auth)
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen
-          name="HomeBase"
-          options={{ headerShown: false }}
-          component={MyTabs}
-        />
+        {isLogin ? (
+          <Stack.Screen
+            name="HomeBase"
+            options={{ headerShown: false }}
+            component={MyTabs}
+          />
+        ) : (
+          <Stack.Screen
+            name="Login"
+            options={{ headerShown: false }}
+            component={LoginScreen}
+          />
+        )}
         {/* add your another screen here using -> Stack.Screen */}
       </Stack.Navigator>
     </NavigationContainer>
