@@ -9,6 +9,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import Home from '../screens/Home/Home.screen'
 import Profile from '../screens/Profile/Profile.screen'
 import LoginScreen from '../screens/Login'
+import BeforeOrder from '../screens/PatientOrder/BeforeOrder.screen'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -59,6 +60,12 @@ const MainNavigation = () => {
           />
         )}
         {/* add your another screen here using -> Stack.Screen */}
+        <Stack.Screen
+          name="BeforeOrder"
+          options={{ headerShown: false }}
+          component={BeforeOrder}
+        />
+        {/* Gua Buat disini seemntara buat ui dulu */}
       </Stack.Navigator>
     </NavigationContainer>
   )
