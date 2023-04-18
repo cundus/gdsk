@@ -55,9 +55,9 @@ const BeforeOrder = () => {
               </View>
             ))}
           <View className={classNames.seeMore}>
-            <Icon name="chevron-down" size={30} color="#000" />
-            <Text style={{ fontSize: 24, color: '#000' }}>See More</Text>
-            <Icon name="chevron-down" size={30} color="#000" />
+            <Icon name="chevron-down" size={28} color="#000" />
+            <Text style={{ fontSize: 20, color: '#000' }}>See More</Text>
+            <Icon name="chevron-down" size={28} color="#000" />
           </View>
           <View style={{ height: 15 }} />
         </ScrollView>
