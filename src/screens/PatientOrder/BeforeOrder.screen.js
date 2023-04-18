@@ -71,7 +71,7 @@ const classNames = {
   overlay: 'absolute top-0 bottom-0 left-0 right-0 bg-white/40',
   logo: 'flex flex-col items-center justify-center',
   header: 'px-4 py-2',
-  textHeader: 'text-3xl font-bold text-center color-black uppercase',
+  textHeader: 'text-3xl font-bold text-center color-black uppercase mb-2',
   content: 'flex-[1] bg-[#f1f1f1] rounded-t-3xl px-4 py-2 flex flex-col gap-3 ',
   cards:
     'flex flex-row items-center justify-between bg-white rounded-xl px-4 py-0.5 shadow-{10}',
