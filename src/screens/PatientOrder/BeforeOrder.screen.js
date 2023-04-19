@@ -6,7 +6,7 @@ import {
   ImageBackground,
   Image,
   TouchableOpacity,
-  ScrollView
+  ScrollView,
 } from 'react-native'
 
 import { Logo } from '../../assets/icons'
@@ -78,7 +78,7 @@ const classNames = {
   floor: 'text-2xl font-bold color-black',
   typeFloor: 'text-2xl font-medium color-[#ed6640]',
   status: 'bg-[#0ba316] rounded-full px-1.5 py-2',
-  seeMore: 'flex flex-row items-center justify-center mt-2 gap-2'
+  seeMore: 'flex flex-row items-center justify-center mt-2 gap-2',
 }
 
 export default BeforeOrder
