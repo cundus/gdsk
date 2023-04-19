@@ -13,6 +13,11 @@ import Home from '../screens/Home'
 import { StatusBar } from 'react-native'
 import AlacarteHome from '../screens/Alacarte'
 import BeforeOrder from '../screens/PatientOrder/BeforeOrder.screen'
+import SplashScreen from '../screens/Splash/SplashScreen'
+import Register from '../screens/Register'
+import Home from '../screens/Home'
+import { StatusBar } from 'react-native'
+import AlacarteHome from '../screens/Alacarte'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
