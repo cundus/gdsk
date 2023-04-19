@@ -3,16 +3,29 @@ import { getServerUrl, loginUser } from '../actions/auth'
 
 const initialState = {
   isFetching: false,
-  result: {},
+  user: {},
   isLogin: false,
   serverUrl: '',
-  error: null
+  error: null,
+  isSplash: true
 }
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    turnOffSplash: state => {
+      return { ...state, isSplash: false }
+    },
+    setLogin: (state, action) => {
+      return {
+        ...state,
+        user: action.payload.user,
+        isLogin: true,
+        serverUrl: action.payload.url
+      }
+    }
+  },
   extraReducers: {
     // login reducer
     [loginUser.pending]: state => {
@@ -21,7 +34,7 @@ const authSlice = createSlice({
     },
     [loginUser.fulfilled]: (state, { payload }) => {
       state.isFetching = false
-      state.result = payload
+      state.user = payload
       state.isLogin = true
     },
     [loginUser.rejected]: (state, { payload }) => {
@@ -44,5 +57,5 @@ const authSlice = createSlice({
     }
   }
 })
-
+export const { turnOffSplash, setLogin } = authSlice.actions
 export default authSlice.reducer

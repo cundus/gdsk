@@ -4,6 +4,6 @@ module.exports = {
   semi: false,
   tabWidth: 2,
   bracketSpacing: true,
-  trailingComma: 'none',
+  trailingComma: 'all',
   arrowParens: 'avoid'
 }

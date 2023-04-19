@@ -49,6 +49,8 @@ export const loginUser = createAsyncThunk(
 
       console.log(data)
 
+      await AsyncStorage.setItem('user', JSON.stringify(data.data))
+      await AsyncStorage.setItem('serverUrl')
       return data.data
     } catch (error) {
       // return custom error message from backend if present
