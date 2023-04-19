@@ -6,9 +6,12 @@ import { useSelector } from 'react-redux'
 
 import Icon from 'react-native-vector-icons/Ionicons'
 
-import Home from '../screens/Home/Home.screen'
-import Profile from '../screens/Profile/Profile.screen'
 import LoginScreen from '../screens/Login'
+import SplashScreen from '../screens/Splash/SplashScreen'
+import Register from '../screens/Register'
+import Home from '../screens/Home'
+import { StatusBar } from 'react-native'
+import AlacarteHome from '../screens/Alacarte'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -26,13 +29,14 @@ function MyTabs() {
           }
         }}
       />
+
       <Tab.Screen
-        name="Profile"
-        component={Profile}
+        name="Alacarte"
+        component={AlaCarteStack}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
-            return <Icon name={'ios-settings'} size={25} color={color} />
+            return <Icon name={'ios-home'} size={25} color={color} />
           }
         }}
       />
@@ -40,10 +44,30 @@ function MyTabs() {
   )
 }
 
+const AlaCarteStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="AlacarteHome"
+      screenOptions={{
+        headerShown: false
+      }}>
+      <Stack.Screen name="AlacarteHome" component={AlacarteHome} />
+    </Stack.Navigator>
+  )
+}
+
 const MainNavigation = () => {
-  const { isFetching, error, isLogin } = useSelector(state => state.auth)
+  const { isFetching, error, isLogin, isSplash } = useSelector(
+    state => state.auth
+  )
+
+  if (isSplash) {
+    return <SplashScreen />
+  }
+
   return (
     <NavigationContainer>
+      <StatusBar hidden />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isLogin ? (
           <Stack.Screen
@@ -52,11 +76,18 @@ const MainNavigation = () => {
             component={MyTabs}
           />
         ) : (
-          <Stack.Screen
-            name="Login"
-            options={{ headerShown: false }}
-            component={LoginScreen}
-          />
+          <>
+            <Stack.Screen
+              name="Login"
+              options={{ headerShown: false }}
+              component={LoginScreen}
+            />
+            <Stack.Screen
+              name="Register"
+              options={{ headerShown: false }}
+              component={Register}
+            />
+          </>
         )}
         {/* add your another screen here using -> Stack.Screen */}
       </Stack.Navigator>

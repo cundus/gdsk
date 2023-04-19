@@ -7,7 +7,9 @@ import {
   Image,
   TextInput,
   TouchableNativeFeedback,
-  Modal
+  Modal,
+  StyleSheet,
+  Dimensions
 } from 'react-native'
 import { BgAuth } from '../../assets/images/background'
 import { Logo } from '../../assets/icons'
@@ -17,6 +19,8 @@ import { KeyboardAvoidingView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUser } from '../../stores/actions/auth'
 import { useEffect } from 'react'
+import { s, ms, vs } from 'react-native-size-matters'
+import { isLandscape } from '../../utils/dimensions'
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -53,67 +57,112 @@ const Login = () => {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
-      <Modal animationType="slide" transparent={true} visible={isFetching}>
-        <View className="flex-[1] bg-black/50 z-[3]">
+      <Modal animationType="fade" transparent={true} visible={isFetching}>
+        <View className="flex-[1] bg-black/50 z-[3] justify-center items-center">
           <Text>LOADING</Text>
         </View>
       </Modal>
       <ImageBackground
         source={BgAuth}
         resizeMode="cover"
-        className={classNames.container}>
+        style={styles.container}>
         <StatusBar hidden />
-        <View className={classNames.content}>
+        <View style={styles.content}>
           <View>
-            <Image source={Logo} alt="logo" className={classNames.logo} />
+            <Image source={Logo} alt="logo" style={styles.logo} />
           </View>
-          <View className={classNames.form}>
+          <View style={styles.form}>
             <TextInput
               placeholder="E-Mail"
               onChangeText={text => handleChange('email', text)}
-              className={classNames.input}
+              style={styles.input}
               placeholderTextColor={'#ccc'}
             />
             <TextInput
               placeholder="Password"
               secureTextEntry
               onChangeText={text => handleChange('password', text)}
-              className={classNames.input}
+              style={styles.input}
               placeholderTextColor={'#ccc'}
             />
             <TextInput
               placeholder="Server"
               onChangeText={text => handleChange('serverUrl', text)}
-              className={classNames.input}
+              style={styles.input}
               placeholderTextColor={'#ccc'}
             />
             <TouchableNativeFeedback
               onPress={handleSubmit}
               background={TouchableNativeFeedback.Ripple('#65a30d')}>
-              <View className={classNames.button}>
-                <Text className={classNames.buttonText}>LOGIN</Text>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>LOGIN</Text>
               </View>
             </TouchableNativeFeedback>
           </View>
-          <View className="h-32"></View>
+          <View style="h-32"></View>
         </View>
-        <View className={classNames.overlay}></View>
+        <View style={styles.overlay}></View>
       </ImageBackground>
     </KeyboardAvoidingView>
   )
 }
 
-const classNames = {
-  container: 'flex-[1] ',
-  overlay: 'absolute top-0 bottom-0 left-0 right-0  bg-black/50 z-[1]',
-  content: 'flex-[1] z-[2] justify-between items-center ',
-  logo: 'pt-10',
-  form: 'w-1/2',
-  input:
-    'border border-[#ccc] bg-gray-600/60 w-full text-white px-5 h-20 text-xl font-bold',
-  button:
-    'bg-lime-500 w-full h-20 justify-center items-center rounded-lg mt-5 shadow',
-  buttonText: 'text-white text-xl font-bold'
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  overlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    top: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    zIndex: 1
+  },
+  content: {
+    flex: 1,
+    zIndex: 2,
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  logo: {
+    width: isLandscape ? vs(250) : vs(350),
+    height: isLandscape ? vs(150) : vs(300),
+    resizeMode: 'contain'
+  },
+  form: {
+    width: '50%'
+  },
+  input: {
+    borderColor: '#ccc',
+    borderWidth: ms(1),
+    width: '100%',
+    padding: s(5),
+    fontSize: ms(12),
+    backgroundColor: 'rgba(148, 163, 184, 0.3)',
+    margin: ms(1),
+    fontFamily: 'Avenir-Roman',
+    color: 'white'
+  },
+  button: {
+    width: '100%',
+    height: ms(30),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(132, 204, 22, 1)',
+    marginTop: ms(10),
+    borderRadius: ms(3)
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: ms(12),
+    fontFamily: 'Avenir-Roman'
+  }
+})
 
+// info login
+// febriantoro@brawijaya.com
+// abcd_1234
+// http://acs.havordigital.com/api
 export default Login
