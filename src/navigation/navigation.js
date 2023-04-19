@@ -7,13 +7,6 @@ import { useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 import LoginScreen from '../screens/Login'
-import BeforeOrder from '../screens/PatientOrder/BeforeOrder.screen'
-import SplashScreen from '../screens/Splash/SplashScreen'
-import Register from '../screens/Register'
-import Home from '../screens/Home'
-import { StatusBar } from 'react-native'
-import AlacarteHome from '../screens/Alacarte'
-import BeforeOrder from '../screens/PatientOrder/BeforeOrder.screen'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -38,7 +31,7 @@ function MyTabs() {
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
-            return <Icon name={'ios-home'} size={25} color={color} />
+            return <Icon name={'ios-settings'} size={25} color={color} />
           },
         }}
       />
@@ -46,27 +39,8 @@ function MyTabs() {
   )
 }
 
-const AlaCarteStack = () => {
-  return (
-    <Stack.Navigator
-      initialRouteName="AlacarteHome"
-      screenOptions={{
-        headerShown: false,
-      }}>
-      <Stack.Screen name="AlacarteHome" component={AlacarteHome} />
-    </Stack.Navigator>
-  )
-}
-
 const MainNavigation = () => {
-  const { isFetching, error, isLogin, isSplash } = useSelector(
-    state => state.auth,
-  )
-
-  if (isSplash) {
-    return <SplashScreen />
-  }
-
+  const { isFetching, error, isLogin } = useSelector(state => state.auth)
   return (
     <NavigationContainer>
       <StatusBar hidden />
