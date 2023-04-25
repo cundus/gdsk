@@ -19,7 +19,7 @@ const Header = ({ img, children }) => {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: height / 3
+    height: height / 3,
   },
   decoration: {
     width: '100%',
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: 2
+    zIndex: 2,
   },
   overlay: {
     position: 'absolute',
@@ -38,12 +38,12 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     backgroundColor: 'rgba(255,255,255,0.5)',
-    zIndex: 1
+    zIndex: 1,
   },
   content: {
     zIndex: 3,
-    flex: 1
-  }
+    flex: 1,
+  },
 })
 
 export default Header

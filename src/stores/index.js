@@ -1,9 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import authReducer from './reducers/auth'
+import floorReducer from './reducers/floor'
+import menuReducer from './reducers/menu'
+import cartReducer from './reducers/cart'
 
 export const store = configureStore({
   reducer: {
-    auth: authReducer
-  }
+    auth: authReducer,
+    floor: floorReducer,
+    menu: menuReducer,
+    cart: cartReducer,
+  },
 })

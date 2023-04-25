@@ -12,16 +12,22 @@ import { Image } from 'react-native'
 import { ms } from 'react-native-size-matters'
 import { TouchableOpacity } from 'react-native'
 
-const AlacarteHome = () => {
+const AlacarteHome = ({ navigation }) => {
   return (
     <ImageBackground source={BgAlacarte} style={styles.container}>
       <Image source={LogoAlacarte} style={styles.alacarte} />
       <View style={styles.optionContainer}>
-        <TouchableOpacity style={styles.optionButton}>
+        <TouchableOpacity
+          style={styles.optionButton}
+          onPress={() => navigation.navigate('AlacartePatient')}>
           <Image source={IconPatientGuest} style={styles.optionButtonImage} />
+          <Text style={styles.optionButtonText}>Patient Guest</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.optionButton}>
+        <TouchableOpacity
+          style={styles.optionButton}
+          onPress={() => navigation.navigate('AlacarteIndividual')}>
           <Image source={IconIndividual} style={styles.optionButtonImage} />
+          <Text style={styles.optionButtonText}>Individual Guest</Text>
         </TouchableOpacity>
       </View>
       <Image source={LogoWhite} style={styles.logo} />
@@ -53,12 +59,17 @@ const styles = StyleSheet.create({
     margin: ms(10),
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: ms(50),
+    borderRadius: ms(30),
   },
   optionButtonImage: {
     width: '100%',
-    height: '100%',
+    height: '70%',
     resizeMode: 'contain',
+  },
+  optionButtonText: {
+    fontSize: ms(18),
+    fontFamily: 'Avenir Heavy',
+    color: 'black',
   },
   logo: {
     width: '50%',

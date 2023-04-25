@@ -7,7 +7,7 @@ const initialState = {
   isLogin: false,
   serverUrl: '',
   error: null,
-  isSplash: true
+  isSplash: true,
 }
 
 const authSlice = createSlice({
@@ -22,9 +22,12 @@ const authSlice = createSlice({
         ...state,
         user: action.payload.user,
         isLogin: true,
-        serverUrl: action.payload.url
+        serverUrl: action.payload.url,
       }
-    }
+    },
+    logout: state => {
+      return initialState
+    },
   },
   extraReducers: {
     // login reducer
@@ -54,8 +57,8 @@ const authSlice = createSlice({
     [getServerUrl.rejected]: (state, { payload }) => {
       state.isFetching = false
       state.error = payload
-    }
-  }
+    },
+  },
 })
-export const { turnOffSplash, setLogin } = authSlice.actions
+export const { turnOffSplash, setLogin, logout } = authSlice.actions
 export default authSlice.reducer

@@ -7,14 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const header = env.API_HEADER
 
-const saveServerUrl = async url => {
-  try {
-    await AsyncStorage.setItem('serverUrl', url)
-  } catch (error) {
-    Alert.alert('Error Saving Data', error.toString())
-  }
-}
-
 export const getServerUrl = createAsyncThunk(
   'auth/getUrl',
   async (props, { rejectWithValue, dispatch }) => {
