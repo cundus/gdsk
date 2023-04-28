@@ -19,6 +19,7 @@ import { IconCart, IconDelete, Logo } from '../../assets/icons'
 import { TextBold, TextNormal } from '../../components/Text'
 import PopUpConfirmation from '../../components/PopUpConfirmation'
 import PopUpSuccess from '../../components/PopUpSuccess'
+import Supscript from '../../components/Supscript'
 
 const EXAMPLE_DATA = [
   {
@@ -106,7 +107,7 @@ const AlacarteConfirmation = ({ navigation }) => {
   const _renderItem = ({ item }) => {
     return (
       <View
-        className="flex-row m-5 bg-white rounded-xl justify-between px-5 py-3"
+        className="flex-row m-5 bg-white rounded-xl justify-between px-5 pt-3 pb-4"
         style={{
           elevation: 10,
         }}>
@@ -119,6 +120,7 @@ const AlacarteConfirmation = ({ navigation }) => {
               borderRadius: ms(100),
               elevation: 5,
               backgroundColor: 'white',
+              marginTop: ms(-20),
             }}>
             <Image
               source={{ uri: item.img }}
@@ -133,8 +135,9 @@ const AlacarteConfirmation = ({ navigation }) => {
             <TextBold style={{ fontSize: ms(20), color: 'black' }}>
               {item.name}
             </TextBold>
-            <TextBold style={{ fontSize: ms(18), color: 'black' }}>
-              {item.harga}{' '}
+            <TextBold
+              style={{ fontSize: ms(18), color: 'black', marginBottom: 10 }}>
+              <Supscript /> {item.harga}{' '}
               {item.qty > 1 && (
                 <TextNormal>{`x${item.qty} = ${
                   +item.harga * +item.qty
@@ -203,7 +206,7 @@ const AlacarteConfirmation = ({ navigation }) => {
               Total
             </TextNormal>
             <TextBold style={{ fontSize: ms(22), color: 'black' }}>
-              Rp.{data.reduce((a, b) => a + b.harga * b.qty, 0)}
+              <Supscript />.{data.reduce((a, b) => a + b.harga * b.qty, 0)}
             </TextBold>
           </View>
           <View className="flex-row justify-between px-10 items-center mb-5">
