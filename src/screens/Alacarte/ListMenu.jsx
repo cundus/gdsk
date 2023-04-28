@@ -7,6 +7,7 @@ import {
   Pressable,
   TouchableNativeFeedback,
   View,
+  Alert,
 } from 'react-native'
 import { TextBold, TextNormal } from '../../components/Text'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -17,20 +18,34 @@ import { useEffect } from 'react'
 import { getMenu } from '../../stores/actions/menu'
 import { useState } from 'react'
 import { useMemo } from 'react'
+import { addItem } from '../../stores/reducers/cart'
 import PopUpOrder from '../../components/PopUpOrder'
 
 const PAGE_SIZE = 8
 
 const ListMenu = ({ route, navigation }) => {
   const { data } = route.params
-  const { menu, auth } = useSelector(state => state)
+  const { menu, auth, cart } = useSelector(state => state)
   const [page, setPage] = useState(1)
   const [listMenu, setListMenu] = useState([])
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
 
   const handleChoose = data => {
-    console.log('CHOOSE', data)
+    let isExist = false
+
+    cart.data.find(item => {
+      if (item.id === data.id) {
+        isExist = true
+        return Alert.alert('Item already exist in cart')
+      }
+    })
+    if (isExist) return
+    dispatch(
+      addItem({
+        ...data,
+      }),
+    )
     navigation.navigate('AlacarteConfirmation')
   }
 
@@ -50,8 +65,6 @@ const ListMenu = ({ route, navigation }) => {
       const arrMenu = []
       menu.menuData.map(item => item.menu?.map(item2 => arrMenu.push(item2)))
 
-      console.log(arrMenu.length)
-
       setListMenu(arrMenu.slice(0, 12))
     }
   }, [menu.menuData])
@@ -63,6 +76,7 @@ const ListMenu = ({ route, navigation }) => {
       menu.menuData.map(item => item.menu?.map(item2 => arrMenu.push(item2)))
       setPage(nextPage)
       setLoading(true)
+
       setTimeout(() => {
         setLoading(false)
         setListMenu(arrMenu.slice(0, nextPage * PAGE_SIZE))

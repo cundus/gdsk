@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import {
   View,
   Text,
@@ -20,42 +20,15 @@ import { TextBold, TextNormal } from '../../components/Text'
 import PopUpConfirmation from '../../components/PopUpConfirmation'
 import PopUpSuccess from '../../components/PopUpSuccess'
 import Supscript from '../../components/Supscript'
-
-const EXAMPLE_DATA = [
-  {
-    id: 1,
-    img: 'https://kurio-img.kurioapps.com/20/05/23/200f4d33-802b-4a43-a113-489e3bec9fcd.jpg',
-    name: 'Bubur Ayam',
-    qty: 1,
-    harga: 30000,
-  },
-  {
-    id: 2,
-    img: 'https://kurio-img.kurioapps.com/20/05/23/200f4d33-802b-4a43-a113-489e3bec9fcd.jpg',
-    name: 'Bubur Ayam',
-    qty: 1,
-    harga: 30000,
-  },
-  {
-    id: 3,
-    img: 'https://kurio-img.kurioapps.com/20/05/23/200f4d33-802b-4a43-a113-489e3bec9fcd.jpg',
-    name: 'Bubur Ayam',
-    qty: 1,
-    harga: 30000,
-  },
-  {
-    id: 4,
-    img: 'https://kurio-img.kurioapps.com/20/05/23/200f4d33-802b-4a43-a113-489e3bec9fcd.jpg',
-    name: 'Bubur Ayam',
-    qty: 1,
-    harga: 30000,
-  },
-]
+import { useDispatch, useSelector } from 'react-redux'
+import { removeItem } from '../../stores/reducers/cart'
 
 const AlacarteConfirmation = ({ navigation }) => {
-  const [data, setData] = useState(EXAMPLE_DATA)
+  const { cart, auth } = useSelector(state => state)
+  const [data, setData] = useState([])
   const [show, setShow] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
+  const dispatch = useDispatch()
   const [selected, setSelected] = useState(null)
 
   const handlePlus = id => {
@@ -89,19 +62,22 @@ const AlacarteConfirmation = ({ navigation }) => {
   }
 
   const onpressRemove = id => {
-    // const newData = data.filter(item => item.id !== id)
     const selectedData = data.find(item => item.id === id)
     setSelected(selectedData)
-
     setShow(true)
-
     // setData(newData)
   }
 
   const onRemove = () => {
-    const newData = data.filter(item => item.id !== selected.id)
-    setData(newData)
+    dispatch(
+      removeItem({
+        ...selected,
+      }),
+    )
     setShow(false)
+    setData(prevData => {
+      return prevData.filter(item => item.id !== selected.id)
+    })
   }
 
   const _renderItem = ({ item }) => {
@@ -123,7 +99,9 @@ const AlacarteConfirmation = ({ navigation }) => {
               marginTop: ms(-20),
             }}>
             <Image
-              source={{ uri: item.img }}
+              source={{
+                uri: `${auth.serverUrl.replace('api', '')}app/menu/${item.img}`,
+              }}
               resizeMode="cover"
               style={{
                 width: '100%',
@@ -172,6 +150,21 @@ const AlacarteConfirmation = ({ navigation }) => {
     )
   }
 
+  useEffect(() => {
+    cart.data.map(item => {
+      setData(prevData => [
+        ...prevData,
+        {
+          id: item.id,
+          img: item.image,
+          name: item.name,
+          qty: 1,
+          harga: item.service_client === null ? 0 : item.service_client,
+        },
+      ])
+    })
+  }, [])
+
   return (
     <View className="flex-[1]">
       <ImageBackground source={BgMenu} className="flex-[1]">
@@ -206,7 +199,8 @@ const AlacarteConfirmation = ({ navigation }) => {
               Total
             </TextNormal>
             <TextBold style={{ fontSize: ms(22), color: 'black' }}>
-              <Supscript />.{data.reduce((a, b) => a + b.harga * b.qty, 0)}
+              <Supscript />
+              {data.reduce((a, b) => a + b.harga * b.qty, 0)}
             </TextBold>
           </View>
           <View className="flex-row justify-between px-10 items-center mb-5">
