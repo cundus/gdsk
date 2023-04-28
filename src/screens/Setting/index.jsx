@@ -8,7 +8,7 @@ import { ms } from 'react-native-size-matters'
 import { useState } from 'react'
 import PopUpSuccess from '../../components/PopUpSuccess'
 
-const Setting = () => {
+const Setting = ({ navigation }) => {
   const [show, setShow] = useState(false)
 
   const dispatch = useDispatch()
@@ -47,6 +47,82 @@ const Setting = () => {
             margin: ms(10),
           }}>
           <Text className="text-white text-3xl">popup success</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('PatientOrder', {
+            screen: 'PatientOrderListRoom',
+          })
+        }>
+        <View
+          style={{
+            width: '100%',
+            height: 50,
+            backgroundColor: 'green',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: ms(10),
+          }}>
+          <Text className="text-white text-3xl">Patient Order List Room</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('PatientOrder', {
+            screen: 'PatientOrderListPatient',
+          })
+        }>
+        <View
+          style={{
+            width: '100%',
+            height: 50,
+            backgroundColor: 'green',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: ms(10),
+          }}>
+          <Text className="text-white text-3xl">
+            Patient Order List Patient
+          </Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('PatientOrder', {
+            screen: 'PatientOrderListMenu',
+          })
+        }>
+        <View
+          style={{
+            width: '100%',
+            height: 50,
+            backgroundColor: 'green',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: ms(10),
+          }}>
+          <Text className="text-white text-3xl">Patient Order List Menu</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('PatientOrder', {
+            screen: 'PatientOrderConfirmation',
+          })
+        }>
+        <View
+          style={{
+            width: '100%',
+            height: 50,
+            backgroundColor: 'green',
+            justifyContent: 'center',
+            alignItems: 'center',
+            margin: ms(10),
+          }}>
+          <Text className="text-white text-3xl">
+            Patient Order List Confirmation
+          </Text>
         </View>
       </TouchableOpacity>
       <PopUpSuccess show={show} onPress={() => setShow(false)} />

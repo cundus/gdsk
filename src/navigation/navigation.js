@@ -23,6 +23,10 @@ import AlacarteListMenu from '../screens/Alacarte/ListMenu'
 
 import PatientOrder from '../screens/PatientOrder'
 import AlacarteConfirmation from '../screens/Alacarte/AlacarteConfirmation'
+import PatientOrderListRoom from '../screens/PatientOrder/PatientOrderListRoom'
+import PatientOrderListPatient from '../screens/PatientOrder/PatientOrderListPatient'
+import PatientOrderListMenu from '../screens/PatientOrder/PatientOrderListMenu'
+import PatientOrderConfirmation from '../screens/PatientOrder/PatientOrderConfirmation'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -55,7 +59,7 @@ function MyTabs() {
       />
       <Tab.Screen
         name="PatientOrder"
-        component={PatientOrder}
+        component={PatientOrderStack}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused, color, size }) => {
@@ -99,6 +103,33 @@ const AlaCarteStack = () => {
       <Stack.Screen
         name="AlacarteConfirmation"
         component={AlacarteConfirmation}
+      />
+    </Stack.Navigator>
+  )
+}
+
+//  Patient Order
+const PatientOrderStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="PatientOrderHome"
+      screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="PatientOrderHome" component={PatientOrder} />
+      <Stack.Screen
+        name="PatientOrderListRoom"
+        component={PatientOrderListRoom}
+      />
+      <Stack.Screen
+        name="PatientOrderListPatient"
+        component={PatientOrderListPatient}
+      />
+      <Stack.Screen
+        name="PatientOrderListMenu"
+        component={PatientOrderListMenu}
+      />
+      <Stack.Screen
+        name="PatientOrderConfirmation"
+        component={PatientOrderConfirmation}
       />
     </Stack.Navigator>
   )

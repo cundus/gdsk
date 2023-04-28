@@ -17,6 +17,7 @@ import { BgLantai, BgMenu } from '../../../assets/images/background'
 import { LogoAlacarte } from '../../../assets/icons'
 
 import Header from '../../../components/Header'
+import { TextBold } from '../../../components/Text'
 
 const AlacartePatient = ({ navigation }) => {
   const { floor, auth } = useSelector(state => state)
@@ -59,38 +60,51 @@ const AlacartePatient = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={BgMenu} style={{ flex: 0.3 }}>
+      <ImageBackground source={BgMenu} style={{ flex: 1 }}>
         <View style={styles.overlay}></View>
-        <View className="flex-[1] -mt-5 justify-center items-center h-full">
+        <View className=" justify-start items-center h-full">
           <Image
             source={LogoAlacarte}
             style={{
-              width: ms(120),
-              height: ms(120),
+              width: ms(100),
+              height: ms(100),
               resizeMode: 'contain',
             }}
           />
         </View>
       </ImageBackground>
-      <ImageBackground
-        source={BgLantai}
-        style={[styles.container, { zIndex: 4 }]}
-        resizeMode="cover"
-        resizeMethod="resize">
-        <View style={styles.contentContainer}>
-          <Text style={styles.title}>Patient Order</Text>
-          <Text style={styles.title}>Choose your floor</Text>
-          {floor.isFetching ? (
-            <ActivityIndicator size={'large'} color={'#00ff00'} />
-          ) : (
-            <FlatList
-              keyExtractor={item => item.id.toString()}
-              data={floor.floorData}
-              renderItem={_renderItem}
-            />
-          )}
-        </View>
-      </ImageBackground>
+      <View
+        style={{
+          flex: 4,
+          backgroundColor: 'white',
+          borderTopLeftRadius: ms(10),
+          borderTopRightRadius: ms(10),
+          marginTop: -ms(20),
+        }}>
+        <ImageBackground
+          source={BgLantai}
+          style={{ zIndex: 4, marginTop: -ms(50), flex: 1 }}
+          resizeMode="stretch"
+          resizeMethod="resize">
+          <View style={styles.contentContainer}>
+            <Text style={styles.title}>Patient Order</Text>
+            <View className="flex-row justify-around">
+              <TextBold className="text-white" style={{ fontSize: ms(14) }}>
+                Choose your floor
+              </TextBold>
+            </View>
+            {floor.isFetching ? (
+              <ActivityIndicator size={'large'} color={'#00ff00'} />
+            ) : (
+              <FlatList
+                keyExtractor={(item, index) => index.toString()}
+                data={floor.floorData}
+                renderItem={_renderItem}
+              />
+            )}
+          </View>
+        </ImageBackground>
+      </View>
     </View>
   )
 }
@@ -115,10 +129,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    marginTop: ms(130),
+    marginTop: ms(170),
     marginHorizontal: ms(110),
-    marginBottom: ms(55),
-    paddingLeft: ms(10),
+    marginBottom: ms(95),
+    paddingLeft: ms(5),
   },
   card: {
     flexDirection: 'row',

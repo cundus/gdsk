@@ -12,8 +12,10 @@ import IconSetting from './icon_settings.png'
 import IconDelete from './icon_delete.png'
 import IconCart from './icon_cart.png'
 import IconShocked from './shocked.png'
+import IconPending from './icon_pending.png'
 
 export {
+  IconPending,
   Logo,
   IconProfile,
   LogoWhite,
