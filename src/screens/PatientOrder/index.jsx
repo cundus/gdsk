@@ -62,7 +62,7 @@ const PatientOrder = ({ navigation }) => {
             </Text>
           </View>
         </TouchableOpacity>
-        <View className="flex-row space-x-5">
+        <View className="flex-row space-x-3">
           <View style={styles.rightCard}>
             <Text style={[styles.statusCardText, { color: 'black' }]}>
               {patientOrder.data.length > 0
@@ -165,8 +165,8 @@ const styles = StyleSheet.create({
     borderRadius: ms(50),
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: ms(20),
-    paddingHorizontal: ms(10),
+    marginRight: ms(8),
+    paddingHorizontal: ms(9),
     // flex: 1,
   },
   rightCard: {

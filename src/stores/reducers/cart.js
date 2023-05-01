@@ -10,7 +10,10 @@ const cartSlice = createSlice({
     updateCart: (state, action) => {
       state.result = action.payload
     },
-    removeItem: (state, action) => {},
+    removeItem: (state, action) => {
+      state.data = state.data.filter(item => item.id !== action.payload.id)
+      return state
+    },
     clearCart: state => {},
   },
 })
