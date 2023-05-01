@@ -16,19 +16,37 @@ import { getFloor } from '../../stores/actions/floor'
 import { BgLantai, BgMenu } from '../../assets/images/background'
 import { LogoAlacarte } from '../../assets/icons'
 import { TextBold, TextNormal } from '../../components/Text'
+import { getPatientOrder } from '../../stores/actions/patientOrder'
+
+const countPendingOrder = floor => {
+  let num = 0
+  floor.room.map(room =>
+    room.patient.map(patient =>
+      patient.order.map(order =>
+        order.detail
+          .filter(detail => detail.order_status === 0)
+          .map(() => {
+            num += 1
+            return num
+          }),
+      ),
+    ),
+  )
+
+  return num
+}
 
 const PatientOrder = ({ navigation }) => {
-  const { floor, auth } = useSelector(state => state)
+  const { floor, auth, patientOrder } = useSelector(state => state)
   const dispatch = useDispatch()
   useEffect(() => {
-    if (navigation.isFocused()) {
-      dispatch(
-        getFloor({
-          serverUrl: auth.serverUrl,
-          clientId: auth.user.selected_client,
-        }),
-      )
-    }
+    dispatch(
+      getPatientOrder({
+        serverUrl: auth.serverUrl,
+        clientId: auth.user.selected_client,
+      }),
+    )
+    console.log(navigation.isFocused())
   }, [navigation.isFocused()])
 
   const _renderItem = ({ item }) => {
@@ -36,30 +54,27 @@ const PatientOrder = ({ navigation }) => {
       <View style={styles.card}>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('AlacarteListRoom', { data: item })
+            navigation.navigate('PatientOrderListRoom', { data: item })
           }>
           <View style={styles.leftCard}>
             <Text style={[styles.cardText, { color: 'black' }]}>
-              {/* {item.name} */}
-              Lantai {item}
+              {item.name}
             </Text>
           </View>
         </TouchableOpacity>
         <View className="flex-row space-x-5">
           <View style={styles.rightCard}>
             <Text style={[styles.statusCardText, { color: 'black' }]}>
-              {/* {item.room
-                ?.map(item => item.patient.length)
-                .reduce((a, b) => a + b, 0)}{' '} */}
-              0 Unsynced
+              {patientOrder.data.length > 0
+                ? patientOrder.data.filter(order => order.floor === item.id)
+                    .length
+                : 0}{' '}
+              Unsynced
             </Text>
           </View>
           <View style={styles.rightCard}>
             <Text style={[styles.statusCardText, { color: 'black' }]}>
-              {/* {item.room
-                ?.map(item => item.patient.length)
-                .reduce((a, b) => a + b, 0)}{' '} */}
-              19 Pending
+              {countPendingOrder(item)} Pending
             </Text>
           </View>
         </View>
@@ -103,7 +118,7 @@ const PatientOrder = ({ navigation }) => {
             ) : (
               <FlatList
                 keyExtractor={(item, index) => index.toString()}
-                data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                data={patientOrder.data}
                 renderItem={_renderItem}
               />
             )}
@@ -136,12 +151,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: ms(170),
     marginHorizontal: ms(110),
-    marginBottom: ms(95),
+    marginBottom: ms(100),
     paddingLeft: ms(5),
   },
   card: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: ms(5),
   },
@@ -162,11 +177,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardText: {
-    fontSize: ms(16),
+    fontSize: ms(12),
     fontFamily: 'Avenir Heavy',
   },
   statusCardText: {
-    fontSize: ms(10),
+    fontSize: ms(8),
     fontFamily: 'Avenir Heavy',
   },
   title: {

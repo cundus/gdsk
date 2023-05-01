@@ -5,6 +5,7 @@ import {
   Pressable,
   Image,
   FlatList,
+  Alert,
 } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -14,11 +15,30 @@ import Overlay from '../../components/Overlay'
 import { IconPending, Logo } from '../../assets/icons'
 import { TextBold, TextNormal } from '../../components/Text'
 import { ms } from 'react-native-size-matters'
+import { useEffect } from 'react'
+import { useState } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const PatientOrderListPatient = ({ navigation }) => {
+const PatientOrderListPatient = ({ route, navigation }) => {
+  const { data, floor } = route.params
+  const [state, setState] = useState({
+    orderPatient: [],
+    orderExtra: [],
+  })
+
+  console.log(data)
+
   const _renderItem = ({ item }) => {
-    return (
-      <Pressable>
+    return item.order.map(order => (
+      <Pressable
+        onPress={() =>
+          navigation.navigate('PatientOrderListMenu', {
+            room: data.id,
+            floor: data.floor_id,
+            patient: item,
+            order: order,
+          })
+        }>
         <View
           className="flex-row p-5 justify-between items-center border border-gray-100 m-5  bg-white"
           style={{ elevation: 6, borderRadius: ms(10) }}>
@@ -76,8 +96,37 @@ const PatientOrderListPatient = ({ navigation }) => {
           </View>
         </View>
       </Pressable>
-    )
+    ))
   }
+
+  const getOrderPatientFromStorage = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@Aerofood:orderPatient')
+      if (value !== null) {
+        const data = JSON.parse(value)
+        setState({ ...state, orderPatient: data })
+      }
+    } catch (error) {
+      Alert.alert('Error Retrieving Data', error.toString())
+    }
+  }
+
+  const getExtraFoodDataFromStorage = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@Aerofood:orderExtra')
+      if (value !== null) {
+        const dataExtraFood = JSON.parse(value)
+        setState({ ...state, orderExtra: dataExtraFood })
+      }
+    } catch (error) {
+      Alert.alert('Error Retrieving Data', error.toString())
+    }
+  }
+
+  useEffect(() => {
+    getExtraFoodDataFromStorage()
+    getOrderPatientFromStorage()
+  }, [])
 
   return (
     <View className="flex-[1]">
@@ -102,7 +151,7 @@ const PatientOrderListPatient = ({ navigation }) => {
                 fontSize: ms(22),
                 color: 'black',
               }}>
-              701 701 - Class VIP
+              {data.name} {data.room_no} - {data.room_class.name}
             </TextBold>
           </View>
           <View className="w-14" />
@@ -111,7 +160,7 @@ const PatientOrderListPatient = ({ navigation }) => {
       <View className="flex-[3]">
         <View className="flex-[1] z-[10] -mt-10 bg-white rounded-3xl">
           <FlatList
-            data={[1, 2]}
+            data={data.patient}
             keyExtractor={(item, index) => index.toString()}
             renderItem={_renderItem}
           />

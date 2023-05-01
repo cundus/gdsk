@@ -10,14 +10,33 @@ const config = {
   rejectUnauthorized: false,
 }
 export const getMenu = createAsyncThunk(
-  'floor/',
+  'menu',
   async ({ serverUrl, clientId }, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await axios.get(
         `${serverUrl}/menu?c=${clientId}`,
         config,
       )
-      console.log('Menu', data)
+      return data
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message)
+      } else {
+        Alert.alert('error retrieving data floor ', error.message)
+        return rejectWithValue(error.message)
+      }
+    }
+  },
+)
+export const getMenuExtra = createAsyncThunk(
+  'menu-extra',
+  async ({ serverUrl, clientId }, { rejectWithValue, dispatch }) => {
+    try {
+      const { data } = await axios.get(
+        `${serverUrl}/menu-extra?c=${clientId}`,
+        config,
+      )
+
       return data
     } catch (error) {
       if (error.response && error.response.data.message) {

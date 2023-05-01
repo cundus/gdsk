@@ -30,7 +30,6 @@ const ListMenu = ({ route, navigation }) => {
   const dispatch = useDispatch()
 
   const handleChoose = data => {
-    console.log('CHOOSE', data)
     navigation.navigate('AlacarteConfirmation')
   }
 
@@ -49,8 +48,6 @@ const ListMenu = ({ route, navigation }) => {
     if (menu.menuData.length > 0) {
       const arrMenu = []
       menu.menuData.map(item => item.menu?.map(item2 => arrMenu.push(item2)))
-
-      console.log(arrMenu.length)
 
       setListMenu(arrMenu.slice(0, 12))
     }

@@ -6,6 +6,7 @@ import {
   FlatList,
   TouchableNativeFeedback,
   Image,
+  Dimensions,
 } from 'react-native'
 import React from 'react'
 import { BgMenu } from '../../assets/images/background'
@@ -13,19 +14,58 @@ import Overlay from '../../components/Overlay'
 import { ms } from 'react-native-size-matters'
 import { TextBold, TextNormal } from '../../components/Text'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { getMenu, getMenuExtra } from '../../stores/actions/menu'
+import moment from 'moment/moment'
+import PopUpOrder from '../../components/PopUpOrder'
+import { IconDelivery } from '../../assets/icons'
+import Icon from 'react-native-vector-icons/AntDesign'
+import FAIcon from 'react-native-vector-icons/FontAwesome'
+import color from '../../utils/color'
 
-const PatientOrderListMenu = () => {
-  const [menu, setMenu] = useState(0)
-  const [toggleMenu, setToggleMenu] = useState(false)
+const { width } = Dimensions.get('window')
+
+const PatientOrderListMenu = ({ route, navigation }) => {
+  const { params } = route
+  const { floor, auth, patientOrder, menu } = useSelector(state => state)
+  const dispatch = useDispatch()
+
+  const [tabMenu, setTabMenu] = useState(0)
+  const [toggleMenu, setToggleMenu] = useState('')
+  const [popUp, setPopUp] = useState({
+    open: false,
+    selectedMenu: {},
+  })
+  const handleCreateOrder = val => {
+    updateCartData({
+      id: detail.id,
+      floor: params.floor.id,
+      room: params.room.id,
+      menu_type_id: [],
+      menu_category_id: [],
+      menu: [],
+      detail: [],
+      order_choices: [],
+      remarks: [],
+      menu_tak: [],
+      menu_replacement: [],
+      created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+    })
+  }
 
   const _renderItem = ({ item }) => {
     return (
       <TouchableNativeFeedback
-        // onPress={() => handleChoose(item)}
-        background={TouchableNativeFeedback.Ripple('#ccc')}>
+        onPress={() => setPopUp({ selectedMenu: item, open: true })}
+        background={TouchableNativeFeedback.Ripple('white')}>
         <View
-          className="flex-[1] justify-end  m-2 "
-          style={{ height: ms(150) }}>
+          className="justify-end"
+          style={{
+            height: ms(150),
+            flex: 1,
+            margin: ms(5),
+          }}>
           <View
             className=" justify-start bg-white items-center "
             style={{
@@ -34,6 +74,16 @@ const PatientOrderListMenu = () => {
               borderRadius: ms(10),
               paddingBottom: ms(20),
             }}>
+            <FAIcon
+              name="check-circle"
+              size={ms(16)}
+              color={color.GREEN_PRIMARY}
+              style={{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+              }}
+            />
             <View
               style={{
                 width: ms(50),
@@ -45,30 +95,47 @@ const PatientOrderListMenu = () => {
                 elevation: 7,
               }}>
               <Image
-                source={
-                  {
-                    // uri: `${auth.serverUrl.replace('api', '')}app/menu/${
-                    //   item.image
-                    // }`,
-                  }
-                }
+                source={{
+                  uri: `${auth.serverUrl.replace('api', '')}app/menu/${
+                    item.image
+                  }`,
+                }}
                 className="w-full h-full"
               />
             </View>
             <TextBold
-              className=""
-              style={{ fontSize: ms(13), textAlign: 'center', color: 'black' }}>
-              {/* {item.name} */}
+              className="mt-2"
+              style={{ fontSize: ms(10), textAlign: 'center', color: 'black' }}>
+              {item.name}
             </TextBold>
-            <TextBold style={{ fontSize: ms(10) }}>PLACEHOLDER</TextBold>
+            <TextNormal style={{ fontSize: ms(10) }}>
+              {item.description ? item.description : '1 Porsi'}
+            </TextNormal>
             <TextNormal style={{ fontSize: ms(10), textAlign: 'center' }}>
-              {/* {item.service_client === null ? 0 : item.service_client} */}
+              {item.service_client === null ? 0 : item.service_client}
             </TextNormal>
           </View>
         </View>
       </TouchableNativeFeedback>
     )
   }
+
+  useEffect(() => {
+    if (navigation.isFocused()) {
+      dispatch(
+        getMenu({
+          serverUrl: auth.serverUrl,
+          clientId: auth.user.selected_client,
+        }),
+      )
+      dispatch(
+        getMenuExtra({
+          serverUrl: auth.serverUrl,
+          clientId: auth.user.selected_client,
+        }),
+      )
+    }
+  }, [navigation.isFocused()])
 
   return (
     <View className="flex-[1]">
@@ -81,7 +148,7 @@ const PatientOrderListMenu = () => {
           </TextBold>
         </View>
       </ImageBackground>
-      <View className="flex-[3]">
+      <View className="flex-[4]">
         <View className="flex-[1] z-[10] -mt-10 bg-white rounded-3xl">
           <View
             className="border border-gray-100 bg-white"
@@ -139,13 +206,13 @@ const PatientOrderListMenu = () => {
               'Morning Snack',
               'Afternoon Snack',
             ].map((item, id) => (
-              <TouchableNativeFeedback onPress={() => setMenu(id)} key={id}>
+              <TouchableNativeFeedback onPress={() => setTabMenu(id)} key={id}>
                 <View
                   className="flex-1 justify-center items-center border border-green-400"
                   style={{
                     height: ms(30),
                     backgroundColor:
-                      menu === id ? 'rgb(34,197,94)' : 'transparent',
+                      tabMenu === id ? 'rgb(34,197,94)' : 'transparent',
                     borderTopLeftRadius: id === 0 ? ms(30) : 0,
                     borderBottomLeftRadius: id === 0 ? ms(30) : 0,
                     borderTopRightRadius: id === 4 ? ms(30) : 0,
@@ -154,7 +221,7 @@ const PatientOrderListMenu = () => {
                   <TextBold
                     style={{ fontSize: ms(10) }}
                     className={`${
-                      menu === id ? 'text-white' : 'text-green-500'
+                      tabMenu === id ? 'text-white' : 'text-green-500'
                     } `}>
                     {item}
                   </TextBold>
@@ -164,19 +231,68 @@ const PatientOrderListMenu = () => {
           </View>
 
           {toggleMenu ? (
-            <FlatList
-              data={[1, 2]}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={_renderItem}
-              numColumns={4}
-            />
+            <>
+              <FlatList
+                data={
+                  toggleMenu === 'order'
+                    ? menu.menuData.reduce((result, item) => {
+                        result.push(...item.menu)
+
+                        return result
+                      }, [])
+                    : menu.menuExtra
+                }
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={_renderItem}
+                numColumns={4}
+                contentContainerStyle={{
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                }}
+              />
+              <View
+                className={`bg-green-500 flex-row justify-between items-center w-[90%] rounded-full mx-auto my-5`}>
+                <View className="flex-row space-x-5 px-10 h-full items-center">
+                  <Image
+                    alt="icon"
+                    source={IconDelivery}
+                    style={{
+                      width: ms(20),
+                      height: '100%',
+                      resizeMode: 'contain',
+                      tintColor: 'white',
+                    }}
+                  />
+                  <TextNormal style={{ fontSize: ms(14), color: 'white' }}>
+                    10 Food Item
+                  </TextNormal>
+                </View>
+
+                <TouchableNativeFeedback>
+                  <View
+                    className="flex-row  items-center h-full space-x-10 rounded-full bg-green-700"
+                    style={{ paddingLeft: ms(10) }}>
+                    <TextNormal
+                      style={{
+                        color: 'white',
+                        fontSize: ms(12),
+                        width: ms(50),
+                        textAlign: 'center',
+                      }}>
+                      Payment Now
+                    </TextNormal>
+                    <Icon name="doubleright" color={'white'} size={ms(20)} />
+                  </View>
+                </TouchableNativeFeedback>
+              </View>
+            </>
           ) : (
             <View className="flex-1">
               <View className="justify-center items-center flex-1">
                 <TextBold className="text-gray-400 mb-6 text-lg">
                   You haven't created the order
                 </TextBold>
-                <TouchableNativeFeedback onPress={() => setToggleMenu(true)}>
+                <TouchableNativeFeedback onPress={() => setToggleMenu('order')}>
                   <View className="px-5 py-3 bg-green-500 rounded-3xl">
                     <TextBold
                       className="text-white "
@@ -194,7 +310,8 @@ const PatientOrderListMenu = () => {
                   <TextBold className="text-gray-400 mb-6 text-lg">
                     You haven't created extra food
                   </TextBold>
-                  <TouchableNativeFeedback>
+                  <TouchableNativeFeedback
+                    onPress={() => setToggleMenu('extra')}>
                     <View className="px-5 py-3 bg-green-500 rounded-3xl">
                       <TextBold
                         className="text-white "
@@ -209,6 +326,18 @@ const PatientOrderListMenu = () => {
           )}
         </View>
       </View>
+      <PopUpOrder
+        data={{
+          ...popUp.selectedMenu,
+          image:
+            auth.serverUrl.replace('api', '') +
+            'app/menu/' +
+            popUp.selectedMenu.image,
+        }}
+        show={popUp.open}
+        onOrder={() => {}}
+        handleClose={() => setPopUp({ open: false, selectedMenu: {} })}
+      />
     </View>
   )
 }

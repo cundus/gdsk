@@ -14,25 +14,56 @@ import { ms } from 'react-native-size-matters'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { Logo } from '../../assets/icons'
 
-const PatientOrderListRoom = ({ navigation }) => {
+const countPendingOrder = room => {
+  let num = 0
+
+  room.patient.map(patient =>
+    patient.order.map(order =>
+      order.detail
+        .filter(detail => detail.order_status === 0)
+        .map(() => {
+          num += 1
+          return num
+        }),
+    ),
+  )
+
+  return num
+}
+
+const PatientOrderListRoom = ({ route, navigation }) => {
+  const { data } = route.params
+
   const _renderItem = ({ item }) => {
     return (
-      <Pressable>
+      <Pressable
+        onPress={() =>
+          navigation.navigate('PatientOrderListPatient', {
+            data: item,
+            floor: data,
+          })
+        }>
         <View
           className="flex-row p-5 justify-between items-center border border-gray-100 m-5 bg-white"
           style={{ elevation: 6, borderRadius: ms(10) }}>
-          <View>
+          <View className="flex-1">
             <TextBold style={{ fontSize: ms(16), color: 'black' }}>
-              701 701
+              {item.name} {item.room_no}
             </TextBold>
-            <TextNormal style={{ fontSize: ms(12) }}>701</TextNormal>
+            <TextNormal style={{ fontSize: ms(12) }}>
+              {item.bed.length > 15
+                ? item.bed.substring(0, 15) + '...'
+                : item.bed.length}
+            </TextNormal>
           </View>
-          <TextBold style={{ fontSize: ms(16) }} className="text-amber-700">
-            Class VIP
+          <TextBold
+            style={{ fontSize: ms(14) }}
+            className="flex-1 text-amber-700">
+            {item.room_class.name}
           </TextBold>
-          <View className="p-2 bg-green-600 rounded-full">
-            <TextNormal style={{ fontSize: ms(14), color: 'white' }}>
-              5 Pending Order
+          <View className="py-2 px-4 bg-green-600 rounded-full">
+            <TextNormal style={{ fontSize: ms(12), color: 'white' }}>
+              {countPendingOrder(item)} Pending Order
             </TextNormal>
           </View>
         </View>
@@ -63,7 +94,7 @@ const PatientOrderListRoom = ({ navigation }) => {
                 fontSize: ms(22),
                 color: 'black',
               }}>
-              7 Floor
+              {data.name}
             </TextBold>
           </View>
           <View className="w-14" />
@@ -72,7 +103,7 @@ const PatientOrderListRoom = ({ navigation }) => {
       <View className="flex-[3]">
         <View className="flex-[1] z-[10] -mt-10 bg-white rounded-3xl">
           <FlatList
-            data={[1]}
+            data={data.room}
             keyExtractor={(item, index) => index.toString()}
             renderItem={_renderItem}
           />

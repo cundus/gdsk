@@ -13,8 +13,10 @@ import IconDelete from './icon_delete.png'
 import IconCart from './icon_cart.png'
 import IconShocked from './shocked.png'
 import IconPending from './icon_pending.png'
+import IconDelivery from './icon_delivered.png'
 
 export {
+  IconDelivery,
   IconPending,
   Logo,
   IconProfile,

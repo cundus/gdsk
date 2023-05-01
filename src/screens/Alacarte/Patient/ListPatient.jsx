@@ -18,6 +18,7 @@ const ListPatient = ({ route, navigation }) => {
   const { data } = route.params
 
   const _renderItem = ({ item }) => {
+    console.log(item)
     return (
       <Pressable
         onPress={() => navigation.navigate('AlacarteListMenu', { data: item })}>
