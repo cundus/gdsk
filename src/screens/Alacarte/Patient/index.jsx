@@ -18,20 +18,24 @@ import { LogoAlacarte } from '../../../assets/icons'
 
 import Header from '../../../components/Header'
 import { TextBold } from '../../../components/Text'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
 
 const AlacartePatient = ({ navigation }) => {
   const { floor, auth } = useSelector(state => state)
   const dispatch = useDispatch()
-  useEffect(() => {
-    if (navigation.isFocused()) {
-      dispatch(
-        getFloor({
-          serverUrl: auth.serverUrl,
-          clientId: auth.user.selected_client,
-        }),
-      )
-    }
-  }, [navigation.isFocused()])
+  useFocusEffect(
+    useCallback(() => {
+      if (navigation.isFocused()) {
+        dispatch(
+          getFloor({
+            serverUrl: auth.serverUrl,
+            clientId: auth.user.selected_client,
+          }),
+        )
+      }
+    }, []),
+  )
 
   const _renderItem = ({ item }) => {
     return (

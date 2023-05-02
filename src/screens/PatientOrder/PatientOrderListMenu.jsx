@@ -23,41 +23,78 @@ import { IconDelivery } from '../../assets/icons'
 import Icon from 'react-native-vector-icons/AntDesign'
 import FAIcon from 'react-native-vector-icons/FontAwesome'
 import color from '../../utils/color'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
+import { updateCart } from '../../stores/reducers/cartPatientOrder'
 
 const { width } = Dimensions.get('window')
 
 const PatientOrderListMenu = ({ route, navigation }) => {
-  const { params } = route
-  const { floor, auth, patientOrder, menu } = useSelector(state => state)
+  // const { params } = route
+  const params = {}
+  params.floor = 1
+  params.room = 1
+  params.patient = 1
+  const { floor, auth, patientOrder, menu, cartPatientOrder } = useSelector(
+    state => state,
+  )
   const dispatch = useDispatch()
-
   const [tabMenu, setTabMenu] = useState(0)
   const [toggleMenu, setToggleMenu] = useState('')
   const [popUp, setPopUp] = useState({
     open: false,
     selectedMenu: {},
+    type: '',
   })
   const handleCreateOrder = val => {
-    updateCartData({
-      id: detail.id,
-      floor: params.floor.id,
-      room: params.room.id,
-      menu_type_id: [],
-      menu_category_id: [],
-      menu: [],
-      detail: [],
-      order_choices: [],
-      remarks: [],
-      menu_tak: [],
-      menu_replacement: [],
-      created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-    })
+    setToggleMenu(val)
+    if (val === 'order') {
+      return dispatch(
+        updateCart({
+          id: params.patient,
+          floor: params.floor,
+          room: params.room,
+          menu_type_id: [],
+          menu_category_id: [],
+          menu: [],
+          detail: [],
+          order_choices: [],
+          remarks: [],
+          menu_tak: [],
+          menu_replacement: [],
+          created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        }),
+      )
+    } else if (val === 'extra') {
+      return dispatch(
+        updateCart({
+          id: patientOrder.id,
+          floor: params.floor,
+          room: params.room,
+          menu_type_id: [],
+          menu_category_id: [],
+          menu: [],
+          detail: [],
+          order_choices: [],
+          remarks: [],
+          menu_tak: [],
+          menu_replacement: [],
+          created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        }),
+      )
+    }
   }
 
   const _renderItem = ({ item }) => {
+    const existed = cartPatientOrder.result?.menu?.find(
+      menu => menu === item.id,
+    )
+
     return (
       <TouchableNativeFeedback
-        onPress={() => setPopUp({ selectedMenu: item, open: true })}
+        onPress={() =>
+          setPopUp({ selectedMenu: item, open: true, type: toggleMenu })
+        }
         background={TouchableNativeFeedback.Ripple('white')}>
         <View
           className="justify-end"
@@ -74,16 +111,18 @@ const PatientOrderListMenu = ({ route, navigation }) => {
               borderRadius: ms(10),
               paddingBottom: ms(20),
             }}>
-            <FAIcon
-              name="check-circle"
-              size={ms(16)}
-              color={color.GREEN_PRIMARY}
-              style={{
-                position: 'absolute',
-                right: 0,
-                top: 0,
-              }}
-            />
+            {existed && (
+              <FAIcon
+                name="check-circle"
+                size={ms(16)}
+                color={color.GREEN_PRIMARY}
+                style={{
+                  position: 'absolute',
+                  right: 0,
+                  top: 0,
+                }}
+              />
+            )}
             <View
               style={{
                 width: ms(50),
@@ -120,22 +159,30 @@ const PatientOrderListMenu = ({ route, navigation }) => {
     )
   }
 
-  useEffect(() => {
-    if (navigation.isFocused()) {
-      dispatch(
-        getMenu({
-          serverUrl: auth.serverUrl,
-          clientId: auth.user.selected_client,
-        }),
-      )
-      dispatch(
-        getMenuExtra({
-          serverUrl: auth.serverUrl,
-          clientId: auth.user.selected_client,
-        }),
-      )
-    }
-  }, [navigation.isFocused()])
+  useFocusEffect(
+    useCallback(() => {
+      if (navigation.isFocused()) {
+        dispatch(
+          getMenu({
+            serverUrl: auth.serverUrl,
+            clientId: auth.user.selected_client,
+          }),
+        )
+        dispatch(
+          getMenuExtra({
+            serverUrl: auth.serverUrl,
+            clientId: auth.user.selected_client,
+          }),
+        )
+      }
+
+      return () => {
+        setTabMenu(0)
+        setToggleMenu('')
+        setPopUp({ open: false, selectedMenu: {}, type: '' })
+      }
+    }, []),
+  )
 
   return (
     <View className="flex-[1]">
@@ -251,7 +298,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
                 }}
               />
               <View
-                className={`bg-green-500 flex-row justify-between items-center w-[90%] rounded-full mx-auto my-5`}>
+                className={`bg-green-500 flex-row justify-between items-center w-[90%] rounded-full mx-auto mb-5`}>
                 <View className="flex-row space-x-5 px-10 h-full items-center">
                   <Image
                     alt="icon"
@@ -264,11 +311,14 @@ const PatientOrderListMenu = ({ route, navigation }) => {
                     }}
                   />
                   <TextNormal style={{ fontSize: ms(14), color: 'white' }}>
-                    10 Food Item
+                    {cartPatientOrder.result?.menu?.length} Food Item
                   </TextNormal>
                 </View>
 
-                <TouchableNativeFeedback>
+                <TouchableNativeFeedback
+                  onPress={() =>
+                    navigation.navigate('PatientOrderConfirmation')
+                  }>
                   <View
                     className="flex-row  items-center h-full space-x-10 rounded-full bg-green-700"
                     style={{ paddingLeft: ms(10) }}>
@@ -292,7 +342,8 @@ const PatientOrderListMenu = ({ route, navigation }) => {
                 <TextBold className="text-gray-400 mb-6 text-lg">
                   You haven't created the order
                 </TextBold>
-                <TouchableNativeFeedback onPress={() => setToggleMenu('order')}>
+                <TouchableNativeFeedback
+                  onPress={() => handleCreateOrder('order')}>
                   <View className="px-5 py-3 bg-green-500 rounded-3xl">
                     <TextBold
                       className="text-white "
@@ -311,7 +362,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
                     You haven't created extra food
                   </TextBold>
                   <TouchableNativeFeedback
-                    onPress={() => setToggleMenu('extra')}>
+                    onPress={() => handleCreateOrder('extra')}>
                     <View className="px-5 py-3 bg-green-500 rounded-3xl">
                       <TextBold
                         className="text-white "
@@ -335,8 +386,11 @@ const PatientOrderListMenu = ({ route, navigation }) => {
             popUp.selectedMenu.image,
         }}
         show={popUp.open}
+        typeMenu={popUp.type}
         onOrder={() => {}}
-        handleClose={() => setPopUp({ open: false, selectedMenu: {} })}
+        handleClose={() =>
+          setPopUp({ open: false, selectedMenu: {}, type: '' })
+        }
       />
     </View>
   )

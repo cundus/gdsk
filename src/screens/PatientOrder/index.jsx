@@ -17,6 +17,8 @@ import { BgLantai, BgMenu } from '../../assets/images/background'
 import { LogoAlacarte } from '../../assets/icons'
 import { TextBold, TextNormal } from '../../components/Text'
 import { getPatientOrder } from '../../stores/actions/patientOrder'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
 
 const countPendingOrder = floor => {
   let num = 0
@@ -39,15 +41,17 @@ const countPendingOrder = floor => {
 const PatientOrder = ({ navigation }) => {
   const { floor, auth, patientOrder } = useSelector(state => state)
   const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(
-      getPatientOrder({
-        serverUrl: auth.serverUrl,
-        clientId: auth.user.selected_client,
-      }),
-    )
-    console.log(navigation.isFocused())
-  }, [navigation.isFocused()])
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(
+        getPatientOrder({
+          serverUrl: auth.serverUrl,
+          clientId: auth.user.selected_client,
+        }),
+      )
+      console.log(navigation.isFocused())
+    }, []),
+  )
 
   const _renderItem = ({ item }) => {
     return (

@@ -88,7 +88,11 @@ const Setting = ({ navigation }) => {
         </View>
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate('PatientOrderListMenu')}>
+        onPress={() =>
+          navigation.navigate('PatientOrder', {
+            screen: 'PatientOrderListMenu',
+          })
+        }>
         <View
           style={{
             width: '100%',

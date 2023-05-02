@@ -22,6 +22,8 @@ import PopUpSuccess from '../../components/PopUpSuccess'
 import Supscript from '../../components/Supscript'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeItem } from '../../stores/reducers/cart'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
 
 const AlacarteConfirmation = ({ navigation }) => {
   const { cart, auth } = useSelector(state => state)
@@ -150,20 +152,22 @@ const AlacarteConfirmation = ({ navigation }) => {
     )
   }
 
-  useEffect(() => {
-    cart.data.map(item => {
-      setData(prevData => [
-        ...prevData,
-        {
-          id: item.id,
-          img: item.image,
-          name: item.name,
-          qty: 1,
-          harga: item.service_client === null ? 0 : item.service_client,
-        },
-      ])
-    })
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      cart.data.map(item => {
+        setData(prevData => [
+          ...prevData,
+          {
+            id: item.id,
+            img: item.image,
+            name: item.name,
+            qty: 1,
+            harga: item.service_client === null ? 0 : item.service_client,
+          },
+        ])
+      })
+    }, []),
+  )
 
   return (
     <View className="flex-[1]">

@@ -5,6 +5,7 @@ import floorReducer from './reducers/floor'
 import menuReducer from './reducers/menu'
 import cartReducer from './reducers/cart'
 import patientOrderReducer from './reducers/patientOrder'
+import cartPatientOrderReducer from './reducers/cartPatientOrder'
 
 export const store = configureStore({
   reducer: {
@@ -13,5 +14,6 @@ export const store = configureStore({
     menu: menuReducer,
     cart: cartReducer,
     patientOrder: patientOrderReducer,
+    cartPatientOrder: cartPatientOrderReducer,
   },
 })

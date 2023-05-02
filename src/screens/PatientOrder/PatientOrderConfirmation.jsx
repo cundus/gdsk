@@ -15,9 +15,14 @@ import { IconCart, Logo } from '../../assets/icons'
 import { TextBold, TextNormal } from '../../components/Text'
 import { FlatList } from 'react-native-gesture-handler'
 import color from '../../utils/color'
+import { useDispatch, useSelector } from 'react-redux'
 
-const PatientOrderConfirmation = () => {
-  const _renderItem = ({ item }) => {
+const PatientOrderConfirmation = ({ navigation }) => {
+  const cart = useSelector(state => state.cartPatientOrder)
+  console.log(cart)
+  const dispatch = useDispatch()
+
+  const _renderItem = ({ item, idx }) => {
     return (
       <View
         style={{
@@ -44,23 +49,26 @@ const PatientOrderConfirmation = () => {
                 backgroundColor: 'white',
                 elevation: 5,
                 marginTop: -ms(20),
+                overflow: 'hidden',
               }}>
               <Image
-                source={{}}
+                source={{ uri: item.image }}
                 resizeMode="cover"
                 style={{ width: '100%', height: '100%' }}
               />
             </View>
-            <View>
-              <TextBold style={{ fontSize: ms(20), color: 'black' }}>
-                Chicken Rice
+            <View className="ml-10">
+              <TextBold style={{ fontSize: ms(16), color: 'black' }}>
+                {item.name}
               </TextBold>
-              <TextBold style={{ fontSize: ms(20), color: 'black' }}>
-                Rp. 50.000 {item == 2 && 'x 2'}
+              <TextBold style={{ fontSize: ms(16), color: 'black' }}>
+                Rp.
+                {item.service_client === null ? 0 : item.service_client}
+                {item == 2 && 'x 2'}
               </TextBold>
             </View>
           </View>
-          <View>
+          <View className="mt-5">
             <Icon name="checkcircle" size={ms(20)} />
           </View>
         </View>
@@ -89,7 +97,7 @@ const PatientOrderConfirmation = () => {
           </TextBold>
           <FlatList
             keyExtractor={(item, id) => id.toString()}
-            data={[1, 2, 3]}
+            data={cart.result.detail}
             renderItem={_renderItem}
           />
         </View>
@@ -104,7 +112,9 @@ const PatientOrderConfirmation = () => {
                 source={IconCart}
                 style={{ resizeMode: 'contain', width: ms(30), height: ms(30) }}
               />
-              <TextNormal style={{ fontSize: ms(20) }}>6 Item</TextNormal>
+              <TextNormal style={{ fontSize: ms(20) }}>
+                {cart.result?.menu?.length} Item
+              </TextNormal>
             </View>
             <TouchableNativeFeedback>
               <View

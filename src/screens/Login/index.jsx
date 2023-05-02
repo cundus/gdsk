@@ -9,7 +9,7 @@ import {
   TouchableNativeFeedback,
   Modal,
   StyleSheet,
-  Dimensions
+  Dimensions,
 } from 'react-native'
 import { BgAuth } from '../../assets/images/background'
 import { Logo } from '../../assets/icons'
@@ -109,7 +109,7 @@ const Login = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   overlay: {
     position: 'absolute',
@@ -118,21 +118,21 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     backgroundColor: 'rgba(0,0,0,0.5)',
-    zIndex: 1
+    zIndex: 1,
   },
   content: {
     flex: 1,
     zIndex: 2,
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   logo: {
     width: isLandscape ? vs(250) : vs(350),
     height: isLandscape ? vs(150) : vs(300),
-    resizeMode: 'contain'
+    resizeMode: 'contain',
   },
   form: {
-    width: '50%'
+    width: '50%',
   },
   input: {
     borderColor: '#ccc',
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(148, 163, 184, 0.3)',
     margin: ms(1),
     fontFamily: 'Avenir-Roman',
-    color: 'white'
+    color: 'white',
   },
   button: {
     width: '100%',
@@ -152,13 +152,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(132, 204, 22, 1)',
     marginTop: ms(10),
-    borderRadius: ms(3)
+    borderRadius: ms(3),
   },
   buttonText: {
     color: 'white',
     fontSize: ms(12),
-    fontFamily: 'Avenir-Roman'
-  }
+    fontFamily: 'Avenir-Roman',
+  },
 })
 
 // info login

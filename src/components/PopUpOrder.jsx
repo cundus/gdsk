@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   TouchableNativeFeedback,
   ScrollView,
+  Alert,
 } from 'react-native'
 import React from 'react'
 import { ms } from 'react-native-size-matters'
@@ -15,16 +16,28 @@ import { TextBold, TextNormal } from './Text'
 import Overlay from './Overlay'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateCart } from '../stores/reducers/cartPatientOrder'
 
 const intialValue = {
   size: '',
   quantity: 0,
-  replacement: '',
-  remark: '',
-  tak: '',
+  menu_replacement: '',
+  remarks: '',
+  menu_tak: '',
+  order_choices: '',
 }
 
-const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
+const PopUpOrder = ({
+  show,
+  data,
+  onOrder,
+  handleClose,
+  patientData,
+  typeMenu,
+}) => {
+  const cartPatientOrder = useSelector(state => state.cartPatientOrder)
+  const dispatch = useDispatch()
   const [form, setForm] = useState(intialValue)
 
   const handleChangeForm = (name, value) => {
@@ -48,7 +61,21 @@ const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
     handleClose()
   }
   const handleOnConfirm = () => {
-    setForm(intialValue)
+    let cart = cartPatientOrder.result
+
+    cart.menu_category_id = [...cart.menu_category_id, data.menu_category_id]
+    cart.menu_type_id = [...cart.menu_type_id, data.menu_type_id]
+    cart.menu = [...cart.menu, data.id]
+    cart.detail = [...cart.detail, data]
+    cart.order_choices = [...cart.order_choices, form.order_choices]
+    cart.remarks = [...cart.remarks, form.remarks]
+    cart.menu_tak = [...cart.menu_tak, form.menu_tak]
+    cart.menu_replacement = [...cart.menu_replacement, form.menu_replacement]
+
+    Alert.alert(JSON.stringify(cart))
+
+    dispatch(updateCart({ ...cart }))
+
     handleClose()
   }
 
@@ -72,7 +99,7 @@ const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
               />
               <Overlay color={'bg-green-600/30'} />
             </View>
-            <View className="flex-[4] z-[10] w-full ">
+            <View className="flex-[3] z-[10] w-full ">
               <View
                 style={{
                   marginTop: -ms(20),
@@ -108,7 +135,7 @@ const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
                   <View className="w-full">
                     <TextNormal
                       style={{
-                        fontSize: ms(16),
+                        fontSize: ms(14),
                         color: 'black',
                         backgroundColor: '#e2e8f0',
                         textAlign: 'center',
@@ -122,7 +149,7 @@ const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
                           key={item}>
                           <TextNormal
                             style={{
-                              fontSize: ms(14),
+                              fontSize: ms(12),
                               color: form.size === item ? 'white' : 'black',
                               backgroundColor:
                                 form.size === item ? '#16a34a' : 'transparent',
@@ -135,37 +162,41 @@ const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
                       ))}
                     </View>
                   </View>
-                  <View className="w-full">
-                    <TextNormal
-                      style={{
-                        fontSize: ms(16),
-                        color: 'black',
-                        backgroundColor: '#e2e8f0',
-                        textAlign: 'center',
-                      }}>
-                      QTY
-                    </TextNormal>
-                    <View className="my-3 flex-row space-x-10 justify-center items-center">
-                      <Pressable onPress={() => handleChangeQuantity('minus')}>
-                        <View className="border-2 rounded-2xl">
-                          <Icon name="minus" size={ms(20)} />
-                        </View>
-                      </Pressable>
-                      <TextNormal style={{ fontSize: ms(20), color: 'black' }}>
-                        {form.quantity.toString()}
+                  {typeMenu === 'extra' && (
+                    <View className="w-full">
+                      <TextNormal
+                        style={{
+                          fontSize: ms(14),
+                          color: 'black',
+                          backgroundColor: '#e2e8f0',
+                          textAlign: 'center',
+                        }}>
+                        QTY
                       </TextNormal>
-                      <Pressable onPress={() => handleChangeQuantity('plus')}>
-                        <View className="border-2 rounded-2xl">
-                          <Icon name="plus" size={ms(20)} />
-                        </View>
-                      </Pressable>
+                      <View className="my-3 flex-row space-x-10 justify-center items-center">
+                        <Pressable
+                          onPress={() => handleChangeQuantity('minus')}>
+                          <View className="border-2 rounded-xl">
+                            <Icon name="minus" size={ms(16)} />
+                          </View>
+                        </Pressable>
+                        <TextNormal
+                          style={{ fontSize: ms(16), color: 'black' }}>
+                          {form.quantity.toString()}
+                        </TextNormal>
+                        <Pressable onPress={() => handleChangeQuantity('plus')}>
+                          <View className="border-2 rounded-xl">
+                            <Icon name="plus" size={ms(16)} />
+                          </View>
+                        </Pressable>
+                      </View>
                     </View>
-                  </View>
+                  )}
                   <View className="w-full items-center">
                     <TextNormal
                       style={{
                         width: '100%',
-                        fontSize: ms(16),
+                        fontSize: ms(14),
                         color: 'black',
                         backgroundColor: '#e2e8f0',
                         textAlign: 'center',
@@ -177,10 +208,11 @@ const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
                       style={{
                         width: '80%',
                         color: 'black',
-                        fontSize: ms(14),
+                        fontSize: ms(12),
                         borderBottomColor: 'black',
                         borderBottomWidth: 1,
                         textAlign: 'center',
+                        marginBottom: ms(5),
                       }}
                     />
                   </View>
@@ -189,7 +221,7 @@ const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
                     <TextNormal
                       style={{
                         width: '100%',
-                        fontSize: ms(16),
+                        fontSize: ms(14),
                         color: 'black',
                         backgroundColor: '#e2e8f0',
                         textAlign: 'center',
@@ -197,14 +229,15 @@ const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
                       Remarks
                     </TextNormal>
                     <TextInput
-                      placeholder="Saus Coklatnya agak banyak"
+                      placeholder="Menu Remarks"
                       style={{
                         width: '80%',
                         color: 'black',
-                        fontSize: ms(14),
+                        fontSize: ms(12),
                         borderBottomColor: 'black',
                         textAlign: 'center',
                         borderBottomWidth: 1,
+                        marginBottom: ms(5),
                       }}
                     />
                   </View>
@@ -213,7 +246,7 @@ const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
                     <TextNormal
                       style={{
                         width: '100%',
-                        fontSize: ms(16),
+                        fontSize: ms(14),
                         color: 'black',
                         backgroundColor: '#e2e8f0',
                         textAlign: 'center',
@@ -225,7 +258,7 @@ const PopUpOrder = ({ show, data, onOrder, handleClose, patientData }) => {
                       style={{
                         width: '80%',
                         color: 'black',
-                        fontSize: ms(14),
+                        fontSize: ms(12),
                         borderBottomColor: 'black',
                         borderBottomWidth: 1,
                         textAlign: 'center',

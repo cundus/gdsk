@@ -18,6 +18,8 @@ import { ms } from 'react-native-size-matters'
 import { useEffect } from 'react'
 import { useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
 
 const PatientOrderListPatient = ({ route, navigation }) => {
   const { data, floor } = route.params
@@ -123,10 +125,12 @@ const PatientOrderListPatient = ({ route, navigation }) => {
     }
   }
 
-  useEffect(() => {
-    getExtraFoodDataFromStorage()
-    getOrderPatientFromStorage()
-  }, [])
+  useFocusEffect(
+    useCallback(() => {
+      getExtraFoodDataFromStorage()
+      getOrderPatientFromStorage()
+    }, []),
+  )
 
   return (
     <View className="flex-[1]">

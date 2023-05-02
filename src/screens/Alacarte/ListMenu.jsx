@@ -20,6 +20,8 @@ import { useState } from 'react'
 import { useMemo } from 'react'
 import { addItem } from '../../stores/reducers/cart'
 import PopUpOrder from '../../components/PopUpOrder'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
 
 const PAGE_SIZE = 8
 
@@ -34,7 +36,7 @@ const ListMenu = ({ route, navigation }) => {
   const handleChoose = data => {
     let isExist = false
 
-    cart.data.find(item => {
+    cart?.data?.find(item => {
       if (item.id === data.id) {
         isExist = true
         return Alert.alert('Item already exist in cart')
@@ -49,16 +51,18 @@ const ListMenu = ({ route, navigation }) => {
     navigation.navigate('AlacarteConfirmation')
   }
 
-  useEffect(() => {
-    if (navigation.isFocused()) {
-      dispatch(
-        getMenu({
-          serverUrl: auth.serverUrl,
-          clientId: auth.user.selected_client,
-        }),
-      )
-    }
-  }, [navigation.isFocused()])
+  useFocusEffect(
+    useCallback(() => {
+      if (navigation.isFocused()) {
+        dispatch(
+          getMenu({
+            serverUrl: auth.serverUrl,
+            clientId: auth.user.selected_client,
+          }),
+        )
+      }
+    }, []),
+  )
 
   useMemo(() => {
     if (menu.menuData.length > 0) {
