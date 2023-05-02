@@ -64,6 +64,8 @@ const ListMenu = ({ route, navigation }) => {
     }, []),
   )
 
+  console.log('Data: ', data)
+
   useMemo(() => {
     if (menu.menuData.length > 0) {
       const arrMenu = []
