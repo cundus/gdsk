@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardText: {
-    fontSize: 30,
+    fontSize: ms(18),
     fontFamily: 'Avenir Heavy',
   },
   title: {

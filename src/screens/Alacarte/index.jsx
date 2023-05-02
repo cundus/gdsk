@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   optionButtonText: {
-    fontSize: ms(18),
+    fontSize: ms(15),
     fontFamily: 'Avenir Heavy',
     color: 'black',
   },

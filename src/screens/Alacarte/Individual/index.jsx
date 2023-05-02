@@ -20,10 +20,11 @@ import { loginUser } from '../../stores/actions/auth'
 import { useEffect } from 'react'
 import { s, ms, vs } from 'react-native-size-matters'
 import moment from 'moment/moment'
+import { updateCart } from '../../../stores/reducers/cart'
 
 const AlacarteIndividual = ({ navigation }) => {
   const dispatch = useDispatch()
-  const { auth } = useSelector(state => state)
+  const { auth, cart } = useSelector(state => state)
   const [form, setForm] = useState({ name: '', phone: '', location: '' })
 
   const handleChange = (name, value) => {
@@ -57,7 +58,9 @@ const AlacarteIndividual = ({ navigation }) => {
       created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
     }
 
-    navigation.navigate('AlacarteListMenu', { data })
+    dispatch(updateCart(data))
+
+    navigation.navigate('AlacarteListMenu')
   }
 
   return (
