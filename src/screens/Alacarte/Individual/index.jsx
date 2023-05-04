@@ -19,17 +19,49 @@ import { useDispatch, useSelector } from 'react-redux'
 import { loginUser } from '../../stores/actions/auth'
 import { useEffect } from 'react'
 import { s, ms, vs } from 'react-native-size-matters'
+import moment from 'moment/moment'
+import { updateCart } from '../../../stores/reducers/cart'
 
-const AlacarteIndividual = () => {
+const AlacarteIndividual = ({ navigation }) => {
   const dispatch = useDispatch()
-
+  const { auth, cart } = useSelector(state => state)
   const [form, setForm] = useState({ name: '', phone: '', location: '' })
 
   const handleChange = (name, value) => {
     setForm({ ...form, [name]: value })
   }
 
-  const handleSubmit = async () => {}
+  const handleSubmit = async () => {
+    const data = {
+      order_no: `${Number(
+        `${moment().format('YYMMDD')}${String(`000${auth.user.id}`).slice(
+          -3,
+        )}0001`,
+      )}`,
+      ala_carte_type: 2,
+      guest_name: form.name,
+      phone: form.phone,
+      location: form.location,
+      client_id: auth.user.selected_client,
+      user_id: auth.user.id,
+      user: {
+        id: auth.user.id,
+        name: auth.user.name,
+      },
+      menu: [],
+      detail: [],
+      price: [],
+      quantity: [],
+      total: [],
+      remarks: [],
+      grand_total: 0,
+      created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+    }
+
+    dispatch(updateCart(data))
+
+    navigation.navigate('AlacarteListMenu')
+  }
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
@@ -64,6 +96,7 @@ const AlacarteIndividual = () => {
               style={styles.input}
               placeholderTextColor={'#ccc'}
               returnKeyType="next"
+              keyboardType="phone-pad"
             />
             <TextInput
               placeholder="Location"

@@ -18,7 +18,7 @@ import { useEffect } from 'react'
 import { getMenu } from '../../stores/actions/menu'
 import { useState } from 'react'
 import { useMemo } from 'react'
-import { addItem } from '../../stores/reducers/cart'
+import { updateCart } from '../../stores/reducers/cart'
 import PopUpOrder from '../../components/PopUpOrder'
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback } from 'react'
@@ -26,7 +26,6 @@ import { useCallback } from 'react'
 const PAGE_SIZE = 8
 
 const ListMenu = ({ route, navigation }) => {
-  const { data } = route.params
   const { menu, auth, cart } = useSelector(state => state)
   const [page, setPage] = useState(1)
   const [listMenu, setListMenu] = useState([])
@@ -36,18 +35,43 @@ const ListMenu = ({ route, navigation }) => {
   const handleChoose = data => {
     let isExist = false
 
-    cart?.data?.find(item => {
-      if (item.id === data.id) {
-        isExist = true
-        return Alert.alert('Item already exist in cart')
-      }
-    })
-    if (isExist) return
-    dispatch(
-      addItem({
-        ...data,
-      }),
-    )
+    console.log('Data: ', data)
+    console.log('Cart: ', cart)
+
+    // console.log('Carts: ', cart.result)
+
+    if (cart.result.menu.length > 0) {
+      cart.result.menu.map(menu => {
+        if (menu === data.id) {
+          isExist = true
+          return Alert.alert('Item already exist in cart')
+        }
+      })
+    }
+
+    if (!isExist) {
+      cart.result.menu = [...cart.result.menu, data.id]
+      cart.result.detail = [...cart.result.detail, data]
+      cart.result.price = [
+        ...cart.result.price,
+        data.service_client === null ? 0 : data.service_client,
+      ]
+      cart.result.quantity = [...cart.result.quantity, 1]
+      dispatch(
+        updateCart({
+          ...cart.result,
+        }),
+      )
+    }
+
+    // cart?.result.find(item => {
+    //   if (item.id === data.id) {
+    //     isExist = true
+    //     return Alert.alert('Item already exist in cart')
+    //   }
+    // })
+    // if (isExist) return
+
     navigation.navigate('AlacarteConfirmation')
   }
 

@@ -82,7 +82,7 @@ const AlacarteConfirmation = ({ navigation }) => {
     })
   }
 
-  const _renderItem = ({ item }) => {
+  const _renderItem = ({ item, index }) => {
     return (
       <View
         className="flex-row m-5 bg-white rounded-xl justify-between px-5 pt-3 pb-4"
@@ -152,22 +152,47 @@ const AlacarteConfirmation = ({ navigation }) => {
     )
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      cart.data.map(item => {
-        setData(prevData => [
-          ...prevData,
-          {
-            id: item.id,
-            img: item.image,
-            name: item.name,
-            qty: 1,
-            harga: item.service_client === null ? 0 : item.service_client,
-          },
-        ])
-      })
-    }, []),
-  )
+  const saveToStorage = async data => {
+    try {
+      const value = await AsyncStorage.getItem('@Aerofood:lastOrder')
+      if (value !== null) {
+        const lastOrder = JSON.parse(value)
+        lastOrder.captainOrder = data.order_no.toString()
+        await AsyncStorage.setItem(
+          '@Aerofood:lastOrder',
+          JSON.stringify(lastOrder),
+        )
+      } else {
+        const lastOrder = {
+          captainOrder: data.order_no.toString(),
+          functionOrder: '',
+        }
+        await AsyncStorage.setItem(
+          '@Aerofood:lastOrder',
+          JSON.stringify(lastOrder),
+        )
+      }
+    } catch (error) {
+      Alert.alert('Error Retrieving Data', error.toString())
+    }
+  }
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     cart.result.map(item => {
+  //       setData(prevData => [
+  //         ...prevData,
+  //         {
+  //           id: item.menu,
+  //           img: item.image,
+  //           name: item.name,
+  //           qty: item.quantity,
+  //           harga: item.service_client === null ? 0 : item.service_client,
+  //         },
+  //       ])
+  //     })
+  //   }, []),
+  // )
 
   return (
     <View className="flex-[1]">
@@ -193,7 +218,7 @@ const AlacarteConfirmation = ({ navigation }) => {
           ORDER CONFIRMATION
         </TextBold>
         <FlatList
-          data={data}
+          data={cart.result.menu}
           keyExtractor={(item, index) => index.toString()}
           renderItem={_renderItem}
         />
