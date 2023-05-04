@@ -10,18 +10,58 @@ import React from 'react'
 import Overlay from '../../../components/Overlay'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { ms } from 'react-native-size-matters'
-
+import moment from 'moment/moment'
 import { BgMenu } from '../../../assets/images/background'
 import { Logo } from '../../../assets/icons'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateCart } from '../../../stores/reducers/cart'
 
 const ListPatient = ({ route, navigation }) => {
   const { data } = route.params
+  const dispatch = useDispatch()
+  const { auth, cart } = useSelector(state => state)
+
+  const handleCart = item => {
+    const data = {
+      order_no: `${Number(
+        `${moment().format('YYMMDD')}${String(`000${auth.user.id}`).slice(
+          -3,
+        )}0001`,
+      )}`,
+      ala_carte_type: 1,
+      floor_name: item.floor_name,
+      room_no: item.room_no,
+      patient_id: item.id,
+      patient: {
+        name: item.name,
+        floor_name: item.floor_name,
+        room_no: item.room_no,
+        bed: item.bed,
+      },
+      client_id: auth.user.selected_client,
+      user_id: auth.user.id,
+      user: {
+        id: auth.user.id,
+        name: auth.user.name,
+      },
+      menu: [],
+      detail: [],
+      price: [],
+      quantity: [],
+      total: [],
+      remarks: [],
+      grand_total: 0,
+      created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+    }
+
+    dispatch(updateCart(data))
+
+    navigation.navigate('AlacarteListMenu')
+  }
 
   const _renderItem = ({ item }) => {
-    console.log(item)
     return (
-      <Pressable
-        onPress={() => navigation.navigate('AlacarteListMenu', { data: item })}>
+      <Pressable onPress={() => handleCart(item)}>
         {({ pressed }) => (
           <View
             style={{

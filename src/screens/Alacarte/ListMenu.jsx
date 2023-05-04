@@ -26,6 +26,7 @@ import { useCallback } from 'react'
 const PAGE_SIZE = 8
 
 const ListMenu = ({ route, navigation }) => {
+  // const { data } = route.params
   const { menu, auth, cart } = useSelector(state => state)
   const [page, setPage] = useState(1)
   const [listMenu, setListMenu] = useState([])
@@ -36,11 +37,11 @@ const ListMenu = ({ route, navigation }) => {
     let isExist = false
 
     console.log('Data: ', data)
-    console.log('Cart: ', cart)
+    console.log('Cart List Menu: ', cart)
 
     // console.log('Carts: ', cart.result)
 
-    if (cart.result.menu.length > 0) {
+    if (cart.result.menu.length > 0 && cart.result.menu !== undefined) {
       cart.result.menu.map(menu => {
         if (menu === data.id) {
           isExist = true
@@ -63,14 +64,6 @@ const ListMenu = ({ route, navigation }) => {
         }),
       )
     }
-
-    // cart?.result.find(item => {
-    //   if (item.id === data.id) {
-    //     isExist = true
-    //     return Alert.alert('Item already exist in cart')
-    //   }
-    // })
-    // if (isExist) return
 
     navigation.navigate('AlacarteConfirmation')
   }
