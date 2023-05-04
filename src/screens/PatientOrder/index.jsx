@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   StyleSheet,
   Text,
@@ -8,6 +8,8 @@ import {
   FlatList,
   ImageBackground,
   ActivityIndicator,
+  Alert,
+  Pressable,
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { ms } from 'react-native-size-matters'
@@ -16,9 +18,15 @@ import { getFloor } from '../../stores/actions/floor'
 import { BgLantai, BgMenu } from '../../assets/images/background'
 import { LogoAlacarte } from '../../assets/icons'
 import { TextBold, TextNormal } from '../../components/Text'
-import { getPatientOrder } from '../../stores/actions/patientOrder'
+import {
+  getPatientOrder,
+  syncPatientOrder,
+  syncPatientOrderExtra,
+} from '../../stores/actions/patientOrder'
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const countPendingOrder = floor => {
   let num = 0
@@ -41,6 +49,12 @@ const countPendingOrder = floor => {
 const PatientOrder = ({ navigation }) => {
   const { floor, auth, patientOrder } = useSelector(state => state)
   const dispatch = useDispatch()
+
+  const [state, setState] = useState({
+    orderPatient: [],
+    orderExtra: [],
+  })
+
   useFocusEffect(
     useCallback(() => {
       dispatch(
@@ -49,9 +63,15 @@ const PatientOrder = ({ navigation }) => {
           clientId: auth.user.selected_client,
         }),
       )
-      console.log(navigation.isFocused())
+      getOrderPatientFromStorage()
+      getExtraFoodDataFromStorage()
     }, []),
   )
+
+  const syncData = async () => {
+    await dispatch(syncPatientOrder(state.orderPatient))
+    await dispatch(syncPatientOrderExtra(state.orderPatient))
+  }
 
   const _renderItem = ({ item }) => {
     return (
@@ -69,8 +89,8 @@ const PatientOrder = ({ navigation }) => {
         <View className="flex-row space-x-3">
           <View style={styles.rightCard}>
             <Text style={[styles.statusCardText, { color: 'black' }]}>
-              {patientOrder.data.length > 0
-                ? patientOrder.data.filter(order => order.floor === item.id)
+              {state.orderPatient.length > 0
+                ? state.orderPatient.filter(order => order.floor === item.id)
                     .length
                 : 0}{' '}
               Unsynced
@@ -84,6 +104,30 @@ const PatientOrder = ({ navigation }) => {
         </View>
       </View>
     )
+  }
+
+  const getOrderPatientFromStorage = async () => {
+    try {
+      const value = await AsyncStorage.getItem('orderPatient')
+      if (value !== null) {
+        const data = JSON.parse(value)
+        setState({ ...state, orderPatient: data })
+      }
+    } catch (error) {
+      Alert.alert('Error Retrieving Data', error.toString())
+    }
+  }
+
+  const getExtraFoodDataFromStorage = async () => {
+    try {
+      const value = await AsyncStorage.getItem('orderExtra')
+      if (value !== null) {
+        const dataExtraFood = JSON.parse(value)
+        setState({ ...state, orderExtra: dataExtraFood })
+      }
+    } catch (error) {
+      Alert.alert('Error Retrieving Data', error.toString())
+    }
   }
 
   return (
@@ -106,7 +150,13 @@ const PatientOrder = ({ navigation }) => {
           resizeMode="stretch"
           resizeMethod="resize">
           <View style={styles.contentContainer}>
-            <Text style={styles.title}>Patient Order</Text>
+            <View className="flex-row justify-between items-center px-5">
+              <View style={{ width: ms(20) }} />
+              <Text style={styles.title}>Patient Order</Text>
+              <Pressable onPress={syncData}>
+                <Icon name="refresh" color={'white'} size={ms(20)} />
+              </Pressable>
+            </View>
             <View className="flex-row justify-around">
               <TextBold className="text-white" style={{ fontSize: ms(14) }}>
                 Choose your floor
@@ -163,6 +213,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: ms(5),
+    marginHorizontal: ms(10),
   },
   leftCard: {
     backgroundColor: 'white',
@@ -171,6 +222,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: ms(8),
     paddingHorizontal: ms(9),
+    width: ms(120),
     // flex: 1,
   },
   rightCard: {
@@ -181,7 +233,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardText: {
-    fontSize: ms(12),
+    fontSize: ms(10),
     fontFamily: 'Avenir Heavy',
   },
   statusCardText: {

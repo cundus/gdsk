@@ -7,6 +7,9 @@ import { logout } from '../../stores/reducers/auth'
 import { ms } from 'react-native-size-matters'
 import { useState } from 'react'
 import PopUpSuccess from '../../components/PopUpSuccess'
+import { TextBold } from '../../components/Text'
+import color from '../../utils/color'
+import Icon from 'react-native-vector-icons/AntDesign'
 
 const Setting = ({ navigation }) => {
   const [show, setShow] = useState(false)
@@ -22,110 +25,55 @@ const Setting = ({ navigation }) => {
   }
 
   return (
-    <View>
-      <Text>Setting</Text>
+    <View className="flex-1 justify-center items-center">
+      <TouchableOpacity onPress={() => navigation.navigate('ChangeServer')}>
+        <View
+          style={{
+            width: ms(200),
+            height: 50,
+            backgroundColor: color.GREEN_PRIMARY,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            borderRadius: ms(10),
+            flexDirection: 'row',
+            paddingHorizontal: ms(10),
+            marginBottom: ms(10),
+          }}>
+          <View style={{ width: ms(10) }} />
+          <TextBold
+            style={{
+              fontSize: ms(14),
+              color: 'white',
+            }}>
+            Change Server
+          </TextBold>
+          <Icon name="logout" size={ms(16)} color="white" />
+        </View>
+      </TouchableOpacity>
+
       <TouchableOpacity onPress={handleLogout}>
         <View
           style={{
-            width: '100%',
+            width: ms(200),
             height: 50,
-            backgroundColor: 'green',
-            justifyContent: 'center',
+            backgroundColor: color.GREEN_PRIMARY,
+            justifyContent: 'space-between',
             alignItems: 'center',
+            borderRadius: ms(10),
+            flexDirection: 'row',
+            paddingHorizontal: ms(10),
           }}>
-          <Text>LOGOUT</Text>
+          <View style={{ width: ms(10) }} />
+          <TextBold
+            style={{
+              fontSize: ms(14),
+              color: 'white',
+            }}>
+            Logout
+          </TextBold>
+          <Icon name="logout" size={ms(16)} color="white" />
         </View>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => setShow(true)}>
-        <View
-          style={{
-            width: '100%',
-            height: 50,
-            backgroundColor: 'green',
-            justifyContent: 'center',
-            alignItems: 'center',
-            margin: ms(10),
-          }}>
-          <Text className="text-white text-3xl">popup success</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('PatientOrder', {
-            screen: 'PatientOrderListRoom',
-          })
-        }>
-        <View
-          style={{
-            width: '100%',
-            height: 50,
-            backgroundColor: 'green',
-            justifyContent: 'center',
-            alignItems: 'center',
-            margin: ms(10),
-          }}>
-          <Text className="text-white text-3xl">Patient Order List Room</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('PatientOrder', {
-            screen: 'PatientOrderListPatient',
-          })
-        }>
-        <View
-          style={{
-            width: '100%',
-            height: 50,
-            backgroundColor: 'green',
-            justifyContent: 'center',
-            alignItems: 'center',
-            margin: ms(10),
-          }}>
-          <Text className="text-white text-3xl">
-            Patient Order List Patient
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('PatientOrder', {
-            screen: 'PatientOrderListMenu',
-          })
-        }>
-        <View
-          style={{
-            width: '100%',
-            height: 50,
-            backgroundColor: 'green',
-            justifyContent: 'center',
-            alignItems: 'center',
-            margin: ms(10),
-          }}>
-          <Text className="text-white text-3xl">Patient Order List Menu</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate('PatientOrder', {
-            screen: 'PatientOrderConfirmation',
-          })
-        }>
-        <View
-          style={{
-            width: '100%',
-            height: 50,
-            backgroundColor: 'green',
-            justifyContent: 'center',
-            alignItems: 'center',
-            margin: ms(10),
-          }}>
-          <Text className="text-white text-3xl">
-            Patient Order List Confirmation
-          </Text>
-        </View>
-      </TouchableOpacity>
-      <PopUpSuccess show={show} onPress={() => setShow(false)} />
     </View>
   )
 }

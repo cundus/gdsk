@@ -18,9 +18,9 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateCart } from '../stores/reducers/cartPatientOrder'
+import { useNavigation } from '@react-navigation/native'
 
 const intialValue = {
-  size: '',
   quantity: 0,
   menu_replacement: '',
   remarks: '',
@@ -38,6 +38,7 @@ const PopUpOrder = ({
 }) => {
   const cartPatientOrder = useSelector(state => state.cartPatientOrder)
   const dispatch = useDispatch()
+  const navigation = useNavigation()
   const [form, setForm] = useState(intialValue)
 
   const handleChangeForm = (name, value) => {
@@ -63,6 +64,20 @@ const PopUpOrder = ({
   const handleOnConfirm = () => {
     let cart = cartPatientOrder.result
 
+    if (typeMenu === 'extra') {
+      cart.menu_extra_id = data.id
+      cart.menu = data
+      cart.price = data.service_client !== null ? data.service_client : 0
+      cart.quantity = form.quantity
+      cart.total = form.quantity * +data.service_client
+      cart.remarks = form.remarks
+
+      dispatch(updateCart(cart))
+
+      handleClose()
+      return navigation.navigate('PatientOrderConfirmation')
+    }
+
     cart.menu_category_id = [...cart.menu_category_id, data.menu_category_id]
     cart.menu_type_id = [...cart.menu_type_id, data.menu_type_id]
     cart.menu = [...cart.menu, data.id]
@@ -72,7 +87,7 @@ const PopUpOrder = ({
     cart.menu_tak = [...cart.menu_tak, form.menu_tak]
     cart.menu_replacement = [...cart.menu_replacement, form.menu_replacement]
 
-    Alert.alert(JSON.stringify(cart))
+    Alert.alert(`${data.name} berhasil ditambahkan!`)
 
     dispatch(updateCart({ ...cart }))
 
@@ -132,36 +147,7 @@ const PopUpOrder = ({
                     }}>
                     PlaceHolder
                   </TextNormal>
-                  <View className="w-full">
-                    <TextNormal
-                      style={{
-                        fontSize: ms(14),
-                        color: 'black',
-                        backgroundColor: '#e2e8f0',
-                        textAlign: 'center',
-                      }}>
-                      Choose Size
-                    </TextNormal>
-                    <View className="my-3 flex-row justify-evenly">
-                      {['Small', 'Medium', 'Large'].map(item => (
-                        <Pressable
-                          onPress={() => handleChangeForm('size', item)}
-                          key={item}>
-                          <TextNormal
-                            style={{
-                              fontSize: ms(12),
-                              color: form.size === item ? 'white' : 'black',
-                              backgroundColor:
-                                form.size === item ? '#16a34a' : 'transparent',
-                              padding: ms(5),
-                              borderRadius: ms(14),
-                            }}>
-                            {item}
-                          </TextNormal>
-                        </Pressable>
-                      ))}
-                    </View>
-                  </View>
+
                   {typeMenu === 'extra' && (
                     <View className="w-full">
                       <TextNormal

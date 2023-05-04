@@ -23,14 +23,11 @@ import { useCallback } from 'react'
 
 const PatientOrderListPatient = ({ route, navigation }) => {
   const { data, floor } = route.params
-  const [state, setState] = useState({
-    orderPatient: [],
-    orderExtra: [],
-  })
 
   console.log(data)
 
   const _renderItem = ({ item }) => {
+    console.log(item)
     return item.order.map(order => (
       <Pressable
         onPress={() =>
@@ -46,15 +43,16 @@ const PatientOrderListPatient = ({ route, navigation }) => {
           style={{ elevation: 6, borderRadius: ms(10) }}>
           <View>
             <TextBold style={{ fontSize: ms(18), color: 'black' }}>
-              NY TIA RESTI
+              {item.name.toUpperCase()}
             </TextBold>
-            <TextNormal style={{ fontSize: ms(12) }}>Pasien baru</TextNormal>
+            <TextNormal style={{ fontSize: ms(12) }}>{item.status}</TextNormal>
           </View>
 
           <View className="flex-row space-x-2">
             <View className="items-end">
               <View className="flex-row items-center">
-                {item === 1 ? (
+                {order.detail.filter(detail => +detail.order_status === 0)
+                  .length > 0 ? (
                   <View className="flex-row items-center mr-5">
                     <TextNormal
                       className="text-emerald-500"
@@ -66,21 +64,31 @@ const PatientOrderListPatient = ({ route, navigation }) => {
                     </TextNormal>
                     <Image
                       source={IconPending}
-                      style={{ width: ms(25), height: ms(25) }}
+                      style={{
+                        width: ms(25),
+                        height: ms(25),
+                        resizeMode: 'contain',
+                      }}
                     />
                   </View>
                 ) : null}
                 <View
                   className={
                     'p-2 rounded-xl ' +
-                    (item === 1 ? ' bg-lime-500 ' : ' bg-green-600  ')
+                    (order.detail.filter(detail => +detail.order_status === 0)
+                      .length > 0
+                      ? ' bg-lime-500 '
+                      : ' bg-green-600  ')
                   }>
                   <TextNormal style={{ fontSize: ms(12), color: 'white' }}>
-                    {item === 1 ? 'Start order' : 'Order finish'}
+                    {order.detail.filter(detail => detail.order_status === 0)
+                      .length > 0
+                      ? 'Start order'
+                      : 'Order finish'}
                   </TextNormal>
                 </View>
               </View>
-              <TextNormal style={{ fontSize: ms(10) }}>701</TextNormal>
+              <TextNormal style={{ fontSize: ms(10) }}>{data.name}</TextNormal>
             </View>
             <View
               style={{
@@ -100,37 +108,6 @@ const PatientOrderListPatient = ({ route, navigation }) => {
       </Pressable>
     ))
   }
-
-  const getOrderPatientFromStorage = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@Aerofood:orderPatient')
-      if (value !== null) {
-        const data = JSON.parse(value)
-        setState({ ...state, orderPatient: data })
-      }
-    } catch (error) {
-      Alert.alert('Error Retrieving Data', error.toString())
-    }
-  }
-
-  const getExtraFoodDataFromStorage = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@Aerofood:orderExtra')
-      if (value !== null) {
-        const dataExtraFood = JSON.parse(value)
-        setState({ ...state, orderExtra: dataExtraFood })
-      }
-    } catch (error) {
-      Alert.alert('Error Retrieving Data', error.toString())
-    }
-  }
-
-  useFocusEffect(
-    useCallback(() => {
-      getExtraFoodDataFromStorage()
-      getOrderPatientFromStorage()
-    }, []),
-  )
 
   return (
     <View className="flex-[1]">

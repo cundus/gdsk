@@ -16,10 +16,13 @@ import { TextBold, TextNormal } from '../../components/Text'
 import { FlatList } from 'react-native-gesture-handler'
 import color from '../../utils/color'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { updateCart } from '../../stores/reducers/cartPatientOrder'
 
-const PatientOrderConfirmation = ({ navigation }) => {
+const PatientOrderConfirmation = ({}) => {
+  const navigation = useNavigation()
   const cart = useSelector(state => state.cartPatientOrder)
-  console.log(cart)
   const dispatch = useDispatch()
 
   const _renderItem = ({ item, idx }) => {
@@ -52,19 +55,18 @@ const PatientOrderConfirmation = ({ navigation }) => {
                 overflow: 'hidden',
               }}>
               <Image
-                source={{ uri: item.image }}
+                source={{ uri: item?.image }}
                 resizeMode="cover"
                 style={{ width: '100%', height: '100%' }}
               />
             </View>
             <View className="ml-10">
               <TextBold style={{ fontSize: ms(16), color: 'black' }}>
-                {item.name}
+                {item?.name}
               </TextBold>
               <TextBold style={{ fontSize: ms(16), color: 'black' }}>
                 Rp.
-                {item.service_client === null ? 0 : item.service_client}
-                {item == 2 && 'x 2'}
+                {item?.service_client === null ? 0 : item?.service_client}
               </TextBold>
             </View>
           </View>
@@ -74,6 +76,61 @@ const PatientOrderConfirmation = ({ navigation }) => {
         </View>
       </View>
     )
+  }
+
+  const submit = async () => {
+    await saveDataToStorage(cart.result)
+    navigation.navigate('PatientOrderHome')
+    dispatch(updateCart({}))
+  }
+
+  const saveDataToStorage = async data => {
+    try {
+      let order = []
+      if (!Array.isArray(cart.result.menu)) {
+        const savedOrder = await AsyncStorage.getItem('orderExtra')
+        if (savedOrder !== null) {
+          order = JSON.parse(savedOrder)
+        }
+        order.push(data)
+        await AsyncStorage.setItem('orderExtra', JSON.stringify(order))
+      } else {
+        const savedOrder = await AsyncStorage.getItem('orderPatient')
+        if (savedOrder !== null) {
+          order = JSON.parse(savedOrder)
+        }
+        const elementsIndex = order.findIndex(element => element.id === data.id)
+        if (elementsIndex === -1) {
+          order.push(data)
+          await AsyncStorage.setItem('orderPatient', JSON.stringify(order))
+        } else {
+          const newArray = [...order]
+          newArray[elementsIndex] = { ...data }
+          await AsyncStorage.setItem('orderPatient', JSON.stringify(newArray))
+        }
+      }
+    } catch (error) {
+      Alert.alert('Error Saving Data', error)
+    }
+  }
+
+  const totalPrice = () => {
+    if (Array.isArray(cart.result.menu)) {
+      return cart.result.detail.reduce(
+        (a, b) => (a + b.service_client !== null ? +b.service_client : 0),
+        0,
+      )
+    }
+
+    return cart.result.total
+  }
+
+  const dataToRender = () => {
+    if (Array.isArray(cart.result.menu)) {
+      return cart.result.detail
+    }
+
+    return [cart.result.menu]
   }
 
   return (
@@ -97,13 +154,14 @@ const PatientOrderConfirmation = ({ navigation }) => {
           </TextBold>
           <FlatList
             keyExtractor={(item, id) => id.toString()}
-            data={cart.result.detail}
+            data={dataToRender()}
             renderItem={_renderItem}
           />
         </View>
         <View className="p-5">
-          <View className="flex-row px-10">
+          <View className="flex-row px-10 justify-between items-center">
             <TextNormal style={{ fontSize: ms(20) }}>Total</TextNormal>
+            <TextNormal style={{ fontSize: ms(20) }}>{totalPrice()}</TextNormal>
           </View>
           <View className="border-t-4 border-t-green-500" />
           <View className="flex-row px-10 justify-between mt-2">
@@ -116,7 +174,7 @@ const PatientOrderConfirmation = ({ navigation }) => {
                 {cart.result?.menu?.length} Item
               </TextNormal>
             </View>
-            <TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={submit}>
               <View
                 style={{
                   width: ms(150),

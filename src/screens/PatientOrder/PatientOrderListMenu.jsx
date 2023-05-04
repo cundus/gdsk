@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native'
 import React from 'react'
+import moment from 'moment/moment'
 import { BgMenu } from '../../assets/images/background'
 import Overlay from '../../components/Overlay'
 import { ms } from 'react-native-size-matters'
@@ -17,7 +18,6 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { getMenu, getMenuExtra } from '../../stores/actions/menu'
-import moment from 'moment/moment'
 import PopUpOrder from '../../components/PopUpOrder'
 import { IconDelivery } from '../../assets/icons'
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -30,11 +30,7 @@ import { updateCart } from '../../stores/reducers/cartPatientOrder'
 const { width } = Dimensions.get('window')
 
 const PatientOrderListMenu = ({ route, navigation }) => {
-  // const { params } = route
-  const params = {}
-  params.floor = 1
-  params.room = 1
-  params.patient = 1
+  const { params } = route
   const { floor, auth, patientOrder, menu, cartPatientOrder } = useSelector(
     state => state,
   )
@@ -68,17 +64,16 @@ const PatientOrderListMenu = ({ route, navigation }) => {
     } else if (val === 'extra') {
       return dispatch(
         updateCart({
-          id: patientOrder.id,
-          floor: params.floor,
-          room: params.room,
-          menu_type_id: [],
-          menu_category_id: [],
-          menu: [],
-          detail: [],
-          order_choices: [],
-          remarks: [],
-          menu_tak: [],
-          menu_replacement: [],
+          meal_time_id: tabMenu,
+          client_id: auth.user.selected_client,
+          user_id: auth.user.id,
+          patient_id: params.patient,
+          menu_extra_id: 0,
+          menu: {},
+          price: 0,
+          quantity: 0,
+          total: 0,
+          remarks: '',
           created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
         }),
       )
@@ -86,14 +81,17 @@ const PatientOrderListMenu = ({ route, navigation }) => {
   }
 
   const _renderItem = ({ item }) => {
-    const existed = cartPatientOrder.result?.menu?.find(
-      menu => menu === item.id,
-    )
+    let existed = false
+    if (toggleMenu === 'order') {
+      existed = cartPatientOrder.result?.menu?.find(menu => menu === item.id)
+    }
 
     return (
       <TouchableNativeFeedback
         onPress={() =>
-          setPopUp({ selectedMenu: item, open: true, type: toggleMenu })
+          existed
+            ? null
+            : setPopUp({ selectedMenu: item, open: true, type: toggleMenu })
         }
         background={TouchableNativeFeedback.Ripple('white')}>
         <View
@@ -219,7 +217,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
               </TextNormal>
               <TextNormal
                 style={{ fontSize: ms(14), color: 'black', marginLeft: ms(5) }}>
-                Tn Tommy
+                {params.patient.name}
               </TextNormal>
             </View>
 
@@ -229,7 +227,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
               </TextNormal>
               <TextNormal
                 style={{ fontSize: ms(14), color: 'black', marginLeft: ms(5) }}>
-                Penyakit Lambung
+                {params.patient.diagnosis}
               </TextNormal>
             </View>
 
@@ -239,7 +237,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
               </TextNormal>
               <TextNormal
                 style={{ fontSize: ms(14), color: 'black', marginLeft: ms(5) }}>
-                27
+                {moment().diff(params.patient.dob, 'year')}
               </TextNormal>
             </View>
           </View>

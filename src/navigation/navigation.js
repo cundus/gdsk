@@ -27,6 +27,7 @@ import PatientOrderListRoom from '../screens/PatientOrder/PatientOrderListRoom'
 import PatientOrderListPatient from '../screens/PatientOrder/PatientOrderListPatient'
 import PatientOrderListMenu from '../screens/PatientOrder/PatientOrderListMenu'
 import PatientOrderConfirmation from '../screens/PatientOrder/PatientOrderConfirmation'
+import ChangeServer from '../screens/ChangeServer'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -150,11 +151,18 @@ const MainNavigation = () => {
       <StatusBar hidden />
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {isLogin ? (
-          <Stack.Screen
-            name="HomeBase"
-            options={{ headerShown: false }}
-            component={MyTabs}
-          />
+          <>
+            <Stack.Screen
+              name="HomeBase"
+              options={{ headerShown: false }}
+              component={MyTabs}
+            />
+            <Stack.Screen
+              name="ChangeServer"
+              options={{ headerShown: false }}
+              component={ChangeServer}
+            />
+          </>
         ) : (
           <>
             <Stack.Screen

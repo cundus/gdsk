@@ -28,8 +28,27 @@ export const getPatientOrder = createAsyncThunk(
     }
   },
 )
-export const syncPatientOrder = createAsyncThunk(
+export const getPatientOrderExtra = createAsyncThunk(
   'patientOrder/',
+  async ({ serverUrl, clientId }, { rejectWithValue, dispatch }) => {
+    try {
+      const { data } = await axios.get(
+        `${serverUrl}/order-extra?c=${clientId}`,
+        config,
+      )
+      return data
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message)
+      } else {
+        Alert.alert('error retrieving patient Order ', error.message)
+        return rejectWithValue(error.message)
+      }
+    }
+  },
+)
+export const syncPatientOrder = createAsyncThunk(
+  'patientOrder/sync',
   async ({ serverUrl, body }, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await axios.post(
@@ -49,7 +68,7 @@ export const syncPatientOrder = createAsyncThunk(
   },
 )
 export const syncPatientOrderExtra = createAsyncThunk(
-  'patientOrder/',
+  'patientOrderExtra/sync',
   async ({ serverUrl, body }, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await axios.post(
