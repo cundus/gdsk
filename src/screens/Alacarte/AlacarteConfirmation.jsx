@@ -21,68 +21,75 @@ import PopUpConfirmation from '../../components/PopUpConfirmation'
 import PopUpSuccess from '../../components/PopUpSuccess'
 import Supscript from '../../components/Supscript'
 import { useDispatch, useSelector } from 'react-redux'
-import { removeItem } from '../../stores/reducers/cart'
+import { removeItem, updateCart } from '../../stores/reducers/cart'
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback } from 'react'
 
 const AlacarteConfirmation = ({ navigation }) => {
   const { cart, auth } = useSelector(state => state)
-  const [data, setData] = useState([])
+  const [data, setData] = useState({})
   const [show, setShow] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
   const dispatch = useDispatch()
   const [selected, setSelected] = useState(null)
 
   const handlePlus = id => {
-    setData(prevData =>
-      prevData.map(item => {
-        if (item.id === id) {
-          return {
-            ...item,
-            qty: item.qty + 1,
-          }
-        }
-        return item
-      }),
-    )
+    console.log('Handle Plus: ', id)
+
+    let cartOrder = { ...cart.result }
+    const itemIdx = cartOrder.detail.findIndex(item => item.id === id)
+
+    if (itemIdx !== -1) {
+      cartOrder.quantity[itemIdx] = +cartOrder.quantity[itemIdx] + 1
+      cartOrder.total[itemIdx] =
+        +cartOrder.quantity[itemIdx] * +cartOrder.price[itemIdx]
+
+      cartOrder.grand_total = cartOrder.total.reduce((a, b) => a + b, 0)
+
+      console.log('Item Idx: ', cartOrder.quantity)
+    }
+
+    dispatch(updateCart(cartOrder))
   }
+
   const handleMinus = id => {
-    setData(prevData =>
-      prevData.map(item => {
-        if (item.id === id) {
-          if (item.qty === 1) {
-            return item
-          }
-          return {
-            ...item,
-            qty: item.qty - 1,
-          }
-        }
-        return item
-      }),
-    )
+    // setData(prevData =>
+    //   prevData.map(item => {
+    //     if (item.id === id) {
+    //       if (item.qty === 1) {
+    //         return item
+    //       }
+    //       return {
+    //         ...item,
+    //         qty: item.qty - 1,
+    //       }
+    //     }
+    //     return item
+    //   }),
+    // )
   }
 
   const onpressRemove = id => {
-    const selectedData = data.find(item => item.id === id)
-    setSelected(selectedData)
+    // const selectedData = data.find(item => item.id === id)
+    // setSelected(selectedData)
     setShow(true)
     // setData(newData)
   }
 
   const onRemove = () => {
-    dispatch(
-      removeItem({
-        ...selected,
-      }),
-    )
+    // dispatch(
+    //   removeItem({
+    //     ...selected,
+    //   }),
+    // )
     setShow(false)
-    setData(prevData => {
-      return prevData.filter(item => item.id !== selected.id)
-    })
+    // setData(prevData => {
+    //   return prevData.filter(item => item.id !== selected.id)
+    // })
   }
 
   const _renderItem = ({ item, index }) => {
+    // console.log('Render Item: ', item)
     return (
       <View
         className="flex-row m-5 bg-white rounded-xl justify-between px-5 pt-3 pb-4"
@@ -102,7 +109,9 @@ const AlacarteConfirmation = ({ navigation }) => {
             }}>
             <Image
               source={{
-                uri: `${auth.serverUrl.replace('api', '')}app/menu/${item.img}`,
+                uri: `${auth.serverUrl.replace('api', '')}app/menu/${
+                  item.image
+                }`,
               }}
               resizeMode="cover"
               style={{
@@ -117,10 +126,10 @@ const AlacarteConfirmation = ({ navigation }) => {
             </TextBold>
             <TextBold
               style={{ fontSize: ms(18), color: 'black', marginBottom: 10 }}>
-              <Supscript /> {item.harga}{' '}
-              {item.qty > 1 && (
-                <TextNormal>{`x${item.qty} = ${
-                  +item.harga * +item.qty
+              <Supscript /> {data.price[index]}{' '}
+              {data.quantity[index] > 1 && (
+                <TextNormal>{`x${data.quantity[index]} = ${
+                  +data.price[index] * +data.quantity[index]
                 }`}</TextNormal>
               )}
             </TextBold>
@@ -131,7 +140,7 @@ const AlacarteConfirmation = ({ navigation }) => {
                 </View>
               </Pressable>
               <TextBold style={{ fontSize: ms(16), color: 'black' }}>
-                {item.qty}
+                {data.quantity[index]}
               </TextBold>
               <Pressable onPress={() => handlePlus(item.id)}>
                 <View className="border-2 rounded-xl p-1">
@@ -154,45 +163,32 @@ const AlacarteConfirmation = ({ navigation }) => {
 
   const saveToStorage = async data => {
     try {
-      const value = await AsyncStorage.getItem('@Aerofood:lastOrder')
+      const value = await AsyncStorage.getItem('lastOrder')
       if (value !== null) {
         const lastOrder = JSON.parse(value)
-        lastOrder.captainOrder = data.order_no.toString()
-        await AsyncStorage.setItem(
-          '@Aerofood:lastOrder',
-          JSON.stringify(lastOrder),
-        )
+        // lastOrder.captainOrder = data.order_no.toString()
+        await AsyncStorage.setItem('lastOrder', JSON.stringify(lastOrder))
       } else {
         const lastOrder = {
-          captainOrder: data.order_no.toString(),
+          // captainOrder: data.order_no.toString(),
           functionOrder: '',
         }
-        await AsyncStorage.setItem(
-          '@Aerofood:lastOrder',
-          JSON.stringify(lastOrder),
-        )
+        await AsyncStorage.setItem('lastOrder', JSON.stringify(lastOrder))
       }
     } catch (error) {
       Alert.alert('Error Retrieving Data', error.toString())
     }
   }
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     cart.result.map(item => {
-  //       setData(prevData => [
-  //         ...prevData,
-  //         {
-  //           id: item.menu,
-  //           img: item.image,
-  //           name: item.name,
-  //           qty: item.quantity,
-  //           harga: item.service_client === null ? 0 : item.service_client,
-  //         },
-  //       ])
-  //     })
-  //   }, []),
-  // )
+  // console.log('Cart Result: ', cart.result)
+
+  useFocusEffect(
+    useCallback(() => {
+      setData(cart.result)
+
+      // console.log('Data: ', data)
+    }, []),
+  )
 
   return (
     <View className="flex-[1]">
@@ -218,7 +214,7 @@ const AlacarteConfirmation = ({ navigation }) => {
           ORDER CONFIRMATION
         </TextBold>
         <FlatList
-          data={cart.result.menu}
+          data={data?.detail}
           keyExtractor={(item, index) => index.toString()}
           renderItem={_renderItem}
         />
@@ -229,7 +225,10 @@ const AlacarteConfirmation = ({ navigation }) => {
             </TextNormal>
             <TextBold style={{ fontSize: ms(22), color: 'black' }}>
               <Supscript />
-              {data.reduce((a, b) => a + b.harga * b.qty, 0)}
+              {data?.quantity?.reduce(
+                (a, b, index) => a + b * data?.price[index],
+                0,
+              )}
             </TextBold>
           </View>
           <View className="flex-row justify-between px-10 items-center mb-5">
@@ -240,7 +239,7 @@ const AlacarteConfirmation = ({ navigation }) => {
                 style={{ width: ms(20), height: ms(20), resizeMode: 'contain' }}
               />
               <TextNormal style={{ fontSize: ms(20), color: 'black' }}>
-                {data.reduce((a, b) => a + b.qty, 0)} item
+                {data?.quantity?.reduce((a, b) => a + b, 0)} item
               </TextNormal>
             </View>
             <TouchableNativeFeedback

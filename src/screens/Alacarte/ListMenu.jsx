@@ -57,7 +57,9 @@ const ListMenu = ({ route, navigation }) => {
         ...cart.result.price,
         data.service_client === null ? 0 : data.service_client,
       ]
+      cart.result.total = [...cart.result.total, 0]
       cart.result.quantity = [...cart.result.quantity, 1]
+      cart.result.remarks = [...cart.result.remarks, '']
       dispatch(
         updateCart({
           ...cart.result,
