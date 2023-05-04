@@ -27,7 +27,10 @@ import PatientOrderListRoom from '../screens/PatientOrder/PatientOrderListRoom'
 import PatientOrderListPatient from '../screens/PatientOrder/PatientOrderListPatient'
 import PatientOrderListMenu from '../screens/PatientOrder/PatientOrderListMenu'
 import PatientOrderConfirmation from '../screens/PatientOrder/PatientOrderConfirmation'
+
 import ChangeServer from '../screens/ChangeServer'
+
+import TestScreen from '../screens/Test/TestScreen'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -161,6 +164,12 @@ const MainNavigation = () => {
               name="ChangeServer"
               options={{ headerShown: false }}
               component={ChangeServer}
+            />
+
+            <Stack.Screen
+              name="TestScreen"
+              options={{ headerShown: false }}
+              component={TestScreen}
             />
           </>
         ) : (

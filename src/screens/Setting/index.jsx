@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch } from 'react-redux'
@@ -27,18 +27,7 @@ const Setting = ({ navigation }) => {
   return (
     <View className="flex-1 justify-center items-center">
       <TouchableOpacity onPress={() => navigation.navigate('ChangeServer')}>
-        <View
-          style={{
-            width: ms(200),
-            height: 50,
-            backgroundColor: color.GREEN_PRIMARY,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            borderRadius: ms(10),
-            flexDirection: 'row',
-            paddingHorizontal: ms(10),
-            marginBottom: ms(10),
-          }}>
+        <View style={styles.button}>
           <View style={{ width: ms(10) }} />
           <TextBold
             style={{
@@ -52,17 +41,7 @@ const Setting = ({ navigation }) => {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={handleLogout}>
-        <View
-          style={{
-            width: ms(200),
-            height: 50,
-            backgroundColor: color.GREEN_PRIMARY,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            borderRadius: ms(10),
-            flexDirection: 'row',
-            paddingHorizontal: ms(10),
-          }}>
+        <View style={styles.button}>
           <View style={{ width: ms(10) }} />
           <TextBold
             style={{
@@ -74,8 +53,36 @@ const Setting = ({ navigation }) => {
           <Icon name="logout" size={ms(16)} color="white" />
         </View>
       </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => navigation.navigate('TestScreen')}>
+        <View style={styles.button}>
+          <View style={{ width: ms(10) }} />
+          <TextBold
+            style={{
+              fontSize: ms(14),
+              color: 'white',
+            }}>
+            test screen
+          </TextBold>
+          <Icon name="logout" size={ms(16)} color="white" />
+        </View>
+      </TouchableOpacity>
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  button: {
+    width: ms(200),
+    height: 50,
+    backgroundColor: color.GREEN_PRIMARY,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderRadius: ms(10),
+    flexDirection: 'row',
+    paddingHorizontal: ms(10),
+    marginBottom: ms(10),
+  },
+})
 
 export default Setting
