@@ -140,15 +140,22 @@ const AlacarteConfirmation = ({ navigation }) => {
       const value = await AsyncStorage.getItem('lastOrder')
       if (value !== null) {
         const lastOrder = JSON.parse(value)
-        // lastOrder.captainOrder = data.order_no.toString()
+        lastOrder.captainOrder = data.order_no.toString()
         await AsyncStorage.setItem('lastOrder', JSON.stringify(lastOrder))
       } else {
         const lastOrder = {
-          // captainOrder: data.order_no.toString(),
-          functionOrder: '',
+          captainOrder: data.order_no.toString(),
         }
         await AsyncStorage.setItem('lastOrder', JSON.stringify(lastOrder))
       }
+
+      let order = []
+      const savedOrder = await AsyncStorage.getItem('orderAlacarte')
+      if (savedOrder !== null) {
+        order = JSON.parse(savedOrder)
+      }
+      order.push(data)
+      await AsyncStorage.setItem('orderAlacarte', JSON.stringify(order))
     } catch (error) {
       Alert.alert('Error Retrieving Data', error.toString())
     }
@@ -215,7 +222,10 @@ const AlacarteConfirmation = ({ navigation }) => {
               </TextNormal>
             </View>
             <TouchableNativeFeedback
-              onPress={() => setShowSuccess(true)}
+              onPress={() => {
+                setShowSuccess(true)
+                saveToStorage(cart)
+              }}
               background={TouchableNativeFeedback.Ripple('#ccc')}>
               <View className="bg-green-500  px-10 rounded-xl">
                 <TextNormal className="text-white" style={{ fontSize: ms(22) }}>

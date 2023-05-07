@@ -65,9 +65,8 @@ const ListMenu = ({ route, navigation }) => {
           ...cart.result,
         }),
       )
+      navigation.navigate('AlacarteConfirmation')
     }
-
-    navigation.navigate('AlacarteConfirmation')
   }
 
   useFocusEffect(
