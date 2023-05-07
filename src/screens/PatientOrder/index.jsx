@@ -69,8 +69,15 @@ const PatientOrder = ({ navigation }) => {
   )
 
   const syncData = async () => {
-    await dispatch(syncPatientOrder(state.orderPatient))
-    await dispatch(syncPatientOrderExtra(state.orderPatient))
+    await dispatch(
+      syncPatientOrder({ serverUrl: auth.serverUrl, body: state.orderPatient }),
+    )
+    await dispatch(
+      syncPatientOrderExtra({
+        serverUrl: auth.serverUrl,
+        body: state.orderExtra,
+      }),
+    )
   }
 
   const _renderItem = ({ item }) => {

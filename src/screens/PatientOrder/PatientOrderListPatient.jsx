@@ -118,7 +118,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
           <Pressable onPress={() => navigation.goBack()}>
             <Icon name="arrowleft" size={ms(30)} color={'black'} />
           </Pressable>
-          <View className="items-center justify-start flex-1  space-y-10 ">
+          <View className="items-center justify-start flex-1 ">
             <Image
               source={Logo}
               resizeMode="contain"
@@ -140,11 +140,19 @@ const PatientOrderListPatient = ({ route, navigation }) => {
       </ImageBackground>
       <View className="flex-[3]">
         <View className="flex-[1] z-[10] -mt-10 bg-white rounded-3xl">
-          <FlatList
-            data={data.patient}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={_renderItem}
-          />
+          {data.patient.length > 0 ? (
+            <FlatList
+              data={data.patient}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={_renderItem}
+            />
+          ) : (
+            <View className="items-center " style={{ marginTop: ms(20) }}>
+              <TextBold style={{ fontSize: ms(12) }}>
+                There is no patient in this room
+              </TextBold>
+            </View>
+          )}
         </View>
       </View>
     </View>

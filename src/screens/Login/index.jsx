@@ -71,17 +71,18 @@ const Login = () => {
   )
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }}>
+    <ImageBackground
+      source={BgAuth}
+      resizeMode="cover"
+      style={styles.container}>
       <Modal animationType="fade" transparent={true} visible={isFetching}>
         <View className="flex-[1] bg-black/50 z-[3] justify-center items-center">
           <Text>LOADING</Text>
         </View>
       </Modal>
-      <ImageBackground
-        source={BgAuth}
-        resizeMode="cover"
-        style={styles.container}>
-        <StatusBar hidden />
+
+      <StatusBar hidden />
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <View style={styles.content}>
           <View>
             <Image source={Logo} alt="logo" style={styles.logo} />
@@ -118,11 +119,11 @@ const Login = () => {
               </View>
             </TouchableNativeFeedback>
           </View>
-          <View style="h-32"></View>
+          <View className="h-32"></View>
         </View>
         <View style={styles.overlay}></View>
-      </ImageBackground>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </ImageBackground>
   )
 }
 
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     right: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: 'rgba(10,10,10,0.6)',
     zIndex: 1,
   },
   content: {
@@ -146,9 +147,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: isLandscape ? vs(250) : vs(350),
-    height: isLandscape ? vs(150) : vs(300),
+    width: vs(250),
+    height: vs(150),
     resizeMode: 'contain',
+    marginTop: ms(20),
+    marginLeft: -ms(15),
   },
   form: {
     width: '50%',

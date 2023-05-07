@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import { useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useSelector } from 'react-redux'
+import { urlValidator } from '../../utils/regexValidator'
 
 const ChangeServer = ({ navigation }) => {
   const auth = useSelector(state => state.auth)
@@ -21,8 +22,11 @@ const ChangeServer = ({ navigation }) => {
 
   const onSubmit = async () => {
     try {
-      await AsyncStorage.setItem('serverUrl', server)
-      setServer('')
+      if (!urlValidator(server.trim())) {
+        return Alert.alert('Login Error', 'Server Url is not a Url')
+      }
+
+      await AsyncStorage.setItem('serverUrl', server.trim())
       Alert.alert('Sukses', 'Sukses mengubah alamat server!')
     } catch (error) {
       Alert.alert(error.message)

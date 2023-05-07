@@ -80,7 +80,7 @@ const PatientOrderListRoom = ({ route, navigation }) => {
           <Pressable onPress={() => navigation.goBack()}>
             <Icon name="arrowleft" size={ms(30)} color={'black'} />
           </Pressable>
-          <View className="items-center justify-start flex-1 space-y-10 ">
+          <View className="items-center justify-start flex-1">
             <Image
               source={Logo}
               resizeMode="contain"

@@ -52,7 +52,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
         }
 
         return (
-          <View key={index}>
+          <View key={index} style={{ flex: 1 }}>
             <Pressable onPress={onPress}>
               {({ pressed }) => (
                 <View
