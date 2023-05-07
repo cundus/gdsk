@@ -13,9 +13,11 @@ import { ms } from 'react-native-size-matters'
 import Icon from 'react-native-vector-icons/AntDesign'
 import { useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useSelector } from 'react-redux'
 
 const ChangeServer = ({ navigation }) => {
-  const [server, setServer] = useState('')
+  const auth = useSelector(state => state.auth)
+  const [server, setServer] = useState(auth.serverUrl)
 
   const onSubmit = async () => {
     try {

@@ -28,10 +28,8 @@ export const loginUser = createAsyncThunk(
   'auth/login',
   async ({ serverUrl, email, password }, { rejectWithValue, dispatch }) => {
     try {
-      console.log('LOGGING IN')
       const config = {
         headers: header,
-        rejectUnauthorized: false,
       }
       const { data } = await axios.post(
         `${serverUrl}/auth/login`,
@@ -43,6 +41,7 @@ export const loginUser = createAsyncThunk(
 
       await AsyncStorage.setItem('user', JSON.stringify(data.data))
       await AsyncStorage.setItem('serverUrl', serverUrl)
+      dispatch(getServerUrl())
       return data.data
     } catch (error) {
       // return custom error message from backend if present

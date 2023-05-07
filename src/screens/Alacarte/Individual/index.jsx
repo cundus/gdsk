@@ -10,6 +10,7 @@ import {
   Modal,
   StyleSheet,
   Dimensions,
+  ScrollView,
 } from 'react-native'
 import { BgAuth } from '../../../assets/images/background'
 import { Logo, LogoAlacarte } from '../../../assets/icons'
@@ -64,7 +65,7 @@ const AlacarteIndividual = ({ navigation }) => {
   }
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <Modal animationType="fade" transparent={true} visible={false}>
         <View className="flex-[1] bg-black/50 z-[3] justify-center items-center">
           <Text>LOADING</Text>
@@ -75,49 +76,52 @@ const AlacarteIndividual = ({ navigation }) => {
         resizeMode="cover"
         style={styles.container}>
         <StatusBar hidden />
-        <View style={styles.content}>
-          <View>
-            <Image source={Logo} alt="logo" style={styles.logo} />
+
+        <ScrollView style={{ zIndex: 5 }}>
+          <View style={styles.content}>
+            <View>
+              <Image source={Logo} alt="logo" style={styles.logo} />
+            </View>
+            <View>
+              <Image source={LogoAlacarte} alt="logo" style={styles.logo} />
+            </View>
+            <View style={styles.form}>
+              <TextInput
+                placeholder="Guest Name"
+                onChangeText={text => handleChange('name', text)}
+                style={styles.input}
+                placeholderTextColor={'#ccc'}
+                returnKeyType="next"
+              />
+              <TextInput
+                placeholder="Phone"
+                onChangeText={text => handleChange('phone', text)}
+                style={styles.input}
+                placeholderTextColor={'#ccc'}
+                returnKeyType="next"
+                keyboardType="phone-pad"
+              />
+              <TextInput
+                placeholder="Location"
+                onChangeText={text => handleChange('location', text)}
+                style={styles.input}
+                placeholderTextColor={'#ccc'}
+                returnKeyType="next"
+              />
+              <TouchableNativeFeedback
+                onPress={handleSubmit}
+                background={TouchableNativeFeedback.Ripple('#65a30d')}>
+                <View style={styles.button}>
+                  <Text style={styles.buttonText}>REGISTER</Text>
+                </View>
+              </TouchableNativeFeedback>
+            </View>
+            <View style="h-14"></View>
           </View>
-          <View>
-            <Image source={LogoAlacarte} alt="logo" style={styles.logo} />
-          </View>
-          <View style={styles.form}>
-            <TextInput
-              placeholder="Guest Name"
-              onChangeText={text => handleChange('name', text)}
-              style={styles.input}
-              placeholderTextColor={'#ccc'}
-              returnKeyType="next"
-            />
-            <TextInput
-              placeholder="Phone"
-              onChangeText={text => handleChange('phone', text)}
-              style={styles.input}
-              placeholderTextColor={'#ccc'}
-              returnKeyType="next"
-              keyboardType="phone-pad"
-            />
-            <TextInput
-              placeholder="Location"
-              onChangeText={text => handleChange('location', text)}
-              style={styles.input}
-              placeholderTextColor={'#ccc'}
-              returnKeyType="next"
-            />
-            <TouchableNativeFeedback
-              onPress={handleSubmit}
-              background={TouchableNativeFeedback.Ripple('#65a30d')}>
-              <View style={styles.button}>
-                <Text style={styles.buttonText}>REGISTER</Text>
-              </View>
-            </TouchableNativeFeedback>
-          </View>
-          <View style="h-32"></View>
-        </View>
+        </ScrollView>
         <View style={styles.overlay}></View>
       </ImageBackground>
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 

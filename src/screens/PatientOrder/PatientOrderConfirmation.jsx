@@ -71,11 +71,18 @@ const PatientOrderConfirmation = ({}) => {
             </View>
           </View>
           <View className="mt-5">
-            <Icon name="checkcircle" size={ms(20)} />
+            <TouchableNativeFeedback>
+              <Icon name="checkcircle" size={ms(20)} />
+            </TouchableNativeFeedback>
           </View>
         </View>
       </View>
     )
+  }
+
+  const removeItem = id => {
+    const cartTemp = cart.result
+    const itemIdx = cartTemp.detail.findIndex(item => item.id === id)
   }
 
   const submit = async () => {

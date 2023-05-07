@@ -17,7 +17,7 @@ const Setting = ({ navigation }) => {
   const dispatch = useDispatch()
   const handleLogout = async () => {
     try {
-      await AsyncStorage.multiRemove(['user', 'serverUrl'])
+      await AsyncStorage.removeItem('user')
       dispatch(logout())
     } catch (error) {
       console.log(error)

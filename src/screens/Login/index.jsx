@@ -17,16 +17,23 @@ import { Alert } from 'react-native'
 import { emailValidator, urlValidator } from '../../utils/regexValidator'
 import { KeyboardAvoidingView } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginUser } from '../../stores/actions/auth'
+import { getServerUrl, loginUser } from '../../stores/actions/auth'
 import { useEffect } from 'react'
 import { s, ms, vs } from 'react-native-size-matters'
 import { isLandscape } from '../../utils/dimensions'
+import { useCallback } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
 
 const Login = () => {
   const dispatch = useDispatch()
-  const { error, isFetching } = useSelector(state => state.auth)
+  const { error, isFetching, serverUrl } = useSelector(state => state.auth)
 
-  const [form, setForm] = useState({ email: '', password: '', serverUrl: '' })
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+    serverUrl: '',
+  })
+  const [serverExist, setServerExist] = useState(false)
 
   const handleChange = (name, value) => {
     setForm({ ...form, [name]: value })
@@ -49,11 +56,19 @@ const Login = () => {
     }
   }
 
-  useEffect(() => {
-    if (error) {
-      Alert.alert('Error', error)
-    }
-  }, [error])
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(getServerUrl())
+      if (serverUrl) {
+        setServerExist(true)
+        setForm({ ...form, serverUrl })
+      }
+
+      if (error) {
+        Alert.alert('Error', error)
+      }
+    }, [error, serverUrl]),
+  )
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }}>
@@ -85,12 +100,16 @@ const Login = () => {
               style={styles.input}
               placeholderTextColor={'#ccc'}
             />
-            <TextInput
-              placeholder="Server"
-              onChangeText={text => handleChange('serverUrl', text)}
-              style={styles.input}
-              placeholderTextColor={'#ccc'}
-            />
+
+            {!serverExist ? (
+              <TextInput
+                placeholder="Server"
+                onChangeText={text => handleChange('serverUrl', text)}
+                style={styles.input}
+                placeholderTextColor={'#ccc'}
+              />
+            ) : null}
+
             <TouchableNativeFeedback
               onPress={handleSubmit}
               background={TouchableNativeFeedback.Ripple('#65a30d')}>
