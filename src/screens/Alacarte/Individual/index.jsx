@@ -65,7 +65,7 @@ const AlacarteIndividual = ({ navigation }) => {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <Modal animationType="fade" transparent={true} visible={false}>
         <View className="flex-[1] bg-black/50 z-[3] justify-center items-center">
           <Text>LOADING</Text>
@@ -82,9 +82,11 @@ const AlacarteIndividual = ({ navigation }) => {
             <View>
               <Image source={Logo} alt="logo" style={styles.logo} />
             </View>
+            <View style={{ height: ms(35) }} />
             <View>
               <Image source={LogoAlacarte} alt="logo" style={styles.logo} />
             </View>
+            <View style={{ height: ms(35) }} />
             <View style={styles.form}>
               <TextInput
                 placeholder="Guest Name"
@@ -116,12 +118,12 @@ const AlacarteIndividual = ({ navigation }) => {
                 </View>
               </TouchableNativeFeedback>
             </View>
-            <View style="h-14"></View>
+            <View style={{ height: ms(20) }}></View>
           </View>
         </ScrollView>
         <View style={styles.overlay}></View>
       </ImageBackground>
-    </View>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -145,8 +147,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width: ms(300),
-    height: ms(150),
+    width: ms(250),
+    height: ms(120),
     resizeMode: 'contain',
   },
   form: {
