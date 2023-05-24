@@ -14,7 +14,12 @@ import { ms } from 'react-native-size-matters'
 
 import { getFloor } from '../../../stores/actions/floor'
 import { BgLantai, BgMenu } from '../../../assets/images/background'
-import { LogoAlacarte } from '../../../assets/icons'
+import {
+  IconHospital,
+  IconHospitaltext,
+  LogoAlacarte,
+  OrnamentBuilding,
+} from '../../../assets/icons'
 
 import Header from '../../../components/Header'
 import { TextBold } from '../../../components/Text'
@@ -91,6 +96,14 @@ const AlacartePatient = ({ navigation }) => {
           resizeMode="stretch"
           resizeMethod="resize">
           <View style={styles.contentContainer}>
+            <View
+              className="absolute left-0 right-0 items-center"
+              style={{ marginTop: -ms(25) }}>
+              <Image
+                source={IconHospital}
+                style={{ width: ms(50), height: ms(50) }}
+              />
+            </View>
             <Text style={styles.title}>Patient Order</Text>
             <View className="flex-row justify-around">
               <TextBold className="text-white" style={{ fontSize: ms(14) }}>
@@ -107,6 +120,24 @@ const AlacartePatient = ({ navigation }) => {
               />
             )}
           </View>
+          <ImageBackground
+            source={OrnamentBuilding}
+            resizeMode="contain"
+            style={{
+              height: ms(70),
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={IconHospitaltext}
+              style={{
+                width: '50%',
+                height: '40%',
+                resizeMode: 'contain',
+                marginTop: -ms(20),
+              }}
+            />
+          </ImageBackground>
         </ImageBackground>
       </View>
     </View>
@@ -133,14 +164,14 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    marginTop: ms(170),
-    marginHorizontal: ms(110),
-    marginBottom: ms(95),
-    paddingLeft: ms(5),
+    marginTop: ms(150),
+    marginHorizontal: ms(60),
+    padding: ms(10),
+    backgroundColor: '#046a33',
   },
   card: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: ms(5),
   },
@@ -161,11 +192,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardText: {
-    fontSize: ms(18),
+    fontSize: ms(14),
     fontFamily: 'Avenir Heavy',
   },
   title: {
     textAlign: 'center',
+    marginTop: ms(10),
     fontSize: ms(20),
     color: 'white',
     fontFamily: 'Avenir Heavy',

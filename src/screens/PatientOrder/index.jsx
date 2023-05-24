@@ -16,7 +16,12 @@ import { ms } from 'react-native-size-matters'
 
 import { getFloor } from '../../stores/actions/floor'
 import { BgLantai, BgMenu } from '../../assets/images/background'
-import { LogoAlacarte } from '../../assets/icons'
+import {
+  IconHospital,
+  IconHospitaltext,
+  LogoAlacarte,
+  OrnamentBuilding,
+} from '../../assets/icons'
 import { TextBold, TextNormal } from '../../components/Text'
 import {
   getPatientOrder,
@@ -157,10 +162,28 @@ const PatientOrder = ({ navigation }) => {
           resizeMode="stretch"
           resizeMethod="resize">
           <View style={styles.contentContainer}>
-            <View className="flex-row justify-between items-center px-5">
+            <View
+              className="absolute left-0 right-0 items-center"
+              style={{ marginTop: -ms(25) }}>
+              <Image
+                source={IconHospital}
+                style={{ width: ms(50), height: ms(50) }}
+              />
+            </View>
+            <View
+              className="flex-row justify-between items-center px-5"
+              style={{ marginTop: ms(25) }}>
               <View style={{ width: ms(20) }} />
               <Text style={styles.title}>Patient Order</Text>
-              <Pressable onPress={syncData}>
+              <Pressable
+                onPress={() =>
+                  dispatch(
+                    getPatientOrder({
+                      serverUrl: auth.serverUrl,
+                      clientId: auth.user.selected_client,
+                    }),
+                  )
+                }>
                 <Icon name="refresh" color={'white'} size={ms(20)} />
               </Pressable>
             </View>
@@ -184,6 +207,24 @@ const PatientOrder = ({ navigation }) => {
               />
             )}
           </View>
+          <ImageBackground
+            source={OrnamentBuilding}
+            resizeMode="contain"
+            style={{
+              height: ms(70),
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={IconHospitaltext}
+              style={{
+                width: '50%',
+                height: '40%',
+                resizeMode: 'contain',
+                marginTop: -ms(20),
+              }}
+            />
+          </ImageBackground>
         </ImageBackground>
       </View>
     </View>
@@ -210,10 +251,10 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    marginTop: ms(170),
-    marginHorizontal: ms(110),
-    marginBottom: ms(100),
-    paddingLeft: ms(5),
+    marginTop: ms(150),
+    marginHorizontal: ms(60),
+    padding: ms(10),
+    backgroundColor: '#046a33',
   },
   card: {
     flexDirection: 'row',

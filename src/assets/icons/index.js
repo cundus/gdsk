@@ -14,6 +14,9 @@ import IconCart from './icon_cart.png'
 import IconShocked from './shocked.png'
 import IconPending from './icon_pending.png'
 import IconDelivery from './icon_delivered.png'
+import IconHospital from './icon_hospital.png'
+import IconHospitaltext from './icon_hospital_text.png'
+import OrnamentBuilding from './ornament_building.png'
 
 export {
   IconDelivery,
@@ -32,4 +35,7 @@ export {
   IconDelete,
   IconCart,
   IconShocked,
+  IconHospital,
+  IconHospitaltext,
+  OrnamentBuilding,
 }

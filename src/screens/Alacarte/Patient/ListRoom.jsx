@@ -83,11 +83,11 @@ const AlacarteListRoom = ({ route, navigation }) => {
   return (
     <View className="flex-[1]">
       <ImageBackground source={BgMenu} className="flex-[1]">
-        <View className="z-[2] flex-[1] justify-between items-center pb-7">
+        <View className="z-[2] justify-between items-center pb-7">
           <Image
             source={Logo}
             alt="logo"
-            style={{ width: ms(150), height: ms(90) }}
+            style={{ width: ms(150), height: ms(70) }}
             resizeMode="contain"
           />
           <View className="flex-row justify-between w-full px-10 items-center">

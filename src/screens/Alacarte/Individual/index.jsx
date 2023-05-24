@@ -34,11 +34,6 @@ const AlacarteIndividual = ({ navigation }) => {
 
   const handleSubmit = async () => {
     const data = {
-      order_no: `${Number(
-        `${moment().format('YYMMDD')}${String(`000${auth.user.id}`).slice(
-          -3,
-        )}0001`,
-      )}`,
       ala_carte_type: 2,
       guest_name: form.name,
       phone: form.phone,

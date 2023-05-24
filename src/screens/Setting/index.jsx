@@ -40,6 +40,20 @@ const Setting = ({ navigation }) => {
         </View>
       </TouchableOpacity>
 
+      <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
+        <View style={styles.button}>
+          <View style={{ width: ms(10) }} />
+          <TextBold
+            style={{
+              fontSize: ms(14),
+              color: 'white',
+            }}>
+            Change Password
+          </TextBold>
+          <Icon name="logout" size={ms(16)} color="white" />
+        </View>
+      </TouchableOpacity>
+
       <TouchableOpacity onPress={handleLogout}>
         <View style={styles.button}>
           <View style={{ width: ms(10) }} />
@@ -54,7 +68,7 @@ const Setting = ({ navigation }) => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('TestScreen')}>
+      {/* <TouchableOpacity onPress={() => navigation.navigate('TestScreen')}>
         <View style={styles.button}>
           <View style={{ width: ms(10) }} />
           <TextBold
@@ -66,7 +80,7 @@ const Setting = ({ navigation }) => {
           </TextBold>
           <Icon name="logout" size={ms(16)} color="white" />
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   )
 }

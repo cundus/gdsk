@@ -29,6 +29,8 @@ import {
 } from '../../stores/reducers/cart'
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { submitAlacarteOrder } from '../../stores/actions/alacarte'
 
 const AlacarteConfirmation = ({ navigation }) => {
   const { cart, auth } = useSelector(state => state)
@@ -43,7 +45,7 @@ const AlacarteConfirmation = ({ navigation }) => {
   }
 
   const handleMinus = id => {
-    dispatch(decreaseQuantity(id))
+    dispatch(decreaseQuantity({ id }))
   }
 
   const onpressRemove = id => {
@@ -222,9 +224,22 @@ const AlacarteConfirmation = ({ navigation }) => {
               </TextNormal>
             </View>
             <TouchableNativeFeedback
-              onPress={() => {
+              onPress={async () => {
+                if (cart.result.menu.length < 1) {
+                  return Alert.alert(
+                    'Error',
+                    'There is no product added, please add atleast 1 product',
+                  )
+                }
+
+                dispatch(
+                  submitAlacarteOrder({
+                    body: cart.result,
+                    serverUrl: auth.serverUrl,
+                  }),
+                )
+
                 setShowSuccess(true)
-                saveToStorage(cart)
               }}
               background={TouchableNativeFeedback.Ripple('#ccc')}>
               <View className="bg-green-500  px-10 rounded-xl">

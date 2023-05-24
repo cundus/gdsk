@@ -31,6 +31,9 @@ import PatientOrderConfirmation from '../screens/PatientOrder/PatientOrderConfir
 import ChangeServer from '../screens/ChangeServer'
 
 import TestScreen from '../screens/Test/TestScreen'
+import ChangePassword from '../screens/ChangePassword'
+import AlacarteOption from '../screens/Alacarte/AlacarteOption'
+import DetailOrder from '../screens/Alacarte/DetailOrder'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -94,6 +97,8 @@ const AlaCarteStack = () => {
         headerShown: false,
       }}>
       <Stack.Screen name="AlacarteHome" component={AlacarteHome} />
+      <Stack.Screen name="AlacarteOption" component={AlacarteOption} />
+      <Stack.Screen name="AlacarteDetailOrder" component={DetailOrder} />
 
       <Stack.Screen name="AlacarteIndividual" component={AlacarteIndividual} />
       <Stack.Screen name="AlacartePatient" component={AlacartePatient} />
@@ -164,6 +169,11 @@ const MainNavigation = () => {
               name="ChangeServer"
               options={{ headerShown: false }}
               component={ChangeServer}
+            />
+            <Stack.Screen
+              name="ChangePassword"
+              options={{ headerShown: false }}
+              component={ChangePassword}
             />
 
             <Stack.Screen

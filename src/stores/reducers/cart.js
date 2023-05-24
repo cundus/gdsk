@@ -47,7 +47,7 @@ const cartSlice = createSlice({
       let cartOrder = { ...state.result }
       const itemIdx = cartOrder.detail.findIndex(item => item.id === id)
       if (itemIdx !== -1) {
-        if (cartOrder.quantity[itemIdx] !== 0) {
+        if (cartOrder.quantity[itemIdx] > 1) {
           cartOrder.quantity[itemIdx] = +cartOrder.quantity[itemIdx] - 1
           cartOrder.total[itemIdx] =
             +cartOrder.quantity[itemIdx] * +cartOrder.price[itemIdx]

@@ -5,6 +5,7 @@ import floorReducer from './reducers/floor'
 import menuReducer from './reducers/menu'
 import cartReducer from './reducers/cart'
 import patientOrderReducer from './reducers/patientOrder'
+import alacarteOrderReducer from './reducers/alacarte'
 import cartPatientOrderReducer from './reducers/cartPatientOrder'
 
 export const store = configureStore({
@@ -15,5 +16,6 @@ export const store = configureStore({
     cart: cartReducer,
     patientOrder: patientOrderReducer,
     cartPatientOrder: cartPatientOrderReducer,
+    alacarteOrder: alacarteOrderReducer,
   },
 })
