@@ -40,7 +40,7 @@ const PopUpOrder = ({
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const [form, setForm] = useState(intialValue)
-
+  console.log(JSON.stringify(cartPatientOrder.result, null, 2))
   const handleChangeForm = (name, value) => {
     setForm({ ...form, [name]: value })
   }
@@ -63,8 +63,8 @@ const PopUpOrder = ({
   }
   const handleOnConfirm = () => {
     let cart = cartPatientOrder.result
-
     if (typeMenu === 'extra') {
+      cart.id = cart.id
       cart.menu_extra_id = data.id
       cart.menu = data
       cart.price = data.service_client !== null ? data.service_client : 0
@@ -78,6 +78,7 @@ const PopUpOrder = ({
       return navigation.navigate('PatientOrderConfirmation')
     }
 
+    cart.id = cart.id
     cart.menu_category_id = [...cart.menu_category_id, data.menu_category_id]
     cart.menu_type_id = [...cart.menu_type_id, data.menu_type_id]
     cart.menu = [...cart.menu, data.id]
@@ -144,9 +145,7 @@ const PopUpOrder = ({
                   <TextNormal
                     style={{
                       fontSize: ms(12),
-                    }}>
-                    PlaceHolder
-                  </TextNormal>
+                    }}></TextNormal>
 
                   {typeMenu === 'extra' && (
                     <View className="w-full">

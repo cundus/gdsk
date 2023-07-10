@@ -32,6 +32,7 @@ import { useFocusEffect } from '@react-navigation/native'
 import { useCallback } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { loading } from '../../stores/reducers/patientOrder'
 
 const countPendingOrder = floor => {
   let num = 0
@@ -70,10 +71,12 @@ const PatientOrder = ({ navigation }) => {
       )
       getOrderPatientFromStorage()
       getExtraFoodDataFromStorage()
+      console.log(JSON.stringify(state.orderPatient, null, 2))
     }, []),
   )
 
   const syncData = async () => {
+    dispatch(loading())
     await dispatch(
       syncPatientOrder({ serverUrl: auth.serverUrl, body: state.orderPatient }),
     )
@@ -83,18 +86,29 @@ const PatientOrder = ({ navigation }) => {
         body: state.orderExtra,
       }),
     )
+
+    AsyncStorage.multiRemove(['orderPatient', 'orderExtra'])
+    setState({
+      orderPatient: [],
+      orderExtra: [],
+    })
+    dispatch(loading())
   }
+
+  console.log(JSON.stringify(state.orderPatient, null, 2))
 
   const _renderItem = ({ item }) => {
     return (
       <View style={styles.card}>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('PatientOrderListRoom', { data: item })
+            navigation.navigate('PatientOrderListRoom', {
+              floor: item,
+            })
           }>
           <View style={styles.leftCard}>
             <Text style={[styles.cardText, { color: 'black' }]}>
-              {item.name}
+              {item.floor_name}
             </Text>
           </View>
         </TouchableOpacity>
@@ -102,15 +116,16 @@ const PatientOrder = ({ navigation }) => {
           <View style={styles.rightCard}>
             <Text style={[styles.statusCardText, { color: 'black' }]}>
               {state.orderPatient.length > 0
-                ? state.orderPatient.filter(order => order.floor === item.id)
-                    .length
+                ? state.orderPatient.filter(
+                    order => order.floor === item.floor_id,
+                  ).length
                 : 0}{' '}
               Unsynced
             </Text>
           </View>
           <View style={styles.rightCard}>
             <Text style={[styles.statusCardText, { color: 'black' }]}>
-              {countPendingOrder(item)} Pending
+              {item.pending_order} Pending
             </Text>
           </View>
         </View>
@@ -175,15 +190,7 @@ const PatientOrder = ({ navigation }) => {
               style={{ marginTop: ms(25) }}>
               <View style={{ width: ms(20) }} />
               <Text style={styles.title}>Patient Order</Text>
-              <Pressable
-                onPress={() =>
-                  dispatch(
-                    getPatientOrder({
-                      serverUrl: auth.serverUrl,
-                      clientId: auth.user.selected_client,
-                    }),
-                  )
-                }>
+              <Pressable onPress={() => syncData()}>
                 <Icon name="refresh" color={'white'} size={ms(20)} />
               </Pressable>
             </View>
@@ -197,7 +204,7 @@ const PatientOrder = ({ navigation }) => {
                 Status Order
               </TextBold>
             </View>
-            {floor.isFetching ? (
+            {floor.isFetching || patientOrder.isFetching ? (
               <ActivityIndicator size={'large'} color={'#00ff00'} />
             ) : (
               <FlatList

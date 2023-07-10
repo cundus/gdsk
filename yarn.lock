@@ -6224,6 +6224,11 @@ react-native-screens@^3.18.2:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-select-dropdown@^3.3.4:
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/react-native-select-dropdown/-/react-native-select-dropdown-3.3.4.tgz#21633ef95e14c2509c9f839b3082e54d7938c2dc"
+  integrity sha512-Ld6BGGgCnbiv7uORAP+KnvDQiqeuqdlasKk9woJH9XtFMD44rwjKwelGzsDxFUM9hIAwZdac4UAFmOmXRaMeRg==
+
 react-native-size-matters@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/react-native-size-matters/-/react-native-size-matters-0.4.0.tgz#01bfd0d59454318f4e0b13fe9c1eb0523d70f2e0"

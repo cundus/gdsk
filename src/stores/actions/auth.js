@@ -44,6 +44,7 @@ export const loginUser = createAsyncThunk(
       dispatch(getServerUrl())
       return data.data
     } catch (error) {
+      console.log(error)
       // return custom error message from backend if present
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message)

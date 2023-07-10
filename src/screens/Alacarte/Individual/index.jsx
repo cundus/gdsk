@@ -22,11 +22,22 @@ import { useEffect } from 'react'
 import { s, ms, vs } from 'react-native-size-matters'
 import moment from 'moment/moment'
 import { updateCart } from '../../../stores/reducers/cart'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
+import axios from 'axios'
+import SelectDropdown from 'react-native-select-dropdown'
 
 const AlacarteIndividual = ({ navigation }) => {
   const dispatch = useDispatch()
   const { auth, cart } = useSelector(state => state)
-  const [form, setForm] = useState({ name: '', phone: '', location: '' })
+  const [form, setForm] = useState({
+    name: '',
+    phone: '',
+    location: '',
+    note: '',
+    booking: 0,
+  })
+  const [data, setData] = useState([])
 
   const handleChange = (name, value) => {
     setForm({ ...form, [name]: value })
@@ -44,6 +55,8 @@ const AlacarteIndividual = ({ navigation }) => {
         id: auth.user.id,
         name: auth.user.name,
       },
+      note: form.note,
+      booking: form.booking,
       menu: [],
       detail: [],
       price: [],
@@ -59,6 +72,28 @@ const AlacarteIndividual = ({ navigation }) => {
     navigation.navigate('AlacarteListMenu')
   }
 
+  useFocusEffect(
+    useCallback(() => {
+      const getBooking = async () => {
+        try {
+          const { data } = await axios.get(
+            `${auth.serverUrl}/order-alacarte/booking`,
+          )
+
+          console.log(data)
+          setData(data)
+        } catch (error) {
+          if (error.response && error.response.data.message) {
+            Alert.alert('error retrieving Room ', error.response.data.message)
+          } else {
+            Alert.alert('error retrieving Room ', error.message)
+          }
+        }
+      }
+
+      getBooking()
+    }, []),
+  )
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <Modal animationType="fade" transparent={true} visible={false}>
@@ -101,6 +136,28 @@ const AlacarteIndividual = ({ navigation }) => {
               <TextInput
                 placeholder="Location"
                 onChangeText={text => handleChange('location', text)}
+                style={styles.input}
+                placeholderTextColor={'#ccc'}
+                returnKeyType="next"
+              />
+              <SelectDropdown
+                data={data}
+                defaultButtonText={'Select Order From'}
+                onSelect={(selected, index) => {
+                  console.log(selected.id)
+                  handleChange('booking', selected.id)
+                }}
+                // dropdownStyle={styles.input}
+                buttonTextStyle={{ color: 'white' }}
+                buttonStyle={[styles.input]}
+                buttonTextAfterSelection={(selected, idx) => selected.name}
+                rowTextForSelection={(item, i) => {
+                  return item.name
+                }}
+              />
+              <TextInput
+                placeholder="Note"
+                onChangeText={text => handleChange('note', text)}
                 style={styles.input}
                 placeholderTextColor={'#ccc'}
                 returnKeyType="next"

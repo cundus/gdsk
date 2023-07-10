@@ -14,7 +14,28 @@ export const getPatientOrder = createAsyncThunk(
   async ({ serverUrl, clientId }, { rejectWithValue, dispatch }) => {
     try {
       const { data } = await axios.get(
-        `${serverUrl}/order-patient?c=${clientId}`,
+        `${serverUrl}/order-patient/floors?c=${clientId}`,
+        config,
+      )
+
+      return data
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message)
+      } else {
+        Alert.alert('error retrieving patient Order ', error.message)
+        return rejectWithValue(error.message)
+      }
+    }
+  },
+)
+
+export const getPatientOrderRoom = createAsyncThunk(
+  'patientOrder/',
+  async ({ serverUrl, floorId }, { rejectWithValue, dispatch }) => {
+    try {
+      const { data } = await axios.get(
+        `${serverUrl}/order-patient/rooms?f=${floorId}`,
         config,
       )
       return data
@@ -28,6 +49,29 @@ export const getPatientOrder = createAsyncThunk(
     }
   },
 )
+export const getPatientOrderPatient = createAsyncThunk(
+  'patientOrder/',
+  async (
+    { serverUrl, floorId, roomId, rcId },
+    { rejectWithValue, dispatch },
+  ) => {
+    try {
+      const { data } = await axios.get(
+        `${serverUrl}/order-patient/patients?f=${floorId}&r=${roomId}&rc=${rcId}`,
+        config,
+      )
+      return data
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message)
+      } else {
+        Alert.alert('error retrieving patient Order ', error.message)
+        return rejectWithValue(error.message)
+      }
+    }
+  },
+)
+
 export const getPatientOrderExtra = createAsyncThunk(
   'patientOrder/',
   async ({ serverUrl, clientId }, { rejectWithValue, dispatch }) => {

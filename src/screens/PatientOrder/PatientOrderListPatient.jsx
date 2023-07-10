@@ -20,22 +20,47 @@ import { useState } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  getPatientOrderPatient,
+  getPatientOrderRoom,
+} from '../../stores/actions/patientOrder'
+import axios from 'axios'
 
 const PatientOrderListPatient = ({ route, navigation }) => {
-  const { data, floor } = route.params
+  const { room } = route.params
+  const state = useSelector(state => state.auth)
+  const [data, setData] = useState([])
 
-  console.log(data)
+  useFocusEffect(
+    useCallback(() => {
+      const getRoom = async () => {
+        try {
+          const { data: patientData } = await axios.get(
+            `${state.serverUrl}/order-patient/patients?f=${room.floor_id}&r=${room.room_id}&rc=${room.room_class_id}`,
+          )
+
+          setData(patientData)
+        } catch (error) {
+          if (error.response && error.response.data.message) {
+            Alert.alert('error retrieving Room ', error.response.data.message)
+          } else {
+            Alert.alert('error retrieving Room ', error.message)
+          }
+        }
+      }
+
+      getRoom()
+    }, []),
+  )
 
   const _renderItem = ({ item }) => {
-    console.log(item)
-    return item.order.map(order => (
+    // return item.order.map(order => (
+    return (
       <Pressable
         onPress={() =>
           navigation.navigate('PatientOrderListMenu', {
-            room: data.id,
-            floor: data.floor_id,
             patient: item,
-            order: order,
           })
         }>
         <View
@@ -43,7 +68,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
           style={{ elevation: 6, borderRadius: ms(10) }}>
           <View>
             <TextBold style={{ fontSize: ms(18), color: 'black' }}>
-              {item.name.toUpperCase()}
+              {item.patient_name.toUpperCase()}
             </TextBold>
             <TextNormal style={{ fontSize: ms(12) }}>{item.status}</TextNormal>
           </View>
@@ -51,7 +76,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
           <View className="flex-row space-x-2">
             <View className="items-end">
               <View className="flex-row items-center">
-                {order.detail.filter(detail => +detail.order_status === 0)
+                {/* {order.detail.filter(detail => +detail.order_status === 0)
                   .length > 0 ? (
                   <View className="flex-row items-center mr-5">
                     <TextNormal
@@ -71,24 +96,25 @@ const PatientOrderListPatient = ({ route, navigation }) => {
                       }}
                     />
                   </View>
-                ) : null}
+                ) : null} */}
                 <View
-                  className={
-                    'p-2 rounded-xl ' +
-                    (order.detail.filter(detail => +detail.order_status === 0)
-                      .length > 0
-                      ? ' bg-lime-500 '
-                      : ' bg-green-600  ')
-                  }>
+                  // +
+                  //   (order.detail.filter(detail => +detail.order_status === 0)
+                  //     .length > 0
+                  //     ? ' bg-lime-500 '
+                  //     : ' bg-green-600  ')
+                  className={'p-2 rounded-xl '}>
                   <TextNormal style={{ fontSize: ms(12), color: 'white' }}>
-                    {order.detail.filter(detail => detail.order_status === 0)
+                    {/* {order.detail.filter(detail => detail.order_status === 0)
                       .length > 0
                       ? 'Start order'
-                      : 'Order finish'}
+                      : 'Order finish'} */}
                   </TextNormal>
                 </View>
               </View>
-              <TextNormal style={{ fontSize: ms(10) }}>{data.name}</TextNormal>
+              <TextNormal style={{ fontSize: ms(10) }}>
+                {room.room_name}
+              </TextNormal>
             </View>
             <View
               style={{
@@ -106,7 +132,8 @@ const PatientOrderListPatient = ({ route, navigation }) => {
           </View>
         </View>
       </Pressable>
-    ))
+    )
+    // ))
   }
 
   return (
@@ -132,7 +159,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
                 fontSize: ms(22),
                 color: 'black',
               }}>
-              {data.name} {data.room_no} - {data.room_class.name}
+              {room.room_name} {room.room_no} - {room.room_class_name}
             </TextBold>
           </View>
           <View className="w-14" />
@@ -140,9 +167,9 @@ const PatientOrderListPatient = ({ route, navigation }) => {
       </ImageBackground>
       <View className="flex-[3]">
         <View className="flex-[1] z-[10] -mt-10 bg-white rounded-3xl">
-          {data.patient.length > 0 ? (
+          {data.length > 0 ? (
             <FlatList
-              data={data.patient}
+              data={data}
               keyExtractor={(item, index) => index.toString()}
               renderItem={_renderItem}
             />

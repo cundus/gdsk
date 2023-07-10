@@ -1,18 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getPatientOrder } from '../actions/patientOrder'
+import { getPatientOrder, getPatientOrderRoom } from '../actions/patientOrder'
 
 const initialState = {
   isFetching: false,
   data: [],
+  data_room: [],
   error: null,
 }
 
 const patientOrderSlice = createSlice({
   name: 'patientOrder',
   initialState,
-  reducers: {},
+  reducers: {
+    loading: state => {
+      state.isFetching = !state.isFetching
+    },
+  },
   extraReducers: {
-    // login reducer
     [getPatientOrder.pending]: state => {
       state.isFetching = true
       state.error = null
@@ -27,5 +31,5 @@ const patientOrderSlice = createSlice({
     },
   },
 })
-// export const { turnOffSplash, setLogin, logout } = menuSlice.actions
+export const { loading } = patientOrderSlice.actions
 export default patientOrderSlice.reducer

@@ -7,6 +7,7 @@ import {
   TouchableNativeFeedback,
   Image,
   Dimensions,
+  Alert,
 } from 'react-native'
 import React from 'react'
 import moment from 'moment/moment'
@@ -30,12 +31,13 @@ import { updateCart } from '../../stores/reducers/cartPatientOrder'
 const { width } = Dimensions.get('window')
 
 const PatientOrderListMenu = ({ route, navigation }) => {
-  const { params } = route
+  const { patient } = route.params
   const { floor, auth, patientOrder, menu, cartPatientOrder } = useSelector(
     state => state,
   )
+
   const dispatch = useDispatch()
-  const [tabMenu, setTabMenu] = useState(0)
+  const [tabMenu, setTabMenu] = useState({})
   const [toggleMenu, setToggleMenu] = useState('')
   const [popUp, setPopUp] = useState({
     open: false,
@@ -43,13 +45,17 @@ const PatientOrderListMenu = ({ route, navigation }) => {
     type: '',
   })
   const handleCreateOrder = val => {
+    if (Object.keys(tabMenu).length < 1) {
+      return Alert.alert('Warning', 'Harus Pilih Meal Time!')
+    }
+
     setToggleMenu(val)
     if (val === 'order') {
       return dispatch(
         updateCart({
-          id: params.patient,
-          floor: params.floor,
-          room: params.room,
+          id: tabMenu.order_patient_detail_id,
+          floor: patient.floor_id,
+          room: patient.room_id,
           menu_type_id: [],
           menu_category_id: [],
           menu: [],
@@ -67,7 +73,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
           meal_time_id: tabMenu,
           client_id: auth.user.selected_client,
           user_id: auth.user.id,
-          patient_id: params.patient,
+          patient_id: patient.patient_id,
           menu_extra_id: 0,
           menu: {},
           price: 0,
@@ -149,7 +155,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
               {item.description ? item.description : '1 Porsi'}
             </TextNormal>
             <TextNormal style={{ fontSize: ms(10), textAlign: 'center' }}>
-              {item.service_client === null ? 0 : item.service_client}
+              {item.service_client === null ? 0 : item.service_client.price}
             </TextNormal>
           </View>
         </View>
@@ -189,7 +195,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
 
         <View className="flex-row z-[4] justify-center items-end h-full pb-10 px-10">
           <TextBold className="" style={{ fontSize: ms(20), color: 'black' }}>
-            PATIENT ORDER - TN TOMMY
+            PATIENT ORDER - {patient.patient_name}
           </TextBold>
         </View>
       </ImageBackground>
@@ -217,7 +223,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
               </TextNormal>
               <TextNormal
                 style={{ fontSize: ms(14), color: 'black', marginLeft: ms(5) }}>
-                {params.patient.name}
+                {patient.patient_name}
               </TextNormal>
             </View>
 
@@ -227,7 +233,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
               </TextNormal>
               <TextNormal
                 style={{ fontSize: ms(14), color: 'black', marginLeft: ms(5) }}>
-                {params.patient.diagnosis}
+                {patient.patient_diagnosis}
               </TextNormal>
             </View>
 
@@ -237,38 +243,40 @@ const PatientOrderListMenu = ({ route, navigation }) => {
               </TextNormal>
               <TextNormal
                 style={{ fontSize: ms(14), color: 'black', marginLeft: ms(5) }}>
-                {moment().diff(params.patient.dob, 'year')}
+                {moment().diff(patient.patient_dob, 'year')}
               </TextNormal>
             </View>
           </View>
 
           {/* Tab Menu */}
           <View className="flex-row justify-center px-8">
-            {[
-              'Breakfast',
-              'Lunch',
-              'Dinner',
-              'Morning Snack',
-              'Afternoon Snack',
-            ].map((item, id) => (
-              <TouchableNativeFeedback onPress={() => setTabMenu(id)} key={id}>
+            {patient?.order?.map((item, id) => (
+              <TouchableNativeFeedback
+                onPress={() => setTabMenu(item)}
+                key={id}>
                 <View
                   className="flex-1 justify-center items-center border border-green-400"
                   style={{
                     height: ms(30),
                     backgroundColor:
-                      tabMenu === id ? 'rgb(34,197,94)' : 'transparent',
+                      tabMenu.meal_time_id === item.meal_time_id
+                        ? 'rgb(34,197,94)'
+                        : 'transparent',
                     borderTopLeftRadius: id === 0 ? ms(30) : 0,
                     borderBottomLeftRadius: id === 0 ? ms(30) : 0,
-                    borderTopRightRadius: id === 4 ? ms(30) : 0,
-                    borderBottomRightRadius: id === 4 ? ms(30) : 0,
+                    borderTopRightRadius:
+                      id === patient.order.length - 1 ? ms(30) : 0,
+                    borderBottomRightRadius:
+                      id === patient.order.length - 1 ? ms(30) : 0,
                   }}>
                   <TextBold
-                    style={{ fontSize: ms(10) }}
+                    style={{ fontSize: ms(8) }}
                     className={`${
-                      tabMenu === id ? 'text-white' : 'text-green-500'
-                    } `}>
-                    {item}
+                      tabMenu.meal_time_id === item.meal_time_id
+                        ? 'text-white'
+                        : 'text-green-500'
+                    } text-center`}>
+                    {item.meal_time}
                   </TextBold>
                 </View>
               </TouchableNativeFeedback>
@@ -327,7 +335,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
                         width: ms(50),
                         textAlign: 'center',
                       }}>
-                      Payment Now
+                      Order Now
                     </TextNormal>
                     <Icon name="doubleright" color={'white'} size={ms(20)} />
                   </View>

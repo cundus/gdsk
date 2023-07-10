@@ -37,7 +37,7 @@ const ListMenu = ({ route, navigation }) => {
     let isExist = false
 
     console.log('Data: ', data)
-    console.log('Cart List Menu: ', cart)
+    console.log('Cart List Menu: ', JSON.stringify(cart, null, 2))
 
     // console.log('Carts: ', cart.result)
 
@@ -55,11 +55,12 @@ const ListMenu = ({ route, navigation }) => {
       cart.result.detail = [...cart.result.detail, data]
       cart.result.price = [
         ...cart.result.price,
-        data.service_client === null ? 0 : data.service_client,
+        data.service_client === null ? 0 : data.service_client.price,
       ]
       cart.result.total = [...cart.result.total, 0]
       cart.result.quantity = [...cart.result.quantity, 1]
       cart.result.remarks = [...cart.result.remarks, '']
+      cart.result.order_choices = [...cart.result.order_choices, '']
       dispatch(
         updateCart({
           ...cart.result,
@@ -141,9 +142,9 @@ const ListMenu = ({ route, navigation }) => {
             style={{ fontSize: ms(13), textAlign: 'center', color: 'black' }}>
             {item.name}
           </TextBold>
-          <TextBold style={{ fontSize: ms(10) }}>PLACEHOLDER</TextBold>
+          {/* <TextBold style={{ fontSize: ms(10) }}>PLACEHOLDER</TextBold> */}
           <TextNormal style={{ fontSize: ms(10), textAlign: 'center' }}>
-            {item.service_client === null ? 0 : item.service_client}
+            {item.service_client === null ? 0 : item.service_client.price}
           </TextNormal>
           <TouchableNativeFeedback
             onPress={() => handleChoose(item)}

@@ -66,7 +66,7 @@ const PatientOrderConfirmation = ({}) => {
               </TextBold>
               <TextBold style={{ fontSize: ms(16), color: 'black' }}>
                 Rp.
-                {item?.service_client === null ? 0 : item?.service_client}
+                {item?.service_client === null ? 0 : item?.service_client.price}
               </TextBold>
             </View>
           </View>
@@ -123,10 +123,13 @@ const PatientOrderConfirmation = ({}) => {
 
   const totalPrice = () => {
     if (Array.isArray(cart.result.menu)) {
-      return cart.result.detail.reduce(
-        (a, b) => (a + b.service_client !== null ? +b.service_client : 0),
-        0,
-      )
+      return cart.result.detail.reduce((a, b) => {
+        console.log(b.service_client, b.id)
+        if (!b.service_client) {
+          return a + 0
+        }
+        return a + b.service_client === null ? 0 : b.service_client.price
+      }, 0)
     }
 
     return cart.result.total

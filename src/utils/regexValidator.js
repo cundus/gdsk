@@ -4,6 +4,6 @@ export const urlValidator = url => {
 }
 
 export const emailValidator = email => {
-  const regex = RegExp(/^[^s@]+@[^s@]+.[^s@]+$/)
+  const regex = RegExp(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
   return regex.test(email)
 }

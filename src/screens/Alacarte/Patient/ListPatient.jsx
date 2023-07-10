@@ -45,6 +45,7 @@ const ListPatient = ({ route, navigation }) => {
       quantity: [],
       total: [],
       remarks: [],
+      order_choices: [],
       grand_total: 0,
       created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
     }
