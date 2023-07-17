@@ -8,6 +8,7 @@ import {
 } from 'react-native'
 import React from 'react'
 import { ms } from 'react-native-size-matters'
+import Icon from 'react-native-vector-icons/'
 
 import {
   IconFood,
@@ -27,7 +28,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
 
   return (
     <View
-      className="border-t-2 border-t-gray-500 flex-row justify-evenly px-10 py-3"
+      className="border-t-2 border-t-gray-500 bg-white flex-row justify-evenly px-10 py-3"
       style={{}}>
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key]
@@ -74,7 +75,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
                   <Text
                     style={{
                       fontFamily: 'Avenir-Roman',
-                      fontSize: ms(14),
+                      fontSize: ms(12),
                       color: 'black',
                     }}>
                     {label === 'PatientOrder' ? 'Patient Order' : label}

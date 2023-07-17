@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, ImageBackground } from 'react-native'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { StyleSheet } from 'react-native'
@@ -13,31 +13,11 @@ const Home = () => {
   const { user } = useSelector(state => state.auth)
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          zIndex: 1
-        }}>
-        <Header img={BgMenu}>
-          <View className="flex-[1] -mt-5 justify-center items-center h-full">
-            <Text
-              style={{
-                fontSize: ms(40),
-                color: 'black',
-                fontFamily: 'Avenir Heavy'
-              }}>
-              Home
-            </Text>
-            <Image
-              source={IconProfile}
-              style={{
-                width: ms(120),
-                height: ms(120),
-                resizeMode: 'contain'
-              }}
-            />
-          </View>
-        </Header>
-      </View>
+      <ImageBackground source={BgMenu} style={{flex:.2,}}  resizeMode='cover' >
+        <View className='absolute top-0 left-0 bottom-0 right-0 bg-green-500/80'>
+
+        </View>
+      </ImageBackground>
       <View style={styles.content}>
         <ScrollView>
           <View style={styles.itemInfo}>
@@ -78,7 +58,8 @@ const styles = StyleSheet.create({
     height: '100%',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
-    paddingHorizontal: ms(50)
+    paddingHorizontal: ms(50),
+    paddingTop:ms(20)
   },
   itemInfo: {
     backgroundColor: '#e5e7eb',
@@ -87,8 +68,8 @@ const styles = StyleSheet.create({
     margin: ms(2)
   },
   itemInfoText: {
-    fontSize: ms(14),
-    fontFamily: 'Avenir-Roman'
+    fontSize: ms(16),
+    fontFamily: 'Avenir Heavy',
   },
   itemInfoTitle: {
     fontSize: ms(20),

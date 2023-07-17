@@ -7,6 +7,7 @@ import {
   Pressable,
   TouchableNativeFeedback,
   ActivityIndicator,
+  TextInput,
 } from 'react-native'
 import React, { useCallback } from 'react'
 import { ms } from 'react-native-size-matters'
@@ -60,33 +61,33 @@ const AlacarteHome = ({ navigation }) => {
           style={{
             elevation: 10,
             borderRadius: ms(5),
-            padding: ms(5),
-            margin: ms(10),
+            padding: ms(10),
+            margin: ms(5),
           }}>
           <View>
-            <TextNormal style={{ color: 'black', fontSize: ms(14) }}>
-              {item.order_no}
+            <TextNormal style={{ color: 'black', fontSize: ms(18), fontWeight: '700' }}>
+              #{item.order_no}
             </TextNormal>
-            <TextNormal style={{ fontSize: ms(12) }}>
+            <TextNormal style={{ fontSize: ms(12), fontWeight: '700' }}>
               Type:{' '}
               {item.ala_carte_type === 1 ? 'Patient Guest' : 'Individual Guest'}
             </TextNormal>
           </View>
           <View className="items-end">
-            <TextNormal style={{ fontSize: ms(12), color: 'green' }}>
+            <TextBold style={{ fontSize: ms(12), color: 'green', }}>
               {item.ala_carte_type === 1
                 ? item?.patient?.name
                 : item.guest_name}
-            </TextNormal>
+            </TextBold>
             {item.ala_carte_type === 1 && (
-              <TextNormal style={{ fontSize: ms(12), color: 'green' }}>
+              <TextBold style={{ fontSize: ms(12), color: 'green', }}>
                 {item.floor_name} - {item.room_no}
-              </TextNormal>
+              </TextBold>
             )}
             {item.ala_carte_type === 2 && (
-              <TextNormal style={{ fontSize: ms(12), color: 'green' }}>
+              <TextBold style={{ fontSize: ms(12), color: 'green', }}>
                 {item.location}
-              </TextNormal>
+              </TextBold>
             )}
           </View>
         </View>
@@ -107,29 +108,28 @@ const AlacarteHome = ({ navigation }) => {
 
   return (
     <View className="flex-[1]">
-      <ImageBackground source={BgMenu} className="flex-[1]">
-        <View className="z-[2] justify-start items-center pb-7">
-          <Image
-            source={Logo}
-            alt="logo"
-            style={{ width: ms(150), height: ms(70) }}
-            resizeMode="contain"
-          />
-          <View className="flex-row justify-center w-full px-10 items-center">
-            <Text
-              style={{
-                fontSize: ms(20),
-                fontFamily: 'Avenir Heavy',
-                color: 'black',
-                textAlign: 'center',
-              }}>
-              Alacarte Order
-            </Text>
+      <ImageBackground source={BgMenu} className="flex-[0.2]" >
+        <View className='z-[5] flex-1 justify-center items-center'>
+          <TextBold style={{
+            fontSize: ms(26),
+            color: 'white',
+          }}>A L A  C A R T E</TextBold>
+          <View className='flex-row space-x-2 items-center justify-center'>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple('#ccc')}
+              onPress={() => navigation.goBack()}>
+              <Icon name='arrowleft' size={ms(34)} color={'white'} />
+            </TouchableNativeFeedback>
+            <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
+              <Icon name='search1' size={ms(16)} color={'gray'} />
+              <TextInput placeholder='Search Nomor Order' className='w-[70%]' />
+            </View>
+            <View className='w-5' />
           </View>
         </View>
-        <Overlay color="bg-white/70" />
+        <Overlay color="bg-green-600/70" />
       </ImageBackground>
-      <View className="flex-[3.5] rounded-t-[40px] -mt-5 z-[5] bg-white">
+      <View className="flex-[1] z-[5] bg-white ">
         <TouchableNativeFeedback
           background={TouchableNativeFeedback.Ripple('#ccc')}
           onPress={() => navigation.navigate('AlacarteOption')}>
@@ -157,6 +157,7 @@ const AlacarteHome = ({ navigation }) => {
           <FlatList
             contentContainerStyle={{
               marginTop: ms(10),
+              paddingBottom:ms(10)
             }}
             keyExtractor={(item, i) => i.toString()}
             data={data}
