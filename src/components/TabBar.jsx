@@ -67,8 +67,8 @@ const TabBar = ({ state, descriptors, navigation }) => {
                     alt="icon"
                     resizeMode="cover"
                     style={{
-                      width: label === 'PatientOrder' ? ms(30) : ms(30),
-                      height: label === 'PatientOrder' ? ms(30) : ms(30),
+                      width:  ms(20),
+                      height:  ms(20),
                     }}
                   />
 

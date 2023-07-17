@@ -117,12 +117,12 @@ const AlacarteHome = ({ navigation }) => {
           <View className='flex-row space-x-2 items-center justify-center'>
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple('#ccc')}
-              onPress={() => navigation.goBack()}>
+              onPress={() => navigation.navigate('Home')}>
               <Icon name='arrowleft' size={ms(34)} color={'white'} />
             </TouchableNativeFeedback>
             <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
               <Icon name='search1' size={ms(16)} color={'gray'} />
-              <TextInput placeholder='Search Nomor Order' className='w-[70%]' />
+              <TextInput placeholder='Search' className='w-[70%]' />
             </View>
             <View className='w-5' />
           </View>

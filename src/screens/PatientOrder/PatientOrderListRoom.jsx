@@ -6,6 +6,8 @@ import {
   Pressable,
   Image,
   Alert,
+  TouchableNativeFeedback,
+  TextInput,
 } from 'react-native'
 import React from 'react'
 import { BgMenu } from '../../assets/images/background'
@@ -90,7 +92,7 @@ const PatientOrderListRoom = ({ route, navigation }) => {
           </View>
           <TextBold
             style={{ fontSize: ms(14) }}
-            className="flex-1 text-amber-700">
+            className="flex-1 text-green-600">
             {item.room_class_name}
           </TextBold>
           <View className="py-2 px-4 bg-green-600 rounded-full">
@@ -105,35 +107,30 @@ const PatientOrderListRoom = ({ route, navigation }) => {
 
   return (
     <View className="flex-[1]">
-      <ImageBackground source={BgMenu} className="flex-[1] ">
-        <Overlay color={'bg-white/70'} />
-
-        <View className="flex-row z-[4] justify-between items-center px-10">
-          <Pressable onPress={() => navigation.goBack()}>
-            <Icon name="arrowleft" size={ms(30)} color={'black'} />
-          </Pressable>
-          <View className="items-center justify-start flex-1">
-            <Image
-              source={Logo}
-              resizeMode="contain"
-              style={{
-                width: ms(120),
-                height: ms(70),
-              }}
-            />
-            <TextBold
-              style={{
-                fontSize: ms(22),
-                color: 'black',
-              }}>
-              {floor.floor_name}
-            </TextBold>
+      <ImageBackground source={BgMenu} className="flex-[0.2] ">
+        <Overlay color={'bg-green-700/70'} />
+        <View className='z-[5] flex-1 justify-center items-center'>
+          <TextBold style={{
+            fontSize: ms(26),
+            color: 'white',
+          }}>{floor.floor_name.toUpperCase()}</TextBold>
+          <View className='flex-row space-x-2 items-center justify-center'>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple('#ccc')}
+              onPress={() => navigation.goBack()}>
+              <Icon name='arrowleft' size={ms(34)} color={'white'} />
+            </TouchableNativeFeedback>
+            <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
+              <Icon name='search1' size={ms(16)} color={'gray'} />
+              <TextInput placeholder='Search Nomor Order' className='w-[70%]' />
+            </View>
+            <View className='w-5' />
           </View>
-          <View className="w-14" />
         </View>
+       
       </ImageBackground>
-      <View className="flex-[3]">
-        <View className="flex-[1] z-[10] -mt-10 bg-white rounded-3xl">
+      <View className="flex-[1]">
+        <View className="flex-[1] z-[10] bg-white ">
           <FlatList
             data={data}
             keyExtractor={(item, index) => index.toString()}

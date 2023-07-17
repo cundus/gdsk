@@ -6,6 +6,8 @@ import {
   Image,
   FlatList,
   Alert,
+  TouchableNativeFeedback,
+  TextInput,
 } from 'react-native'
 import React from 'react'
 import Icon from 'react-native-vector-icons/AntDesign'
@@ -112,9 +114,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
                   </TextNormal>
                 </View>
               </View>
-              <TextNormal style={{ fontSize: ms(10) }}>
-                {room.room_name}
-              </TextNormal>
+              
             </View>
             <View
               style={{
@@ -129,7 +129,11 @@ const PatientOrderListPatient = ({ route, navigation }) => {
                 />
               )}
             </View>
+            
           </View>
+          <TextNormal style={{ fontSize: ms(18) }} className='text-green-600'>
+                {room.room_name}
+              </TextNormal>
         </View>
       </Pressable>
     )
@@ -138,35 +142,30 @@ const PatientOrderListPatient = ({ route, navigation }) => {
 
   return (
     <View className="flex-[1]">
-      <ImageBackground source={BgMenu} className="flex-[1] ">
-        <Overlay color={'bg-white/70'} />
-
-        <View className="flex-row z-[4] justify-between items-center px-10">
-          <Pressable onPress={() => navigation.goBack()}>
-            <Icon name="arrowleft" size={ms(30)} color={'black'} />
-          </Pressable>
-          <View className="items-center justify-start flex-1 ">
-            <Image
-              source={Logo}
-              resizeMode="contain"
-              style={{
-                width: ms(120),
-                height: ms(70),
-              }}
-            />
-            <TextBold
-              style={{
-                fontSize: ms(22),
-                color: 'black',
-              }}>
-              {room.room_name} {room.room_no} - {room.room_class_name}
-            </TextBold>
+      <ImageBackground source={BgMenu} className="flex-[0.2] ">
+        <Overlay color={'bg-green-600/70'} />
+        <View className='z-[5] flex-1 justify-center items-center'>
+          <TextBold style={{
+            fontSize: ms(22),
+            color: 'white',
+          }}>{room.room_name.toUpperCase()}</TextBold>
+          <View className='flex-row space-x-2 items-center justify-center'>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple('#ccc')}
+              onPress={() => navigation.goBack()}>
+              <Icon name='arrowleft' size={ms(34)} color={'white'} />
+            </TouchableNativeFeedback>
+            <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
+              <Icon name='search1' size={ms(16)} color={'gray'} />
+              <TextInput placeholder='Search' className='w-[70%]' />
+            </View>
+            <View className='w-5' />
           </View>
-          <View className="w-14" />
         </View>
+       
       </ImageBackground>
-      <View className="flex-[3]">
-        <View className="flex-[1] z-[10] -mt-10 bg-white rounded-3xl">
+      <View className="flex-[1]">
+        <View className="flex-[1] z-[10] bg-white rounded-3xl">
           {data.length > 0 ? (
             <FlatList
               data={data}

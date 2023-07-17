@@ -172,7 +172,7 @@ const PatientOrder = ({ navigation }) => {
           <View className='flex-row space-x-2 items-center justify-center'>
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple('#ccc')}
-              onPress={() => navigation.goBack()}>
+              onPress={() => navigation.navigate('Home')}>
               <IconAD name='arrowleft' size={ms(34)} color={'white'} />
             </TouchableNativeFeedback>
             <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
@@ -246,8 +246,8 @@ const styles = StyleSheet.create({
     elevation:10,
     backgroundColor:'white',
     paddingHorizontal:ms(10),
-    paddingVertical: ms(10),
-    borderRadius:ms(5)
+    paddingVertical: ms(15),
+    borderRadius:ms(10)
   },
   leftCard: {
     backgroundColor: 'white',
