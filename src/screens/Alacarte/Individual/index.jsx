@@ -1,31 +1,27 @@
-import React, { useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import axios from 'axios'
+import moment from 'moment/moment'
+import React, { useCallback, useState } from 'react'
 import {
-  View,
-  Text,
+  Alert,
   ImageBackground,
-  StatusBar,
-  Image,
-  TextInput,
-  TouchableNativeFeedback,
+  KeyboardAvoidingView,
   Modal,
   StyleSheet,
-  Dimensions,
-  ScrollView,
+  Text,
+  TextInput,
+  TouchableNativeFeedback,
+  View
 } from 'react-native'
-import { BgAuth } from '../../../assets/images/background'
-import { Logo, LogoAlacarte } from '../../../assets/icons'
-import { Alert } from 'react-native'
-import { KeyboardAvoidingView } from 'react-native'
+import { ms, s } from 'react-native-size-matters'
+import IconAD from 'react-native-vector-icons/AntDesign'
 import { useDispatch, useSelector } from 'react-redux'
-import { loginUser } from '../../stores/actions/auth'
-import { useEffect } from 'react'
-import { s, ms, vs } from 'react-native-size-matters'
-import moment from 'moment/moment'
+import { BgMenu } from '../../../assets/images/background'
+import Overlay from '../../../components/Overlay'
+import { TextBold } from '../../../components/Text'
 import { updateCart } from '../../../stores/reducers/cart'
-import { useFocusEffect } from '@react-navigation/native'
-import { useCallback } from 'react'
-import axios from 'axios'
-import SelectDropdown from 'react-native-select-dropdown'
+import DropDownPicker from 'react-native-dropdown-picker'
+import color from '../../../utils/color'
 
 const AlacarteIndividual = ({ navigation }) => {
   const dispatch = useDispatch()
@@ -94,6 +90,15 @@ const AlacarteIndividual = ({ navigation }) => {
       getBooking()
     }, []),
   )
+
+  //For Dropdown
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Apple', value: 'apple'},
+    {label: 'Banana', value: 'banana'}
+  ])
+
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
       <Modal animationType="fade" transparent={true} visible={false}>
@@ -101,79 +106,51 @@ const AlacarteIndividual = ({ navigation }) => {
           <Text>LOADING</Text>
         </View>
       </Modal>
-      <ImageBackground
-        source={BgAuth}
-        resizeMode="cover"
-        style={styles.container}>
-        <StatusBar hidden />
-
-        <ScrollView style={{ zIndex: 5 }}>
-          <View style={styles.content}>
-            <View>
-              <Image source={Logo} alt="logo" style={styles.logo} />
-            </View>
-            <View style={{ height: ms(35) }} />
-            <View>
-              <Image source={LogoAlacarte} alt="logo" style={styles.logo} />
-            </View>
-            <View style={{ height: ms(35) }} />
-            <View style={styles.form}>
-              <TextInput
-                placeholder="Guest Name"
-                onChangeText={text => handleChange('name', text)}
-                style={styles.input}
-                placeholderTextColor={'#ccc'}
-                returnKeyType="next"
-              />
-              <TextInput
-                placeholder="Phone"
-                onChangeText={text => handleChange('phone', text)}
-                style={styles.input}
-                placeholderTextColor={'#ccc'}
-                returnKeyType="next"
-                keyboardType="phone-pad"
-              />
-              <TextInput
-                placeholder="Location"
-                onChangeText={text => handleChange('location', text)}
-                style={styles.input}
-                placeholderTextColor={'#ccc'}
-                returnKeyType="next"
-              />
-              <SelectDropdown
-                data={data}
-                defaultButtonText={'Select Order From'}
-                onSelect={(selected, index) => {
-                  console.log(selected.id)
-                  handleChange('booking', selected.id)
-                }}
-                // dropdownStyle={styles.input}
-                buttonTextStyle={{ color: 'white' }}
-                buttonStyle={[styles.input]}
-                buttonTextAfterSelection={(selected, idx) => selected.name}
-                rowTextForSelection={(item, i) => {
-                  return item.name
-                }}
-              />
-              <TextInput
-                placeholder="Note"
-                onChangeText={text => handleChange('note', text)}
-                style={styles.input}
-                placeholderTextColor={'#ccc'}
-                returnKeyType="next"
-              />
-              <TouchableNativeFeedback
-                onPress={handleSubmit}
-                background={TouchableNativeFeedback.Ripple('#65a30d')}>
-                <View style={styles.button}>
-                  <Text style={styles.buttonText}>REGISTER</Text>
-                </View>
-              </TouchableNativeFeedback>
-            </View>
-            <View style={{ height: ms(20) }}></View>
+      <ImageBackground source={BgMenu} style={{ flex: 1 }}>
+        <View className='flex-row' style={{ paddingHorizontal: ms(16), marginTop: ms(40)}}>
+          <View className='z-[5]' style={{ width: '25%'}}>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple('#ccc')}
+              onPress={() => navigation.navigate('Home')}>
+              <IconAD name='arrowleft' size={ms(34)} color={'white'} />
+            </TouchableNativeFeedback>
           </View>
-        </ScrollView>
-        <View style={styles.overlay}></View>
+          <View className='z-[5]' style={{ width: '75%'}}>
+              <TextBold style={{
+                fontSize: ms(22),
+                color: 'white',
+              }}> INDIVIDUAL GUEST </TextBold>
+          </View>
+        </View>
+        <Overlay color={'bg-green-700/70'} />
+        <View>
+          <View className='z-[5]' style={styles.form}>
+              <TextInput style={styles.input} placeholder='Guest Name'/>
+              <TextInput style={styles.input} placeholder='Phone'/>
+              <TextInput style={styles.input} placeholder='Location'/>
+              <DropDownPicker
+                  open={open}
+                  value={value}
+                  items={items}
+                  setOpen={setOpen}
+                  setValue={setValue}
+                  setItems={setItems}
+                  style={styles.input}
+              />
+              <TextInput style={styles.input} placeholder='Note'/>
+
+              <View style={{ marginTop: ms(20) }}>
+                <TouchableNativeFeedback
+                background={TouchableNativeFeedback.Ripple('#ccc')}
+                // onPress={() => navigation.navigate('Home')}
+                >
+                <View style={styles.buttonNext}>
+                  <Text style={styles.buttonNextText}> NEXT </Text>
+                </View>
+                </TouchableNativeFeedback>
+              </View>
+          </View>
+        </View>
       </ImageBackground>
     </KeyboardAvoidingView>
   )
@@ -204,18 +181,25 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   form: {
-    width: '50%',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'white',
+    marginTop: ms(18),
   },
   input: {
     borderColor: '#ccc',
     borderWidth: ms(1),
-    width: '100%',
-    padding: s(5),
+    width: '90%',
+    height: ms(60),
+    padding: s(10),
     fontSize: ms(12),
     backgroundColor: 'rgba(148, 163, 184, 0.3)',
-    margin: ms(1),
+    // margin: ms(1),
     fontFamily: 'Avenir-Roman',
-    color: 'white',
+    color: 'black',
+    alignSelf: 'center',
+    marginTop: ms(5),
+    borderRadius: ms(5),
   },
   button: {
     width: '100%',
@@ -230,6 +214,21 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: ms(12),
     fontFamily: 'Avenir-Roman',
+  },
+  buttonNext: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  buttonNextText: {
+    color: 'white',
+    fontSize: ms(20),
+    fontFamily: 'Avenir-Roman',
+    backgroundColor: color.GREEN_PRIMARY,
+    borderRadius: ms(5),
+    width:'50%',
+    elevation: 30,
+    textAlign: 'center',
+    paddingVertical: ms(5),
   },
 })
 

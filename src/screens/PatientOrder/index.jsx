@@ -1,42 +1,31 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Image,
-  FlatList,
-  ImageBackground,
   ActivityIndicator,
   Alert,
-  Pressable,
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  Text,
   TouchableNativeFeedback,
+  View
 } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
 import { ms } from 'react-native-size-matters'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { getFloor } from '../../stores/actions/floor'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
+import { TextInput } from 'react-native-gesture-handler'
+import IconAD from 'react-native-vector-icons/AntDesign'
 import { BgLantai, BgMenu } from '../../assets/images/background'
-import {
-  IconHospital,
-  IconHospitaltext,
-  LogoAlacarte,
-  OrnamentBuilding,
-} from '../../assets/icons'
-import { TextBold, TextNormal } from '../../components/Text'
+import Overlay from '../../components/Overlay'
+import { TextBold } from '../../components/Text'
 import {
   getPatientOrder,
   syncPatientOrder,
   syncPatientOrderExtra,
 } from '../../stores/actions/patientOrder'
-import { useFocusEffect } from '@react-navigation/native'
-import { useCallback } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import IconAD from 'react-native-vector-icons/AntDesign'
 import { loading } from '../../stores/reducers/patientOrder'
-import Overlay from '../../components/Overlay'
-import { TextInput } from 'react-native-gesture-handler'
 
 const countPendingOrder = floor => {
   let num = 0
