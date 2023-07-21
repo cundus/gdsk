@@ -3,13 +3,10 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  Image,
   FlatList,
   ImageBackground,
   ActivityIndicator,
   Alert,
-  Pressable,
   TouchableNativeFeedback,
 } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'

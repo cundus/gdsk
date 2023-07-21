@@ -68,11 +68,11 @@ const styles = StyleSheet.create({
     margin: ms(2)
   },
   itemInfoText: {
-    fontSize: ms(16),
+    fontSize: ms(12),
     fontFamily: 'Avenir Heavy',
   },
   itemInfoTitle: {
-    fontSize: ms(20),
+    fontSize: ms(16),
     color: 'black',
     fontFamily: 'Avenir-Roman'
   }
