@@ -81,7 +81,6 @@ const AlacarteConfirmation = ({ navigation }) => {
               borderRadius: ms(100),
               elevation: 5,
               backgroundColor: 'white',
-              marginTop: ms(-20),
             }}>
             <Image
               source={{
@@ -96,20 +95,11 @@ const AlacarteConfirmation = ({ navigation }) => {
               }}
             />
           </View>
-          <View className="">
-            <TextBold style={{ fontSize: ms(20), color: 'black' }}>
+          <View className="justify-center">
+            <TextBold style={{ fontSize: ms(20), color: 'black', padding: 12 }}>
               {item.name}
             </TextBold>
-            <TextBold
-              style={{ fontSize: ms(18), color: 'black', marginBottom: 10 }}>
-              <Supscript /> {cart.result.price[index]}{' '}
-              {cart.result.quantity[index] > 1 && (
-                <TextNormal>{`x${cart.result.quantity[index]} = ${
-                  +cart.result.price[index] * +cart.result.quantity[index]
-                }`}</TextNormal>
-              )}
-            </TextBold>
-            <View className="flex-row  items-center space-x-5">
+            <View className="flex-row  items-center space-x-5 p-3">
               <Pressable onPress={() => handleMinus(item.id)}>
                 <View className="border-2 rounded-xl p-1">
                   <Icon name="minus" size={ms(16)} color="black" />
@@ -127,11 +117,9 @@ const AlacarteConfirmation = ({ navigation }) => {
           </View>
         </View>
         <Pressable onPress={() => onpressRemove(item.id)}>
-          <Image
-            source={IconDelete}
-            resizeMode="contain"
-            style={{ width: ms(50), height: ms(50) }}
-          />
+          <View className="rounded-full bg-green-500 p-0.5">
+            <Icon name="close" size={ms(16)} color="white" className="p-1" />
+          </View>
         </Pressable>
       </View>
     )
@@ -173,46 +161,31 @@ const AlacarteConfirmation = ({ navigation }) => {
 
   return (
     <View className="flex-[1]">
-      <ImageBackground source={BgMenu} className="flex-[1]">
-        <View className="z-[2] justify-between items-center flex-row px-16">
+      <ImageBackground source={BgMenu} className="flex-[0.13]">
+        <View className="z-[2] justify-between flex-row flex-[1] items-center px-8 ">
           <Pressable onPress={() => navigation.goBack()}>
             <Icon name="arrowleft" size={ms(30)} color={'white'} />
           </Pressable>
-          <Image
-            source={Logo}
-            resizeMode="contain"
-            alt="logo"
-            style={{ width: ms(130), height: ms(90) }}
-          />
+          <TextBold
+            className="text-center text-black"
+            style={{ fontSize: ms(18), marginTop: ms(5), color: 'white' }}>
+            ORDER CONFIRMATION
+          </TextBold>
           <View className="w-20" />
         </View>
-        <Overlay color={'bg-green-400/80'} />
+        <Overlay color={'bg-green-600/80'} />
       </ImageBackground>
-      <View className="flex-[4] rounded-t-3xl bg-white -mt-10 z-10">
-        <TextBold
-          className="text-center text-black"
-          style={{ fontSize: ms(16), marginTop: ms(5) }}>
-          ORDER CONFIRMATION
-        </TextBold>
+      <View className="flex-[1] bg-white z-10">
         <FlatList
           data={cart.result?.detail}
           keyExtractor={(item, index) => index.toString()}
           renderItem={_renderItem}
         />
-        <View>
-          <View className="flex-row justify-between px-10 items-center">
+        <View className="border-t-8 flex-row justify-between border-green-500 mx-3">
+          <View className="justify-between px-10 items-start">
             <TextNormal style={{ fontSize: ms(22), color: 'black' }}>
               Total
             </TextNormal>
-            <TextBold style={{ fontSize: ms(22), color: 'black' }}>
-              <Supscript />
-              {cart.result?.quantity?.reduce(
-                (a, b, index) => a + b * cart.result?.price[index],
-                0,
-              )}
-            </TextBold>
-          </View>
-          <View className="flex-row justify-between px-10 items-center mb-5">
             <View className="flex-row items-center space-x-3">
               <Image
                 source={IconCart}
@@ -223,6 +196,8 @@ const AlacarteConfirmation = ({ navigation }) => {
                 {cart.result?.quantity?.reduce((a, b) => a + b, 0)} item
               </TextNormal>
             </View>
+          </View>
+          <View className="flex-row justify-between px-10 items-center ">
             <TouchableNativeFeedback
               onPress={async () => {
                 if (cart.result.menu.length < 1) {
