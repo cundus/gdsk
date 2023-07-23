@@ -118,7 +118,7 @@ const ListMenu = ({ route, navigation }) => {
   const _renderItem = ({ item }) => {
     const isChoosed = cart.result.menu.filter(menu => menu === item.id)
     return (
-      <View className="flex-[1] justify-end  m-2 " style={{ height: ms(200) }}>
+      <View className="justify-end  m-2 " style={{ height: ms(200), flex: 1/4 }}>
         <View
           className=" justify-start bg-white items-center "
           style={{
@@ -129,10 +129,10 @@ const ListMenu = ({ route, navigation }) => {
           }}>
           <View
             style={{
-              width: ms(80),
-              height: ms(80),
+              width: ms(60),
+              height: ms(60),
               overflow: 'hidden',
-              borderRadius: ms(80),
+              borderRadius: ms(60),
               marginTop: -ms(30),
               backgroundColor: 'white',
               elevation: 7,
@@ -166,7 +166,7 @@ const ListMenu = ({ route, navigation }) => {
             {item.service_client === null ? 0 : item.service_client.price}
           </TextNormal>
           <TouchableNativeFeedback
-            onPress={() => isChoosed.length < 1 && handleChoose(item) }
+            onPress={() => isChoosed.length < 1 && handleChoose(item)}
             background={TouchableNativeFeedback.Ripple('#ccc')}>
             <View
               className={` w-full  justify-center items-center absolute bottom-0 ${isChoosed.length > 0 ? "bg-green-300" : "bg-green-600"}`}
@@ -189,7 +189,7 @@ const ListMenu = ({ route, navigation }) => {
       return menus
     }
 
-    return menus.filter(menu => menu.name.toLowerCase().includes(search.toLocaleLowerCase()))
+    return menus.filter(item => item.name.toLowerCase().includes(search.toLocaleLowerCase()))
   }
 
   const _renderCategory = ({ item, index }) => {
@@ -229,7 +229,11 @@ const ListMenu = ({ route, navigation }) => {
             renderItem={_renderItem}
             collapsable
             numColumns={4}
-
+            columnWrapperStyle={{
+              flex: 1/4,
+              justifyContent:'flex-start'
+            }}
+            ListEmptyComponent={<TextBold>No Menu</TextBold>}
           />
         }
         {/* </Animated.View> */}
@@ -254,7 +258,7 @@ const ListMenu = ({ route, navigation }) => {
             </TouchableNativeFeedback>
             <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
               <IconAD name='search1' size={ms(16)} color={'gray'} />
-              <TextInput placeholder='Search' className='w-[70%]' />
+              <TextInput placeholder='Search' value={search} onChangeText={e => setSearch(e)} className='w-[70%]' />
             </View>
             <View className='w-5' />
           </View>

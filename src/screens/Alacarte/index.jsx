@@ -9,7 +9,7 @@ import {
   ActivityIndicator,
   TextInput,
 } from 'react-native'
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { ms } from 'react-native-size-matters'
 import { TextBold, TextNormal } from '../../components/Text'
 import { BgMenu } from '../../assets/images/background'
@@ -20,36 +20,21 @@ import { useFocusEffect } from '@react-navigation/native'
 import { getAlacarteOrder } from '../../stores/actions/alacarte'
 import Icon from 'react-native-vector-icons/AntDesign'
 
-const DATA_DUMMY = [
-  {
-    alacarte_type: 1,
-    order_no: '#123123123123',
-    user: {
-      name: 'Sundus',
-    },
-    patient: {
-      name: 'SUndus Patient',
-    },
-    floor_name: 'Lantai 8',
-    room_no: '6',
-  },
-  {
-    alacarte_type: 2,
-    order_no: '#123123123123',
-    user: {
-      name: 'Sundus',
-    },
-    guest_name: 'Sundus Individual',
-    location: 'garut',
-    floor_name: 'Lantai 8',
-    room_no: '6',
-  },
-]
-
 const AlacarteHome = ({ navigation }) => {
   const { auth, alacarteOrder } = useSelector(state => state)
   const { data, error, isFetching } = alacarteOrder
   const dispatch = useDispatch()
+  const [search, setSearch] = useState('')
+
+  const filterMenu = (menus) => {
+    if (search === '') {
+      return menus
+    }
+    return menus.filter(menu => menu.order_no.toLowerCase().includes(search.toLocaleLowerCase()) || menu?.patient?.name.toLowerCase().includes(search.toLocaleLowerCase()))
+  }
+  
+
+
   const _renderItem = ({ item }) => {
     return (
       <Pressable
@@ -122,7 +107,7 @@ const AlacarteHome = ({ navigation }) => {
             </TouchableNativeFeedback>
             <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
               <Icon name='search1' size={ms(16)} color={'gray'} />
-              <TextInput placeholder='Search' className='w-[70%]' />
+              <TextInput placeholder='Search' value={search} onChangeText={(e)=> setSearch(e)} className='w-[70%]' />
             </View>
             <View className='w-5' />
           </View>
@@ -173,7 +158,7 @@ const AlacarteHome = ({ navigation }) => {
               paddingBottom: ms(10)
             }}
             keyExtractor={(item, i) => i.toString()}
-            data={data}
+            data={filterMenu(data)}
             renderItem={_renderItem}
           />
         )}
