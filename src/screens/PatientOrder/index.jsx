@@ -27,23 +27,7 @@ import {
 } from '../../stores/actions/patientOrder'
 import { loading } from '../../stores/reducers/patientOrder'
 
-const countPendingOrder = floor => {
-  let num = 0
-  floor.room.map(room =>
-    room.patient.map(patient =>
-      patient.order.map(order =>
-        order.detail
-          .filter(detail => detail.order_status === 0)
-          .map(() => {
-            num += 1
-            return num
-          }),
-      ),
-    ),
-  )
 
-  return num
-}
 
 const PatientOrder = ({ navigation }) => {
   const { floor, auth, patientOrder } = useSelector(state => state)
@@ -53,6 +37,14 @@ const PatientOrder = ({ navigation }) => {
     orderPatient: [],
     orderExtra: [],
   })
+  const [search, setSearch] = useState('')
+  const filterMenu = (menus) => {
+    if (search === '') {
+      return menus
+    }
+    return menus.filter(menu => menu.floor_name.toLowerCase().includes(search.toLocaleLowerCase()))
+  }
+
 
   useFocusEffect(
     useCallback(() => {
@@ -64,7 +56,6 @@ const PatientOrder = ({ navigation }) => {
       )
       getOrderPatientFromStorage()
       getExtraFoodDataFromStorage()
-      console.log(JSON.stringify(state.orderPatient, null, 2))
     }, []),
   )
 
@@ -88,12 +79,11 @@ const PatientOrder = ({ navigation }) => {
     dispatch(loading())
   }
 
-  console.log(JSON.stringify(state.orderPatient, null, 2))
 
   const _renderItem = ({ item }) => {
     return (
       <TouchableNativeFeedback
-      background={TouchableNativeFeedback.Ripple('#ccc')}
+        background={TouchableNativeFeedback.Ripple('#ccc')}
         onPress={() =>
           navigation.navigate('PatientOrderListRoom', {
             floor: item,
@@ -166,7 +156,7 @@ const PatientOrder = ({ navigation }) => {
             </TouchableNativeFeedback>
             <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
               <IconAD name='search1' size={ms(16)} color={'gray'} />
-              <TextInput placeholder='Search' className='w-[70%]' />
+              <TextInput placeholder='Search' onChangeText={e=> setSearch(e)} className='w-[70%]' />
             </View>
             <View className='w-5' />
           </View>
@@ -185,13 +175,13 @@ const PatientOrder = ({ navigation }) => {
           style={{ zIndex: 4, flex: 1 }}
         >
           <View style={styles.contentContainer}>
-           
+
             {floor.isFetching || patientOrder.isFetching ? (
               <ActivityIndicator size={'large'} color={'#00ff00'} />
             ) : (
               <FlatList
                 keyExtractor={(item, index) => index.toString()}
-                data={patientOrder.data}
+                data={filterMenu(patientOrder.data)}
                 renderItem={_renderItem}
               />
             )}
@@ -231,12 +221,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: ms(5),
-    marginHorizontal:ms(5),
-    elevation:10,
-    backgroundColor:'white',
-    paddingHorizontal:ms(10),
+    marginHorizontal: ms(5),
+    elevation: 10,
+    backgroundColor: 'white',
+    paddingHorizontal: ms(10),
     paddingVertical: ms(15),
-    borderRadius:ms(10)
+    borderRadius: ms(10)
   },
   leftCard: {
     backgroundColor: 'white',

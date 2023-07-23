@@ -33,7 +33,15 @@ const PatientOrderListPatient = ({ route, navigation }) => {
   const { room } = route.params
   const state = useSelector(state => state.auth)
   const [data, setData] = useState([])
+  const [search, setSearch] = useState('')
 
+  const filterMenu = (menus) => {
+    if (search === '') {
+      return menus
+    }
+    return menus.filter(menu => menu.patient_name.toLowerCase().includes(search.toLocaleLowerCase()))
+  }
+  
   useFocusEffect(
     useCallback(() => {
       const getRoom = async () => {
@@ -114,7 +122,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
                   </TextNormal>
                 </View>
               </View>
-              
+
             </View>
             <View
               style={{
@@ -129,11 +137,11 @@ const PatientOrderListPatient = ({ route, navigation }) => {
                 />
               )}
             </View>
-            
+
           </View>
           <TextNormal style={{ fontSize: ms(18) }} className='text-green-600'>
-                {room.room_name}
-              </TextNormal>
+            {room.room_name}
+          </TextNormal>
         </View>
       </Pressable>
     )
@@ -157,18 +165,18 @@ const PatientOrderListPatient = ({ route, navigation }) => {
             </TouchableNativeFeedback>
             <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
               <Icon name='search1' size={ms(16)} color={'gray'} />
-              <TextInput placeholder='Search' className='w-[70%]' />
+              <TextInput placeholder='Search' value={search} onChangeText={e => setSearch(e)} className='w-[70%]' />
             </View>
             <View className='w-5' />
           </View>
         </View>
-       
+
       </ImageBackground>
       <View className="flex-[1]">
         <View className="flex-[1] z-[10] bg-white rounded-3xl">
           {data.length > 0 ? (
             <FlatList
-              data={data}
+              data={filterMenu(data)}
               keyExtractor={(item, index) => index.toString()}
               renderItem={_renderItem}
             />

@@ -46,7 +46,13 @@ const PatientOrderListRoom = ({ route, navigation }) => {
   const state = useSelector(state => state.auth)
   const dispatch = useDispatch()
   const [data, setData] = useState([])
-
+  const [search, setSearch] = useState('')
+  const filterMenu = (menus) => {
+    if (search === '') {
+      return menus
+    }
+    return menus.filter(menu => menu.room_name.toLowerCase().includes(search.toLocaleLowerCase()))
+  }
   useFocusEffect(
     useCallback(() => {
       const getRoom = async () => {
@@ -122,7 +128,7 @@ const PatientOrderListRoom = ({ route, navigation }) => {
             </TouchableNativeFeedback>
             <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
               <Icon name='search1' size={ms(16)} color={'gray'} />
-              <TextInput placeholder='Search Nomor Order' className='w-[70%]' />
+              <TextInput placeholder='Search Nomor Order' value={search} onChangeText={e=> setSearch(e)} className='w-[70%]' />
             </View>
             <View className='w-5' />
           </View>
@@ -132,7 +138,7 @@ const PatientOrderListRoom = ({ route, navigation }) => {
       <View className="flex-[1]">
         <View className="flex-[1] z-[10] bg-white ">
           <FlatList
-            data={data}
+            data={filterMenu(data)}
             keyExtractor={(item, index) => index.toString()}
             renderItem={_renderItem}
           />
