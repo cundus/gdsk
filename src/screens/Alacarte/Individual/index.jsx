@@ -20,7 +20,7 @@ import { BgMenu } from '../../../assets/images/background'
 import Overlay from '../../../components/Overlay'
 import { TextBold } from '../../../components/Text'
 import { updateCart } from '../../../stores/reducers/cart'
-import DropDownPicker from 'react-native-dropdown-picker'
+import SelectDropdown from 'react-native-select-dropdown'
 import color from '../../../utils/color'
 
 const AlacarteIndividual = ({ navigation }) => {
@@ -40,6 +40,17 @@ const AlacarteIndividual = ({ navigation }) => {
   }
 
   const handleSubmit = async () => {
+
+    const validation = Object.keys(form).filter(item => {
+      return form[item] === ''
+    })
+
+    if (validation.length > 0) {
+      return Alert.alert("Harap lengkapi form!")
+    }
+
+
+
     const data = {
       ala_carte_type: 2,
       guest_name: form.name,
@@ -91,13 +102,7 @@ const AlacarteIndividual = ({ navigation }) => {
     }, []),
   )
 
-  //For Dropdown
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    {label: 'Apple', value: 'apple'},
-    {label: 'Banana', value: 'banana'}
-  ])
+
 
   return (
     <KeyboardAvoidingView behavior="padding" style={{ flex: 1 }}>
@@ -107,48 +112,61 @@ const AlacarteIndividual = ({ navigation }) => {
         </View>
       </Modal>
       <ImageBackground source={BgMenu} style={{ flex: 1 }}>
-        <View className='flex-row' style={{ paddingHorizontal: ms(16), marginTop: ms(40)}}>
-          <View className='z-[5]' style={{ width: '25%'}}>
+        <View className='flex-row' style={{ paddingHorizontal: ms(16), marginTop: ms(40) }}>
+          <View className='z-[5]' style={{ width: '25%' }}>
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple('#ccc')}
               onPress={() => navigation.navigate('Home')}>
               <IconAD name='arrowleft' size={ms(34)} color={'white'} />
             </TouchableNativeFeedback>
           </View>
-          <View className='z-[5]' style={{ width: '75%'}}>
-              <TextBold style={{
-                fontSize: ms(22),
-                color: 'white',
-              }}> INDIVIDUAL GUEST </TextBold>
+          <View className='z-[5]' style={{ width: '75%' }}>
+            <TextBold style={{
+              fontSize: ms(22),
+              color: 'white',
+            }}> INDIVIDUAL GUEST </TextBold>
           </View>
         </View>
         <Overlay color={'bg-green-700/70'} />
         <View>
           <View className='z-[5]' style={styles.form}>
-              <TextInput style={styles.input} placeholder='Guest Name'/>
-              <TextInput style={styles.input} placeholder='Phone'/>
-              <TextInput style={styles.input} placeholder='Location'/>
-              <DropDownPicker
-                  open={open}
-                  value={value}
-                  items={items}
-                  setOpen={setOpen}
-                  setValue={setValue}
-                  setItems={setItems}
-                  style={styles.input}
-              />
-              <TextInput style={styles.input} placeholder='Note'/>
+            <TextInput style={styles.input} value={form.name} onChangeText={e => handleChange('name', e)} placeholder='Guest Name' />
+            <TextInput style={styles.input} value={form.phone} onChangeText={e => handleChange('phone', e)} placeholder='Phone' />
+            <TextInput style={styles.input} value={form.location} onChangeText={e => handleChange('location', e)} placeholder='Location' />
+            <SelectDropdown
+              data={data}
+              defaultButtonText={'Order Booking'}
+              buttonTextStyle={{
+                color: 'white',
+                textAlign: 'left'
+              }}
+              onSelect={(selected, index) => {
+                console.log(selected.id)
+                handleChange('booking', selected.id)
+              }}
+              renderDropdownIcon={isOpened => {
+                return <IconAD name={isOpened ? 'up' : 'down'} color={'#ccc'} size={18} />;
+              }}
+              dropdownIconPosition='right'
+              // dropdownStyle={styles.input}
+              buttonStyle={[styles.input, { backgroundColor: 'rgba(63,178,101,255)' }]}
+              buttonTextAfterSelection={(selected, idx) => selected.name}
+              rowTextForSelection={(item, i) => {
+                return item.name
+              }}
+            />
+            <TextInput style={styles.input} value={form.note} onChangeText={e => handleChange('note', e)} placeholder='Note' />
 
-              <View style={{ marginTop: ms(20) }}>
-                <TouchableNativeFeedback
+            <View style={{ marginTop: ms(20) }}>
+              <TouchableNativeFeedback
                 background={TouchableNativeFeedback.Ripple('#ccc')}
-                // onPress={() => navigation.navigate('Home')}
-                >
+                onPress={handleSubmit}
+              >
                 <View style={styles.buttonNext}>
                   <Text style={styles.buttonNextText}> NEXT </Text>
                 </View>
-                </TouchableNativeFeedback>
-              </View>
+              </TouchableNativeFeedback>
+            </View>
           </View>
         </View>
       </ImageBackground>
@@ -185,20 +203,21 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'white',
     marginTop: ms(18),
+    paddingHorizontal: ms(20)
   },
   input: {
     borderColor: '#ccc',
     borderWidth: ms(1),
-    width: '90%',
+    width: '100%',
     height: ms(60),
     padding: s(10),
     fontSize: ms(12),
     backgroundColor: 'rgba(148, 163, 184, 0.3)',
     // margin: ms(1),
-    fontFamily: 'Avenir-Roman',
+    fontFamily: 'Avenir Heavy',
     color: 'black',
     alignSelf: 'center',
-    marginTop: ms(5),
+    marginTop: ms(15),
     borderRadius: ms(5),
   },
   button: {
@@ -213,19 +232,21 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: ms(12),
-    fontFamily: 'Avenir-Roman',
+    fontFamily: 'Avenir Heavy'
+
   },
   buttonNext: {
+    justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
   },
   buttonNextText: {
     color: 'white',
     fontSize: ms(20),
-    fontFamily: 'Avenir-Roman',
+    fontFamily: 'Avenir Heavy',
     backgroundColor: color.GREEN_PRIMARY,
     borderRadius: ms(5),
-    width:'50%',
+    width: '50%',
     elevation: 30,
     textAlign: 'center',
     paddingVertical: ms(5),

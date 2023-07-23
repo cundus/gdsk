@@ -8,6 +8,13 @@ import {
   TouchableNativeFeedback,
   View,
   Alert,
+  SectionList,
+  Platform,
+  UIManager,
+  LayoutAnimation,
+  Animated,
+  ImageBackground,
+  TextInput,
 } from 'react-native'
 import { TextBold, TextNormal } from '../../components/Text'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -19,9 +26,13 @@ import { getMenu } from '../../stores/actions/menu'
 import { useState } from 'react'
 import { useMemo } from 'react'
 import { updateCart } from '../../stores/reducers/cart'
-import PopUpOrder from '../../components/PopUpOrder'
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback } from 'react'
+import IconAD from 'react-native-vector-icons/AntDesign'
+import color from '../../utils/color'
+import { BgMenu } from '../../assets/images/background'
+import Overlay from '../../components/Overlay'
+
 
 const PAGE_SIZE = 8
 
@@ -29,17 +40,14 @@ const ListMenu = ({ route, navigation }) => {
   // const { data } = route.params
   const { menu, auth, cart } = useSelector(state => state)
   const [page, setPage] = useState(1)
+  const [section, setSection] = useState(null)
   const [listMenu, setListMenu] = useState([])
   const [loading, setLoading] = useState(false)
-  const dispatch = useDispatch()
+  const [search, setSearch] = useState('')
 
+  const dispatch = useDispatch()
   const handleChoose = data => {
     let isExist = false
-
-    console.log('Data: ', data)
-    console.log('Cart List Menu: ', JSON.stringify(cart, null, 2))
-
-    // console.log('Carts: ', cart.result)
 
     if (cart.result.menu.length > 0 && cart.result.menu !== undefined) {
       cart.result.menu.map(menu => {
@@ -66,9 +74,9 @@ const ListMenu = ({ route, navigation }) => {
           ...cart.result,
         }),
       )
-      navigation.navigate('AlacarteConfirmation')
     }
   }
+
 
   useFocusEffect(
     useCallback(() => {
@@ -108,6 +116,7 @@ const ListMenu = ({ route, navigation }) => {
   }
 
   const _renderItem = ({ item }) => {
+    const isChoosed = cart.result.menu.filter(menu => menu === item.id)
     return (
       <View className="flex-[1] justify-end  m-2 " style={{ height: ms(200) }}>
         <View
@@ -127,15 +136,25 @@ const ListMenu = ({ route, navigation }) => {
               marginTop: -ms(30),
               backgroundColor: 'white',
               elevation: 7,
+              position: 'relative'
             }}>
             <Image
               source={{
-                uri: `${auth.serverUrl.replace('api', '')}app/menu/${
-                  item.image
-                }`,
+                uri: `${auth.serverUrl.replace('api', '')}app/menu/${item.image
+                  }`,
               }}
               className="w-full h-full"
             />
+            {
+              isChoosed.length > 0 &&
+              <View style={{
+                position: 'absolute',
+                top: 0,
+                right: ms(0)
+              }}>
+                <IconAD name='checkcircle' color={color.GREEN_PRIMARY} size={ms(20)} />
+              </View>
+            }
           </View>
           <TextBold
             className=""
@@ -147,10 +166,10 @@ const ListMenu = ({ route, navigation }) => {
             {item.service_client === null ? 0 : item.service_client.price}
           </TextNormal>
           <TouchableNativeFeedback
-            onPress={() => handleChoose(item)}
+            onPress={() => isChoosed.length < 1 && handleChoose(item) }
             background={TouchableNativeFeedback.Ripple('#ccc')}>
             <View
-              className="bg-green-600 w-full  justify-center items-center absolute bottom-0"
+              className={` w-full  justify-center items-center absolute bottom-0 ${isChoosed.length > 0 ? "bg-green-300" : "bg-green-600"}`}
               style={{
                 borderRadius: ms(10),
                 height: ms(30),
@@ -165,49 +184,101 @@ const ListMenu = ({ route, navigation }) => {
     )
   }
 
+  const filterMenu = (menus) => {
+    if (search === '') {
+      return menus
+    }
+
+    return menus.filter(menu => menu.name.toLowerCase().includes(search.toLocaleLowerCase()))
+  }
+
+  const _renderCategory = ({ item, index }) => {
+    // const animation = new Animated.Value(section !== index ? 0 : 1)
+
+    const handleCollapse = () => {
+      // Animated.timing(animation, {
+      //   toValue: section === index ? 1 : 0,
+      //   duration: 300,
+      //   useNativeDriver: false
+      // }).start()
+
+      setSection(index === section ? null : index)
+    }
+
+    return (
+      <View className='' style={{ backgroundColor: 'white', marginVertical: ms(2), elevation: 10, height: 'auto' }} >
+        <Pressable onPress={() => handleCollapse(index)}>
+          <View className='flex-row justify-between items-center' style={{ height: ms(40), paddingHorizontal: ms(10), backgroundColor: color.GREEN_PRIMARY }}>
+            <TextBold style={{ fontSize: ms(18), color: 'white' }}>{item.name}</TextBold>
+            <IconAD name={index === section ? 'up' : 'down'} size={ms(20)} color={'white'} />
+          </View>
+        </Pressable>
+        {/* <Animated.View
+          style={{
+            height: animation.interpolate({
+              inputRange: [0, 1],
+              outputRange: [0, ms(300)]
+            })
+          }}
+        > */}
+        {
+          index === section &&
+          <FlatList
+            data={filterMenu(item.menu)}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={_renderItem}
+            collapsable
+            numColumns={4}
+
+          />
+        }
+        {/* </Animated.View> */}
+
+      </View>
+    )
+  }
+
   return (
     <View className="flex-[1] justify-start">
-      <View className="bg-green-600 my-5 px-10 py-2 flex-row justify-between items-center">
-        <Pressable onPress={() => navigation.goBack()}>
-          <Icon name="chevron-left" size={ms(20)} color="white" />
-        </Pressable>
+      <ImageBackground source={BgMenu} style={{ flex: .2 }}>
+        <View className='z-[5] flex-1 justify-center items-center'>
+          <TextBold style={{
+            fontSize: ms(22),
+            color: 'white',
+          }}>SELECT MENU</TextBold>
+          <View className='flex-row space-x-2 items-center justify-center'>
+            <TouchableNativeFeedback
+              background={TouchableNativeFeedback.Ripple('#ccc')}
+              onPress={() => navigation.goBack()}>
+              <IconAD name='arrowleft' size={ms(34)} color={'white'} />
+            </TouchableNativeFeedback>
+            <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
+              <IconAD name='search1' size={ms(16)} color={'gray'} />
+              <TextInput placeholder='Search' className='w-[70%]' />
+            </View>
+            <View className='w-5' />
+          </View>
+        </View>
+        <Overlay color={'bg-green-700/70'} />
+      </ImageBackground>
 
-        <TextBold className="text-white" style={{ fontSize: ms(18) }}>
-          Ala Carte
-        </TextBold>
-        <View />
-      </View>
-      <View className="justify-center items-center">
-        <Image
-          source={Logo}
-          style={{ width: ms(120), height: ms(90), resizeMode: 'contain' }}
-        />
-      </View>
-      <View className="flex-[1]">
+      <View className="flex-[1] px-10">
+        <TouchableNativeFeedback
+          onPress={() => navigation.navigate('AlacarteConfirmation')}
+          background={TouchableNativeFeedback.Ripple('#ccc')}
+        >
+          <View style={{ flexDirection: 'row', position: 'absolute', bottom: ms(20), right: (20), backgroundColor: color.GREEN_PRIMARY, alignItems: 'center', paddingHorizontal: ms(10), paddingVertical: ms(5), borderRadius: ms(8), zIndex: 99, elevation: 10 }}>
+            <IconAD name='shoppingcart' size={ms(20)} color={'white'} />
+            <TextBold style={{ fontSize: ms(18), color: 'white', marginLeft: ms(5) }}>{cart.result.menu.length} Menu Selected</TextBold>
+          </View>
+        </TouchableNativeFeedback>
         {menu.isFetching ? (
           <ActivityIndicator size={'large'} color={'green'} />
         ) : (
           <FlatList
-            data={listMenu}
+            data={menu.menuData}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={_renderItem}
-            numColumns={4}
-            // onEndReached={handleLoadMore}
-            ListFooterComponent={
-              loading ? (
-                <View style={{ marginVertical: ms(10) }}>
-                  <ActivityIndicator size={'large'} color="green" />
-                </View>
-              ) : (
-                <TouchableNativeFeedback onPress={handleLoadMore}>
-                  <View className="flex-row my-5 justify-center space-x-5 items-center">
-                    <Icon name="chevron-down" size={ms(12)} />
-                    <TextBold style={{ fontSize: ms(12) }}>See More</TextBold>
-                    <Icon name="chevron-down" size={ms(12)} />
-                  </View>
-                </TouchableNativeFeedback>
-              )
-            }
+            renderItem={_renderCategory}
           />
         )}
       </View>

@@ -130,23 +130,36 @@ const AlacarteHome = ({ navigation }) => {
         <Overlay color="bg-green-600/70" />
       </ImageBackground>
       <View className="flex-[1] z-[5] bg-white ">
-        <TouchableNativeFeedback
-          background={TouchableNativeFeedback.Ripple('#ccc')}
-          onPress={() => navigation.navigate('AlacarteOption')}>
-          <View
-            className="bg-green-600 justify-center items-center"
+        <View
+          className="bg-green-600 justify-center items-center"
+          style={{
+            width: ms(50),
+            height: ms(50),
+            borderRadius: ms(50),
+            position: 'absolute',
+            bottom: ms(20),
+            right: ms(20),
+            zIndex: 99,
+            overflow:'hidden'
+          }}>
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple('#ccc')}
             style={{
-              width: ms(50),
-              height: ms(50),
-              borderRadius: ms(50),
-              position: 'absolute',
-              bottom: ms(20),
-              right: ms(20),
-              zIndex: 99,
-            }}>
-            <Icon name="plus" color="white" size={ms(20)} />
-          </View>
-        </TouchableNativeFeedback>
+              borderRadius: '100%'
+            }}
+            onPress={() => navigation.navigate('AlacarteOption')}>
+            <View
+              className="bg-green-600 justify-center items-center"
+              style={{
+                width: ms(50),
+                height: ms(50),
+                borderRadius: ms(50),
+                zIndex: 99,
+              }}>
+              <Icon name="plus" color="white" size={ms(20)} />
+            </View>
+          </TouchableNativeFeedback>
+        </View>
         {isFetching ? (
           <ActivityIndicator size={'large'} color={'#00ff00'} />
         ) : data.length < 1 ? (
@@ -157,7 +170,7 @@ const AlacarteHome = ({ navigation }) => {
           <FlatList
             contentContainerStyle={{
               marginTop: ms(10),
-              paddingBottom:ms(10)
+              paddingBottom: ms(10)
             }}
             keyExtractor={(item, i) => i.toString()}
             data={data}

@@ -234,7 +234,7 @@ const AlacarteConfirmation = ({ navigation }) => {
       />
       <PopUpSuccess
         show={showSuccess}
-        onPress={() => navigation.replace('AlacartePatient')}
+        onPress={() => navigation.replace('AlacarteHome')}
       />
     </View>
   )
