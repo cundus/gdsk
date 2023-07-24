@@ -43,10 +43,16 @@ const PatientOrderMenu = ({ route, navigation }) => {
   const [listMenu, setListMenu] = useState([])
   const [loading, setLoading] = useState(false)
   const [search, setSearch] = useState('')
-
+  const [popUp, setPopUp] = useState({
+    open: false,
+    selectedMenu: {},
+    type: '',
+  })
   const dispatch = useDispatch()
+
   const handleChoose = data => {
     let isExist = false
+    setPopUp({ selectedMenu: data, open: true, type: toggleMenu })
   }
 
   useFocusEffect(
@@ -144,10 +150,10 @@ const PatientOrderMenu = ({ route, navigation }) => {
             {item.service_client === null ? 0 : item.service_client.price}
           </TextNormal>
           <TouchableNativeFeedback
-            onPress={() => isChoosed.length < 1 && handleChoose(item)}
+            onPress={() => handleChoose(item)}
             background={TouchableNativeFeedback.Ripple('#ccc')}>
             <View
-              className={` w-full  justify-center items-center absolute bottom-0 `}
+              className={` w-full  justify-center items-center absolute bottom-0 bg-green-600`}
               //   ${
               //     isChoosed.length > 0 ? 'bg-green-300' : 'bg-green-600'
               //   }`}

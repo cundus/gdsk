@@ -53,38 +53,38 @@ const PatientOrderListMenu = ({ route, navigation }) => {
 
     // setToggleMenu(val)
     if (val === 'order') {
-      // return dispatch(
-      //   updateCart({
-      //     id: tabMenu.order_patient_detail_id,
-      //     floor: patient.floor_id,
-      //     room: patient.room_id,
-      //     menu_type_id: [],
-      //     menu_category_id: [],
-      //     menu: [],
-      //     detail: [],
-      //     order_choices: [],
-      //     remarks: [],
-      //     menu_tak: [],
-      //     menu_replacement: [],
-      //     created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-      //   }),
-      // )
+      return dispatch(
+        updateCart({
+          id: tabMenu.order_patient_detail_id,
+          floor: patient.floor_id,
+          room: patient.room_id,
+          menu_type_id: [],
+          menu_category_id: [],
+          menu: [],
+          detail: [],
+          order_choices: [],
+          remarks: [],
+          menu_tak: [],
+          menu_replacement: [],
+          created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        }),
+      )
     } else if (val === 'extra') {
-      // return dispatch(
-      //   updateCart({
-      //     meal_time_id: tabMenu,
-      //     client_id: auth.user.selected_client,
-      //     user_id: auth.user.id,
-      //     patient_id: patient.patient_id,
-      //     menu_extra_id: 0,
-      //     menu: {},
-      //     price: 0,
-      //     quantity: 0,
-      //     total: 0,
-      //     remarks: '',
-      //     created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-      //   }),
-      // )
+      return dispatch(
+        updateCart({
+          meal_time_id: tabMenu,
+          client_id: auth.user.selected_client,
+          user_id: auth.user.id,
+          patient_id: patient.patient_id,
+          menu_extra_id: 0,
+          menu: {},
+          price: 0,
+          quantity: 0,
+          total: 0,
+          remarks: '',
+          created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+        }),
+      )
     }
 
     navigation.navigate('PatientOrderMenu')
