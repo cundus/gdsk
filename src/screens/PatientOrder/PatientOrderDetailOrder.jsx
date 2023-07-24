@@ -8,6 +8,7 @@ import {
   Image,
   Dimensions,
   Alert,
+  TextInput,
 } from 'react-native'
 import React from 'react'
 import moment from 'moment/moment'
@@ -39,6 +40,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
   const dispatch = useDispatch()
   const [tabMenu, setTabMenu] = useState({})
   const [toggleMenu, setToggleMenu] = useState('')
+  const [search, setSearch] = useState('')
   const [popUp, setPopUp] = useState({
     open: false,
     selectedMenu: {},
@@ -49,41 +51,43 @@ const PatientOrderListMenu = ({ route, navigation }) => {
       return Alert.alert('Warning', 'Harus Pilih Meal Time!')
     }
 
-    setToggleMenu(val)
+    // setToggleMenu(val)
     if (val === 'order') {
-      return dispatch(
-        updateCart({
-          id: tabMenu.order_patient_detail_id,
-          floor: patient.floor_id,
-          room: patient.room_id,
-          menu_type_id: [],
-          menu_category_id: [],
-          menu: [],
-          detail: [],
-          order_choices: [],
-          remarks: [],
-          menu_tak: [],
-          menu_replacement: [],
-          created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-        }),
-      )
+      // return dispatch(
+      //   updateCart({
+      //     id: tabMenu.order_patient_detail_id,
+      //     floor: patient.floor_id,
+      //     room: patient.room_id,
+      //     menu_type_id: [],
+      //     menu_category_id: [],
+      //     menu: [],
+      //     detail: [],
+      //     order_choices: [],
+      //     remarks: [],
+      //     menu_tak: [],
+      //     menu_replacement: [],
+      //     created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+      //   }),
+      // )
     } else if (val === 'extra') {
-      return dispatch(
-        updateCart({
-          meal_time_id: tabMenu,
-          client_id: auth.user.selected_client,
-          user_id: auth.user.id,
-          patient_id: patient.patient_id,
-          menu_extra_id: 0,
-          menu: {},
-          price: 0,
-          quantity: 0,
-          total: 0,
-          remarks: '',
-          created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
-        }),
-      )
+      // return dispatch(
+      //   updateCart({
+      //     meal_time_id: tabMenu,
+      //     client_id: auth.user.selected_client,
+      //     user_id: auth.user.id,
+      //     patient_id: patient.patient_id,
+      //     menu_extra_id: 0,
+      //     menu: {},
+      //     price: 0,
+      //     quantity: 0,
+      //     total: 0,
+      //     remarks: '',
+      //     created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+      //   }),
+      // )
     }
+
+    navigation.navigate('PatientOrderMenu')
   }
 
   const _renderItem = ({ item }) => {
@@ -190,17 +194,27 @@ const PatientOrderListMenu = ({ route, navigation }) => {
 
   return (
     <View className="flex-[1]">
-      <ImageBackground source={BgMenu} className="flex-[1] ">
-        <Overlay color={'bg-white/70'} />
-
-        <View className="flex-row z-[4] justify-center items-end h-full pb-10 px-10">
-          <TextBold className="" style={{ fontSize: ms(20), color: 'black' }}>
-            PATIENT ORDER - {patient.patient_name}
+      <ImageBackground source={BgMenu} style={{ flex: 0.2 }}>
+        <View className="flex-row z-50 flex-1 space-x-2 items-center justify-between">
+          <TouchableNativeFeedback
+            background={TouchableNativeFeedback.Ripple('#ccc')}
+            onPress={() => navigation.navigate('Home')}>
+            <Icon name="arrowleft" size={ms(34)} color={'white'} />
+          </TouchableNativeFeedback>
+          <TextBold
+            style={{
+              fontSize: ms(22),
+              color: 'white',
+            }}>
+            PATIENT ORDER
           </TextBold>
+
+          <View className="w-5" />
         </View>
+        <Overlay color="bg-green-700/70" />
       </ImageBackground>
-      <View className="flex-[4]">
-        <View className="flex-[1] z-[10] -mt-10 bg-white rounded-3xl">
+      <View className="flex-[1]">
+        <View className="flex-[1] z-[10] bg-white rounded-3xl">
           <View
             className="border border-gray-100 bg-white"
             style={{
@@ -216,15 +230,33 @@ const PatientOrderListMenu = ({ route, navigation }) => {
               }}>
               Patient Order
             </TextBold>
-
-            <View className="">
-              <TextNormal style={{ fontSize: ms(16), color: 'gray' }}>
-                Patient
-              </TextNormal>
-              <TextNormal
-                style={{ fontSize: ms(14), color: 'black', marginLeft: ms(5) }}>
-                {patient.patient_name}
-              </TextNormal>
+            <View className="flex-row justify-between items-center">
+              <View className="">
+                <TextNormal style={{ fontSize: ms(16), color: 'gray' }}>
+                  Patient
+                </TextNormal>
+                <TextNormal
+                  style={{
+                    fontSize: ms(14),
+                    color: 'black',
+                    marginLeft: ms(5),
+                  }}>
+                  {patient.patient_name}
+                </TextNormal>
+              </View>
+              <View className="">
+                <TextNormal style={{ fontSize: ms(16), color: 'gray' }}>
+                  Age
+                </TextNormal>
+                <TextNormal
+                  style={{
+                    fontSize: ms(14),
+                    color: 'black',
+                    marginLeft: ms(5),
+                  }}>
+                  {moment().diff(patient.patient_dob, 'year')}
+                </TextNormal>
+              </View>
             </View>
 
             <View className="">
@@ -232,18 +264,12 @@ const PatientOrderListMenu = ({ route, navigation }) => {
                 Diagnosa
               </TextNormal>
               <TextNormal
-                style={{ fontSize: ms(14), color: 'black', marginLeft: ms(5) }}>
+                style={{
+                  fontSize: ms(14),
+                  color: 'black',
+                  marginLeft: ms(5),
+                }}>
                 {patient.patient_diagnosis}
-              </TextNormal>
-            </View>
-
-            <View className="">
-              <TextNormal style={{ fontSize: ms(16), color: 'gray' }}>
-                Age
-              </TextNormal>
-              <TextNormal
-                style={{ fontSize: ms(14), color: 'black', marginLeft: ms(5) }}>
-                {moment().diff(patient.patient_dob, 'year')}
               </TextNormal>
             </View>
           </View>

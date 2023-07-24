@@ -35,13 +35,15 @@ const PatientOrderListPatient = ({ route, navigation }) => {
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
 
-  const filterMenu = (menus) => {
+  const filterMenu = menus => {
     if (search === '') {
       return menus
     }
-    return menus.filter(menu => menu.patient_name.toLowerCase().includes(search.toLocaleLowerCase()))
+    return menus.filter(menu =>
+      menu.patient_name.toLowerCase().includes(search.toLocaleLowerCase()),
+    )
   }
-  
+
   useFocusEffect(
     useCallback(() => {
       const getRoom = async () => {
@@ -69,7 +71,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
     return (
       <Pressable
         onPress={() =>
-          navigation.navigate('PatientOrderListMenu', {
+          navigation.navigate('PatientOrderDetailOrder', {
             patient: item,
           })
         }>
@@ -122,7 +124,6 @@ const PatientOrderListPatient = ({ route, navigation }) => {
                   </TextNormal>
                 </View>
               </View>
-
             </View>
             <View
               style={{
@@ -137,9 +138,8 @@ const PatientOrderListPatient = ({ route, navigation }) => {
                 />
               )}
             </View>
-
           </View>
-          <TextNormal style={{ fontSize: ms(18) }} className='text-green-600'>
+          <TextNormal style={{ fontSize: ms(18) }} className="text-green-600">
             {room.room_name}
           </TextNormal>
         </View>
@@ -152,25 +152,32 @@ const PatientOrderListPatient = ({ route, navigation }) => {
     <View className="flex-[1]">
       <ImageBackground source={BgMenu} className="flex-[0.2] ">
         <Overlay color={'bg-green-600/70'} />
-        <View className='z-[5] flex-1 justify-center items-center'>
-          <TextBold style={{
-            fontSize: ms(22),
-            color: 'white',
-          }}>{room.room_name.toUpperCase()}</TextBold>
-          <View className='flex-row space-x-2 items-center justify-center'>
+        <View className="z-[5] flex-1 justify-center items-center">
+          <TextBold
+            style={{
+              fontSize: ms(22),
+              color: 'white',
+            }}>
+            {room.room_name.toUpperCase()}
+          </TextBold>
+          <View className="flex-row space-x-2 items-center justify-center">
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple('#ccc')}
               onPress={() => navigation.goBack()}>
-              <Icon name='arrowleft' size={ms(34)} color={'white'} />
+              <Icon name="arrowleft" size={ms(34)} color={'white'} />
             </TouchableNativeFeedback>
-            <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
-              <Icon name='search1' size={ms(16)} color={'gray'} />
-              <TextInput placeholder='Search' value={search} onChangeText={e => setSearch(e)} className='w-[70%]' />
+            <View className="flex-row bg-white rounded-full justify-start items-center px-3">
+              <Icon name="search1" size={ms(16)} color={'gray'} />
+              <TextInput
+                placeholder="Search"
+                value={search}
+                onChangeText={e => setSearch(e)}
+                className="w-[70%]"
+              />
             </View>
-            <View className='w-5' />
+            <View className="w-5" />
           </View>
         </View>
-
       </ImageBackground>
       <View className="flex-[1]">
         <View className="flex-[1] z-[10] bg-white rounded-3xl">

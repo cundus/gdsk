@@ -35,9 +35,9 @@ import Overlay from '../../components/Overlay'
 
 const PAGE_SIZE = 8
 
-const ListMenu = ({ route, navigation }) => {
+const PatientOrderMenu = ({ route, navigation }) => {
   // const { data } = route.params
-  const { menu, auth, cart } = useSelector(state => state)
+  const { menu, auth, cartPatientOrder } = useSelector(state => state)
   const [page, setPage] = useState(1)
   const [section, setSection] = useState(null)
   const [listMenu, setListMenu] = useState([])
@@ -47,33 +47,6 @@ const ListMenu = ({ route, navigation }) => {
   const dispatch = useDispatch()
   const handleChoose = data => {
     let isExist = false
-
-    if (cart.result.menu.length > 0 && cart.result.menu !== undefined) {
-      cart.result.menu.map(menu => {
-        if (menu === data.id) {
-          isExist = true
-          return Alert.alert('Item already exist in cart')
-        }
-      })
-    }
-
-    if (!isExist) {
-      cart.result.menu = [...cart.result.menu, data.id]
-      cart.result.detail = [...cart.result.detail, data]
-      cart.result.price = [
-        ...cart.result.price,
-        data.service_client === null ? 0 : data.service_client.price,
-      ]
-      cart.result.total = [...cart.result.total, 0]
-      cart.result.quantity = [...cart.result.quantity, 1]
-      cart.result.remarks = [...cart.result.remarks, '']
-      cart.result.order_choices = [...cart.result.order_choices, '']
-      dispatch(
-        updateCart({
-          ...cart.result,
-        }),
-      )
-    }
   }
 
   useFocusEffect(
@@ -114,7 +87,7 @@ const ListMenu = ({ route, navigation }) => {
   }
 
   const _renderItem = ({ item }) => {
-    const isChoosed = cart.result.menu.filter(menu => menu === item.id)
+    // const isChoosed = cart.result.menu.filter(menu => menu === item.id)
     return (
       <View
         className="justify-end  m-2 "
@@ -146,7 +119,7 @@ const ListMenu = ({ route, navigation }) => {
               }}
               className="w-full h-full"
             />
-            {isChoosed.length > 0 && (
+            {/* {isChoosed.length > 0 && (
               <View
                 style={{
                   position: 'absolute',
@@ -159,7 +132,7 @@ const ListMenu = ({ route, navigation }) => {
                   size={ms(20)}
                 />
               </View>
-            )}
+            )} */}
           </View>
           <TextBold
             className=""
@@ -174,9 +147,10 @@ const ListMenu = ({ route, navigation }) => {
             onPress={() => isChoosed.length < 1 && handleChoose(item)}
             background={TouchableNativeFeedback.Ripple('#ccc')}>
             <View
-              className={` w-full  justify-center items-center absolute bottom-0 ${
-                isChoosed.length > 0 ? 'bg-green-300' : 'bg-green-600'
-              }`}
+              className={` w-full  justify-center items-center absolute bottom-0 `}
+              //   ${
+              //     isChoosed.length > 0 ? 'bg-green-300' : 'bg-green-600'
+              //   }`}
               style={{
                 borderRadius: ms(10),
                 height: ms(30),
@@ -221,7 +195,9 @@ const ListMenu = ({ route, navigation }) => {
           backgroundColor: 'white',
           marginVertical: ms(2),
           elevation: 10,
+          borderRadius: ms(10),
           height: 'auto',
+          overflow: 'hidden',
         }}>
         <Pressable onPress={() => handleCollapse(index)}>
           <View
@@ -321,7 +297,8 @@ const ListMenu = ({ route, navigation }) => {
             <IconAD name="shoppingcart" size={ms(20)} color={'white'} />
             <TextBold
               style={{ fontSize: ms(18), color: 'white', marginLeft: ms(5) }}>
-              {cart.result.menu.length} Menu Selected
+              {/* {cart.result.menu.length} */}
+              Menu Selected
             </TextBold>
           </View>
         </TouchableNativeFeedback>
@@ -339,4 +316,4 @@ const ListMenu = ({ route, navigation }) => {
   )
 }
 
-export default ListMenu
+export default PatientOrderMenu
