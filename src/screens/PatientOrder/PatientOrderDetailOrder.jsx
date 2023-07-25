@@ -53,7 +53,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
 
     // setToggleMenu(val)
     if (val === 'order') {
-      return dispatch(
+      dispatch(
         updateCart({
           id: tabMenu.order_patient_detail_id,
           floor: patient.floor_id,
@@ -70,7 +70,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
         }),
       )
     } else if (val === 'extra') {
-      return dispatch(
+      dispatch(
         updateCart({
           meal_time_id: tabMenu,
           client_id: auth.user.selected_client,

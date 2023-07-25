@@ -142,8 +142,15 @@ const PatientOrderMenu = ({ route, navigation }) => {
           </View>
           <TextBold
             className=""
-            style={{ fontSize: ms(13), textAlign: 'center', color: 'black' }}>
-            {item.name}
+            style={{
+              fontSize: ms(12),
+              textAlign: 'center',
+              color: 'black',
+              marginHorizontal: ms(5),
+            }}>
+            {item.name.length > 14
+              ? item.name.substring(0, 15) + '...'
+              : item.name}
           </TextBold>
           {/* <TextBold style={{ fontSize: ms(10) }}>PLACEHOLDER</TextBold> */}
           <TextNormal style={{ fontSize: ms(10), textAlign: 'center' }}>
@@ -238,6 +245,21 @@ const PatientOrderMenu = ({ route, navigation }) => {
             renderItem={_renderItem}
             collapsable
             numColumns={4}
+            ListFooterComponent={
+              <View style={{ justifyContent: 'center' }}>
+                <TouchableNativeFeedback>
+                  <View
+                    style={{
+                      margin: ms(5),
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: color.GREEN_PRIMARY,
+                    }}>
+                    <TextBold>Additional Menu</TextBold>
+                  </View>
+                </TouchableNativeFeedback>
+              </View>
+            }
             columnWrapperStyle={{
               flex: 1 / 4,
               justifyContent: 'flex-start',
