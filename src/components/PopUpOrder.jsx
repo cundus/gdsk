@@ -74,8 +74,7 @@ const PopUpOrder = ({
 
       dispatch(updateCart(cart))
 
-      handleClose()
-      return navigation.navigate('PatientOrderConfirmation')
+      return handleClose()
     }
 
     cart.id = cart.id

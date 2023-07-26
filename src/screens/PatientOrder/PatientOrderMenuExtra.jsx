@@ -31,7 +31,7 @@ import PopUpOrder from '../../components/PopUpOrder'
 
 const PAGE_SIZE = 8
 
-const PatientOrderMenu = ({ route, navigation }) => {
+const PatientOrderMenuExtra = ({ route, navigation }) => {
   const { type } = route.params
   const { menu, auth, cartPatientOrder } = useSelector(state => state)
   const [page, setPage] = useState(1)
@@ -88,8 +88,11 @@ const PatientOrderMenu = ({ route, navigation }) => {
   }
 
   const _renderItem = ({ item }) => {
-    const isChoosed = cartPatientOrder.result.menu.filter(
-      menu => menu === item.id,
+    const isChoosed = cartPatientOrder.result?.menu_extra_id === item.id
+    console.log(
+      cartPatientOrder.result?.menu_extra_id,
+      item.id,
+      cartPatientOrder.result?.menu_extra_id === item.id,
     )
     return (
       <View
@@ -107,11 +110,10 @@ const PatientOrderMenu = ({ route, navigation }) => {
             style={{
               width: ms(60),
               height: ms(60),
-              overflow: 'hidden',
               borderRadius: ms(60),
-              marginTop: -ms(30),
               backgroundColor: 'white',
               elevation: 7,
+              marginTop: -ms(10),
               position: 'relative',
             }}>
             <Image
@@ -122,7 +124,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
               }}
               className="w-full h-full"
             />
-            {/* {isChoosed.length > 0 && (
+            {isChoosed && (
               <View
                 style={{
                   position: 'absolute',
@@ -135,7 +137,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
                   size={ms(20)}
                 />
               </View>
-            )} */}
+            )}
           </View>
           <TextBold
             className=""
@@ -154,12 +156,12 @@ const PatientOrderMenu = ({ route, navigation }) => {
             {item.service_client === null ? 0 : item.service_client.price}
           </TextNormal>
           <TouchableNativeFeedback
-            disabled={isChoosed.length > 0}
+            disabled={isChoosed}
             onPress={() => handleChoose(item)}
             background={TouchableNativeFeedback.Ripple('#ccc')}>
             <View
               className={` w-full  justify-center items-center absolute bottom-0 bg-green-600
-                ${isChoosed.length > 0 ? 'bg-green-300' : 'bg-green-600'}`}
+                ${isChoosed ? 'bg-green-300' : 'bg-green-600'}`}
               style={{
                 borderRadius: ms(10),
                 height: ms(30),
@@ -321,7 +323,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
             <IconAD name="shoppingcart" size={ms(20)} color={'white'} />
             <TextBold
               style={{ fontSize: ms(18), color: 'white', marginLeft: ms(5) }}>
-              {cartPatientOrder.result.menu.length}
+              {cartPatientOrder.result.menu_extra_id ? 1 : 0}
               Menu Selected
             </TextBold>
           </View>
@@ -330,9 +332,9 @@ const PatientOrderMenu = ({ route, navigation }) => {
           <ActivityIndicator size={'large'} color={'green'} />
         ) : (
           <FlatList
-            data={menu.menuData}
+            data={menu.menuExtra}
             keyExtractor={(item, index) => index.toString()}
-            renderItem={_renderCategory}
+            renderItem={_renderItem}
           />
         )}
       </View>
@@ -355,4 +357,4 @@ const PatientOrderMenu = ({ route, navigation }) => {
   )
 }
 
-export default PatientOrderMenu
+export default PatientOrderMenuExtra

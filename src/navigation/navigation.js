@@ -27,6 +27,8 @@ import PatientOrderListRoom from '../screens/PatientOrder/PatientOrderListRoom'
 import PatientOrderListPatient from '../screens/PatientOrder/PatientOrderListPatient'
 import PatientOrderDetailOrder from '../screens/PatientOrder/PatientOrderDetailOrder'
 import PatientOrderConfirmation from '../screens/PatientOrder/PatientOrderConfirmation'
+import PatientOrderMenu from '../screens/PatientOrder/PatientOrderMenu'
+import PatientOrderMenuExtra from '../screens/PatientOrder/PatientOrderMenuExtra'
 
 import ChangeServer from '../screens/ChangeServer'
 
@@ -34,7 +36,6 @@ import TestScreen from '../screens/Test/TestScreen'
 import ChangePassword from '../screens/ChangePassword'
 import AlacarteOption from '../screens/Alacarte/AlacarteOption'
 import DetailOrder from '../screens/Alacarte/DetailOrder'
-import PatientOrderMenu from '../screens/PatientOrder/PatientOrderMenu'
 
 const Stack = createStackNavigator()
 const Tab = createBottomTabNavigator()
@@ -138,6 +139,10 @@ const PatientOrderStack = () => {
         component={PatientOrderDetailOrder}
       />
       <Stack.Screen name="PatientOrderMenu" component={PatientOrderMenu} />
+      <Stack.Screen
+        name="PatientOrderMenuExtra"
+        component={PatientOrderMenuExtra}
+      />
       <Stack.Screen
         name="PatientOrderConfirmation"
         component={PatientOrderConfirmation}

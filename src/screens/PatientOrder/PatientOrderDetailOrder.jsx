@@ -31,7 +31,7 @@ import { updateCart } from '../../stores/reducers/cartPatientOrder'
 
 const { width } = Dimensions.get('window')
 
-const PatientOrderListMenu = ({ route, navigation }) => {
+const PatientOrderDetailOrder = ({ route, navigation }) => {
   const { patient } = route.params
   const { floor, auth, patientOrder, menu, cartPatientOrder } = useSelector(
     state => state,
@@ -72,7 +72,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
     } else if (val === 'extra') {
       dispatch(
         updateCart({
-          meal_time_id: tabMenu,
+          meal_time_id: tabMenu.meal_time_id,
           client_id: auth.user.selected_client,
           user_id: auth.user.id,
           patient_id: patient.patient_id,
@@ -87,7 +87,13 @@ const PatientOrderListMenu = ({ route, navigation }) => {
       )
     }
 
-    navigation.navigate('PatientOrderMenu')
+    navigation.navigate(
+      val === 'extra' ? 'PatientOrderMenuExtra' : 'PatientOrderMenu',
+      {
+        meal_time: tabMenu.meal_time_id,
+        type: val,
+      },
+    )
   }
 
   const _renderItem = ({ item }) => {
@@ -195,10 +201,10 @@ const PatientOrderListMenu = ({ route, navigation }) => {
   return (
     <View className="flex-[1]">
       <ImageBackground source={BgMenu} style={{ flex: 0.2 }}>
-        <View className="flex-row z-50 flex-1 space-x-2 items-center justify-between">
+        <View className="flex-row z-50 flex-1 space-x-2 px-10 items-center justify-between">
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('#ccc')}
-            onPress={() => navigation.navigate('Home')}>
+            onPress={() => navigation.goBack()}>
             <Icon name="arrowleft" size={ms(34)} color={'white'} />
           </TouchableNativeFeedback>
           <TextBold
@@ -221,7 +227,7 @@ const PatientOrderListMenu = ({ route, navigation }) => {
               elevation: 5,
               margin: ms(15),
               borderRadius: ms(10),
-              padding: ms(10),
+              padding: ms(5),
             }}>
             <TextBold
               className={'text-center text-black'}
@@ -409,23 +415,8 @@ const PatientOrderListMenu = ({ route, navigation }) => {
           )}
         </View>
       </View>
-      <PopUpOrder
-        data={{
-          ...popUp.selectedMenu,
-          image:
-            auth.serverUrl.replace('api', '') +
-            'app/menu/' +
-            popUp.selectedMenu.image,
-        }}
-        show={popUp.open}
-        typeMenu={popUp.type}
-        onOrder={() => {}}
-        handleClose={() =>
-          setPopUp({ open: false, selectedMenu: {}, type: '' })
-        }
-      />
     </View>
   )
 }
 
-export default PatientOrderListMenu
+export default PatientOrderDetailOrder
