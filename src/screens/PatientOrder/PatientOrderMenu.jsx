@@ -66,7 +66,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
   useMemo(() => {
     if (menu.menuData.length > 0) {
       const arrMenu = []
-      menu.menuData.map(item => item.menu?.map(item2 => arrMenu.push(item2)))
+      menu.menuData.map(item => item?.menu?.map(item2 => arrMenu.push(item2)))
 
       setListMenu(arrMenu.slice(0, 12))
     }
@@ -88,7 +88,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
   }
 
   const _renderItem = ({ item }) => {
-    const isChoosed = cartPatientOrder.result.menu.filter(
+    const isChoosed = cartPatientOrder.result?.menu?.filter(
       menu => menu === item.id,
     )
     return (
@@ -103,6 +103,21 @@ const PatientOrderMenu = ({ route, navigation }) => {
             borderRadius: ms(10),
             paddingBottom: ms(20),
           }}>
+          {isChoosed.length > 0 && (
+            <View
+              style={{
+                position: 'absolute',
+                top: 0,
+                right: ms(0),
+                zIndex: 50,
+              }}>
+              <IconAD
+                name="checkcircle"
+                color={color.GREEN_PRIMARY}
+                size={ms(20)}
+              />
+            </View>
+          )}
           <View
             style={{
               width: ms(60),
@@ -122,20 +137,6 @@ const PatientOrderMenu = ({ route, navigation }) => {
               }}
               className="w-full h-full"
             />
-            {/* {isChoosed.length > 0 && (
-              <View
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  right: ms(0),
-                }}>
-                <IconAD
-                  name="checkcircle"
-                  color={color.GREEN_PRIMARY}
-                  size={ms(20)}
-                />
-              </View>
-            )} */}
           </View>
           <TextBold
             className=""
@@ -154,12 +155,12 @@ const PatientOrderMenu = ({ route, navigation }) => {
             {item.service_client === null ? 0 : item.service_client.price}
           </TextNormal>
           <TouchableNativeFeedback
-            disabled={isChoosed.length > 0}
+            disabled={isChoosed?.length > 0}
             onPress={() => handleChoose(item)}
             background={TouchableNativeFeedback.Ripple('#ccc')}>
             <View
               className={` w-full  justify-center items-center absolute bottom-0 bg-green-600
-                ${isChoosed.length > 0 ? 'bg-green-300' : 'bg-green-600'}`}
+                ${isChoosed?.length > 0 ? 'bg-green-300' : 'bg-green-600'}`}
               style={{
                 borderRadius: ms(10),
                 height: ms(30),
@@ -241,21 +242,21 @@ const PatientOrderMenu = ({ route, navigation }) => {
             renderItem={_renderItem}
             collapsable
             numColumns={4}
-            ListFooterComponent={
-              <View style={{ justifyContent: 'center' }}>
-                <TouchableNativeFeedback>
-                  <View
-                    style={{
-                      margin: ms(5),
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: color.GREEN_PRIMARY,
-                    }}>
-                    <TextBold>Additional Menu</TextBold>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
-            }
+            // ListFooterComponent={
+            //   <View style={{ justifyContent: 'center' }}>
+            //     <TouchableNativeFeedback>
+            //       <View
+            //         style={{
+            //           margin: ms(5),
+            //           justifyContent: 'center',
+            //           alignItems: 'center',
+            //           backgroundColor: color.GREEN_PRIMARY,
+            //         }}>
+            //         <TextBold>Additional Menu</TextBold>
+            //       </View>
+            //     </TouchableNativeFeedback>
+            //   </View>
+            // }
             columnWrapperStyle={{
               flex: 1 / 4,
               justifyContent: 'flex-start',
@@ -321,7 +322,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
             <IconAD name="shoppingcart" size={ms(20)} color={'white'} />
             <TextBold
               style={{ fontSize: ms(18), color: 'white', marginLeft: ms(5) }}>
-              {cartPatientOrder.result.menu.length}
+              {cartPatientOrder.result.menu?.length}
               Menu Selected
             </TextBold>
           </View>

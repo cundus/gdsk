@@ -9,6 +9,8 @@ import {
   Dimensions,
   Alert,
   TextInput,
+  ScrollView,
+  VirtualizedList,
 } from 'react-native'
 import React from 'react'
 import moment from 'moment/moment'
@@ -28,6 +30,8 @@ import color from '../../utils/color'
 import { useFocusEffect } from '@react-navigation/native'
 import { useCallback } from 'react'
 import { updateCart } from '../../stores/reducers/cartPatientOrder'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useMemo } from 'react'
 
 const { width } = Dimensions.get('window')
 
@@ -39,13 +43,27 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
 
   const dispatch = useDispatch()
   const [tabMenu, setTabMenu] = useState({})
+  const [dataAfter, setDataAfter] = useState([])
+  const [dataAfterExtra, setDataAfterExtra] = useState([])
   const [toggleMenu, setToggleMenu] = useState('')
+  // const [currentTab, setCurrentTab] = useState([])
   const [search, setSearch] = useState('')
   const [popUp, setPopUp] = useState({
     open: false,
     selectedMenu: {},
     type: '',
   })
+
+  const currentTab = useMemo(
+    () => dataAfter.filter(item => item.meal_time_id === tabMenu.meal_time_id),
+    [tabMenu, patient, dataAfter],
+  )
+  const currentTabExtra = useMemo(() => {
+    return dataAfterExtra.find(
+      item => item.meal_time_id === tabMenu.meal_time_id,
+    )?.menu
+  }, [tabMenu, patient, dataAfter])
+
   const handleCreateOrder = val => {
     if (Object.keys(tabMenu).length < 1) {
       return Alert.alert('Warning', 'Harus Pilih Meal Time!')
@@ -67,11 +85,14 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
           menu_tak: [],
           menu_replacement: [],
           created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+          patient_id: patient.patient_id,
+          meal_time_id: tabMenu.meal_time_id,
         }),
       )
     } else if (val === 'extra') {
       dispatch(
         updateCart({
+          floor: patient.floor_id,
           meal_time_id: tabMenu.meal_time_id,
           client_id: auth.user.selected_client,
           user_id: auth.user.id,
@@ -96,6 +117,35 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
     )
   }
 
+  const handleEditOrder = val => {
+    if (Object.keys(tabMenu).length < 1) {
+      return Alert.alert('Warning', 'Harus Pilih Meal Time!')
+    }
+
+    // setToggleMenu(val)
+    if (val === 'order') {
+      dispatch(
+        updateCart({
+          ...currentTab[0],
+        }),
+      )
+    } else if (val === 'extra') {
+      dispatch(
+        updateCart({
+          ...currentTabExtra,
+        }),
+      )
+    }
+
+    navigation.navigate(
+      val === 'extra' ? 'PatientOrderMenuExtra' : 'PatientOrderMenu',
+      {
+        meal_time: tabMenu.meal_time_id,
+        type: val,
+      },
+    )
+  }
+
   const _renderItem = ({ item }) => {
     let existed = false
     if (toggleMenu === 'order') {
@@ -103,40 +153,33 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
     }
 
     return (
-      <TouchableNativeFeedback
-        onPress={() =>
-          existed
-            ? null
-            : setPopUp({ selectedMenu: item, open: true, type: toggleMenu })
-        }
-        background={TouchableNativeFeedback.Ripple('white')}>
+      <>
         <View
           className="justify-end"
           style={{
-            height: ms(150),
+            height: ms(115),
             flex: 1,
             margin: ms(5),
           }}>
           <View
             className=" justify-start bg-white items-center "
             style={{
-              height: ms(100),
+              height: ms(90),
               elevation: 5,
               borderRadius: ms(10),
               paddingBottom: ms(20),
             }}>
-            {existed && (
-              <FAIcon
-                name="check-circle"
-                size={ms(16)}
-                color={color.GREEN_PRIMARY}
-                style={{
-                  position: 'absolute',
-                  right: 0,
-                  top: 0,
-                }}
-              />
-            )}
+            <FAIcon
+              name="check-circle"
+              size={ms(16)}
+              color={color.GREEN_PRIMARY}
+              style={{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+                zIndex: 50,
+              }}
+            />
             <View
               style={{
                 width: ms(50),
@@ -149,9 +192,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
               }}>
               <Image
                 source={{
-                  uri: `${auth.serverUrl.replace('api', '')}app/menu/${
-                    item.image
-                  }`,
+                  uri: item.image,
                 }}
                 className="w-full h-full"
               />
@@ -159,18 +200,51 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
             <TextBold
               className="mt-2"
               style={{ fontSize: ms(10), textAlign: 'center', color: 'black' }}>
-              {item.name}
+              {item?.name.length > 15
+                ? item?.name.substring(0, 15) + '....'
+                : item?.name}
             </TextBold>
             <TextNormal style={{ fontSize: ms(10) }}>
               {item.description ? item.description : '1 Porsi'}
             </TextNormal>
             <TextNormal style={{ fontSize: ms(10), textAlign: 'center' }}>
-              {item.service_client === null ? 0 : item.service_client.price}
+              {item.service_client === null ? 0 : item?.service_client?.price}
             </TextNormal>
           </View>
         </View>
-      </TouchableNativeFeedback>
+      </>
     )
+  }
+
+  const getOrderPatientFromStorage = async () => {
+    try {
+      const value = await AsyncStorage.getItem('orderPatient')
+      if (value !== null) {
+        const data = JSON.parse(value)
+
+        const currentData = data.filter(
+          item => item.patient_id === patient.patient_id,
+        )
+        setDataAfter(currentData)
+      }
+    } catch (error) {
+      Alert.alert('Error Retrieving Data', error.toString())
+    }
+  }
+
+  const getExtraFoodDataFromStorage = async () => {
+    try {
+      const value = await AsyncStorage.getItem('orderExtra')
+      if (value !== null) {
+        const dataExtraFood = JSON.parse(value)
+        const currentData = dataExtraFood.filter(
+          item => item.patient_id === patient.patient_id,
+        )
+        setDataAfterExtra(currentData)
+      }
+    } catch (error) {
+      Alert.alert('Error Retrieving Data', error.toString())
+    }
   }
 
   useFocusEffect(
@@ -189,9 +263,11 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
           }),
         )
       }
+      getExtraFoodDataFromStorage()
+      getOrderPatientFromStorage()
+      setTabMenu(patient.order[0])
 
       return () => {
-        setTabMenu(0)
         setToggleMenu('')
         setPopUp({ open: false, selectedMenu: {}, type: '' })
       }
@@ -225,9 +301,10 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
             className="border border-gray-100 bg-white"
             style={{
               elevation: 5,
-              margin: ms(15),
+              margin: ms(10),
               borderRadius: ms(10),
-              padding: ms(5),
+              paddingVertical: ms(5),
+              paddingHorizontal: ms(10),
             }}>
             <TextBold
               className={'text-center text-black'}
@@ -302,7 +379,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
                       id === patient.order.length - 1 ? ms(30) : 0,
                   }}>
                   <TextBold
-                    style={{ fontSize: ms(8) }}
+                    style={{ fontSize: ms(10) }}
                     className={`${
                       tabMenu.meal_time_id === item.meal_time_id
                         ? 'text-white'
@@ -314,105 +391,182 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
               </TouchableNativeFeedback>
             ))}
           </View>
-
-          {toggleMenu ? (
-            <>
-              <FlatList
-                data={
-                  toggleMenu === 'order'
-                    ? menu.menuData.reduce((result, item) => {
-                        result.push(...item.menu)
-
-                        return result
-                      }, [])
-                    : menu.menuExtra
-                }
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={_renderItem}
-                numColumns={4}
-                contentContainerStyle={{
-                  paddingHorizontal: 16,
-                  paddingVertical: 8,
-                }}
-              />
-              <View
-                className={`bg-green-500 flex-row justify-between items-center w-[90%] rounded-full mx-auto mb-5`}>
-                <View className="flex-row space-x-5 px-10 h-full items-center">
-                  <Image
-                    alt="icon"
-                    source={IconDelivery}
-                    style={{
-                      width: ms(20),
-                      height: '100%',
-                      resizeMode: 'contain',
-                      tintColor: 'white',
-                    }}
-                  />
-                  <TextNormal style={{ fontSize: ms(14), color: 'white' }}>
-                    {cartPatientOrder.result?.menu?.length} Food Item
-                  </TextNormal>
-                </View>
-
-                <TouchableNativeFeedback
-                  onPress={() =>
-                    navigation.navigate('PatientOrderConfirmation')
-                  }>
-                  <View
-                    className="flex-row  items-center h-full space-x-10 rounded-full bg-green-700"
-                    style={{ paddingLeft: ms(10) }}>
-                    <TextNormal
-                      style={{
-                        color: 'white',
-                        fontSize: ms(12),
-                        width: ms(50),
-                        textAlign: 'center',
-                      }}>
-                      Order Now
-                    </TextNormal>
-                    <Icon name="doubleright" color={'white'} size={ms(20)} />
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
-            </>
-          ) : (
+          <View className="flex-1">
             <View className="flex-1">
-              <View className="justify-center items-center flex-1">
-                <TextBold className="text-gray-400 mb-6 text-lg">
-                  You haven't created the order
-                </TextBold>
-                <TouchableNativeFeedback
-                  onPress={() => handleCreateOrder('order')}>
-                  <View className="px-5 py-3 bg-green-500 rounded-3xl">
-                    <TextBold
-                      className="text-white "
-                      style={{ fontSize: ms(10) }}>
-                      Create Order
-                    </TextBold>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
-              <View className="flex-[1.5]">
-                <TextNormal className="bg-green-500 mb-10 text-center text-3xl text-white">
-                  Extra Food
-                </TextNormal>
-                <View className="justify-center items-center ">
+              {currentTab.length > 0 ? (
+                <FlatList
+                  data={currentTab[0].detail}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={_renderItem}
+                  numColumns={4}
+                  // getItemCount={() => cartPatientOrder.result?.detail.length}
+                  // getItem={(data, index) => data[index]}
+                  contentContainerStyle={{
+                    paddingHorizontal: 16,
+                    paddingVertical: ms(10),
+                  }}
+                  ListFooterComponent={
+                    <View
+                      style={{
+                        alignSelf: 'center',
+                        overflow: 'hidden',
+                        marginVertical: ms(10),
+                        borderRadius: ms(10),
+                        backgroundColor: color.GREEN_PRIMARY,
+                      }}>
+                      <TouchableNativeFeedback
+                        onPress={() => handleEditOrder('order')}
+                        background={TouchableNativeFeedback.Ripple('#ccc')}>
+                        <View
+                          style={{
+                            backgroundColor: color.GREEN_PRIMARY,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '100%',
+                            paddingHorizontal: ms(10),
+                            paddingVertical: ms(5),
+                          }}>
+                          <TextBold
+                            style={{ fontSize: ms(12), color: 'white' }}>
+                            Edit Order
+                          </TextBold>
+                        </View>
+                      </TouchableNativeFeedback>
+                    </View>
+                  }
+                />
+              ) : (
+                <View className="justify-center items-center flex-1">
                   <TextBold className="text-gray-400 mb-6 text-lg">
-                    You haven't created extra food
+                    You haven't created the order
                   </TextBold>
                   <TouchableNativeFeedback
-                    onPress={() => handleCreateOrder('extra')}>
+                    onPress={() => handleCreateOrder('order')}>
                     <View className="px-5 py-3 bg-green-500 rounded-3xl">
                       <TextBold
                         className="text-white "
                         style={{ fontSize: ms(10) }}>
-                        Add extra food
+                        Create Order
                       </TextBold>
                     </View>
                   </TouchableNativeFeedback>
                 </View>
+              )}
+            </View>
+            <View className="flex-1">
+              <TextNormal className="bg-green-500 mb-10 text-center text-3xl text-white">
+                Extra Food
+              </TextNormal>
+              <View className="justify-center items-center ">
+                {currentTabExtra ? (
+                  <>
+                    <View
+                      style={{
+                        width: ms(150),
+                        margin: ms(5),
+                      }}>
+                      <View
+                        className=" justify-start bg-white items-center "
+                        style={{
+                          height: ms(80),
+                          elevation: 5,
+                          borderRadius: ms(10),
+                          paddingBottom: ms(20),
+                        }}>
+                        <FAIcon
+                          name="check-circle"
+                          size={ms(16)}
+                          color={color.GREEN_PRIMARY}
+                          style={{
+                            position: 'absolute',
+                            right: 0,
+                            top: 0,
+                            zIndex: 50,
+                          }}
+                        />
+                        <View
+                          style={{
+                            width: ms(50),
+                            height: ms(50),
+                            // overflow: 'hidden',
+                            borderRadius: ms(50),
+                            marginTop: -ms(30),
+                            backgroundColor: 'white',
+                            elevation: 7,
+                          }}>
+                          <Image
+                            source={{
+                              uri: currentTabExtra.image,
+                            }}
+                            className="w-full h-full"
+                          />
+                        </View>
+                        <TextBold
+                          className="mt-2"
+                          style={{
+                            fontSize: ms(10),
+                            textAlign: 'center',
+                            color: 'black',
+                          }}>
+                          {currentTabExtra?.name.length > 15
+                            ? currentTabExtra?.name.substring(0, 15) + '....'
+                            : currentTabExtra?.name}
+                        </TextBold>
+                        <TextNormal
+                          style={{ fontSize: ms(10), textAlign: 'center' }}>
+                          {currentTabExtra.service_client === null
+                            ? 0
+                            : currentTabExtra?.service_client?.price}
+                        </TextNormal>
+                      </View>
+                    </View>
+                    <View
+                      style={{
+                        alignSelf: 'center',
+                        overflow: 'hidden',
+                        borderRadius: ms(10),
+                        backgroundColor: color.GREEN_PRIMARY,
+                      }}>
+                      <TouchableNativeFeedback
+                        onPress={() => handleEditOrder('extra')}
+                        background={TouchableNativeFeedback.Ripple('#ccc')}>
+                        <View
+                          style={{
+                            backgroundColor: color.GREEN_PRIMARY,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '100%',
+                            paddingHorizontal: ms(10),
+                            paddingVertical: ms(5),
+                          }}>
+                          <TextBold
+                            style={{ fontSize: ms(12), color: 'white' }}>
+                            Edit Order
+                          </TextBold>
+                        </View>
+                      </TouchableNativeFeedback>
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <TextBold className="text-gray-400 mb-6 text-lg">
+                      You haven't created extra food
+                    </TextBold>
+                    <TouchableNativeFeedback
+                      onPress={() => handleCreateOrder('extra')}>
+                      <View className="px-5 py-3 bg-green-500 rounded-3xl">
+                        <TextBold
+                          className="text-white "
+                          style={{ fontSize: ms(10) }}>
+                          Add extra food
+                        </TextBold>
+                      </View>
+                    </TouchableNativeFeedback>
+                  </>
+                )}
               </View>
             </View>
-          )}
+          </View>
         </View>
       </View>
     </View>

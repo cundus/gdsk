@@ -13,32 +13,30 @@ const Home = () => {
   const { user } = useSelector(state => state.auth)
   return (
     <View style={styles.container}>
-      <ImageBackground source={BgMenu} style={{flex:.2,}}  resizeMode='cover' >
-        <View className='absolute top-0 left-0 bottom-0 right-0 bg-green-500/80'>
-
-        </View>
+      <ImageBackground source={BgMenu} style={{ flex: 0.2 }} resizeMode="cover">
+        <View className="absolute top-0 left-0 bottom-0 right-0 bg-green-500/80"></View>
       </ImageBackground>
       <View style={styles.content}>
         <ScrollView>
           <View style={styles.itemInfo}>
             <Text style={styles.itemInfoTitle}>EMAIL:</Text>
-            <Text style={styles.itemInfoText}>{user.email}</Text>
+            <Text style={styles.itemInfoText}>{user?.email}</Text>
           </View>
           <View style={styles.itemInfo}>
             <Text style={styles.itemInfoTitle}>ROLE:</Text>
-            <Text style={styles.itemInfoText}>{user.role.name}</Text>
+            <Text style={styles.itemInfoText}>{user?.role?.name}</Text>
           </View>
           <View style={styles.itemInfo}>
             <Text style={styles.itemInfoTitle}>NAME:</Text>
-            <Text style={styles.itemInfoText}>{user.name}</Text>
+            <Text style={styles.itemInfoText}>{user?.name}</Text>
           </View>
           <View style={styles.itemInfo}>
             <Text style={styles.itemInfoTitle}>NIK:</Text>
-            <Text style={styles.itemInfoText}>{user.nik}</Text>
+            <Text style={styles.itemInfoText}>{user?.nik}</Text>
           </View>
           <View style={styles.itemInfo}>
             <Text style={styles.itemInfoTitle}>POSITION:</Text>
-            <Text style={styles.itemInfoText}>{user.position}</Text>
+            <Text style={styles.itemInfoText}>{user?.position}</Text>
           </View>
         </ScrollView>
       </View>
@@ -48,7 +46,7 @@ const Home = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   content: {
     backgroundColor: 'white',
@@ -59,13 +57,13 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     paddingHorizontal: ms(50),
-    paddingTop:ms(20)
+    paddingTop: ms(20),
   },
   itemInfo: {
     backgroundColor: '#e5e7eb',
     padding: ms(10),
     borderRadius: ms(10),
-    margin: ms(2)
+    margin: ms(2),
   },
   itemInfoText: {
     fontSize: ms(12),
@@ -74,8 +72,8 @@ const styles = StyleSheet.create({
   itemInfoTitle: {
     fontSize: ms(16),
     color: 'black',
-    fontFamily: 'Avenir-Roman'
-  }
+    fontFamily: 'Avenir-Roman',
+  },
 })
 
 export default Home

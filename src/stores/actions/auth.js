@@ -37,7 +37,9 @@ export const loginUser = createAsyncThunk(
         config,
       )
 
-      console.log(data)
+      if (!data.data) {
+        return Alert.alert('Email atau password salah!')
+      }
 
       await AsyncStorage.setItem('user', JSON.stringify(data.data))
       await AsyncStorage.setItem('serverUrl', serverUrl)

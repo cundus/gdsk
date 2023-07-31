@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableNativeFeedback,
-  View
+  View,
 } from 'react-native'
 import { ms } from 'react-native-size-matters'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,6 +17,7 @@ import { useFocusEffect } from '@react-navigation/native'
 import { useCallback } from 'react'
 import { TextInput } from 'react-native-gesture-handler'
 import IconAD from 'react-native-vector-icons/AntDesign'
+import IconFA from 'react-native-vector-icons/FontAwesome'
 import { BgLantai, BgMenu } from '../../assets/images/background'
 import Overlay from '../../components/Overlay'
 import { TextBold } from '../../components/Text'
@@ -26,8 +27,8 @@ import {
   syncPatientOrderExtra,
 } from '../../stores/actions/patientOrder'
 import { loading } from '../../stores/reducers/patientOrder'
-
-
+import color from '../../utils/color'
+import { updateCart } from '../../stores/reducers/cartPatientOrder'
 
 const PatientOrder = ({ navigation }) => {
   const { floor, auth, patientOrder } = useSelector(state => state)
@@ -38,13 +39,14 @@ const PatientOrder = ({ navigation }) => {
     orderExtra: [],
   })
   const [search, setSearch] = useState('')
-  const filterMenu = (menus) => {
+  const filterMenu = menus => {
     if (search === '') {
       return menus
     }
-    return menus.filter(menu => menu.floor_name.toLowerCase().includes(search.toLocaleLowerCase()))
+    return menus.filter(menu =>
+      menu.floor_name.toLowerCase().includes(search.toLocaleLowerCase()),
+    )
   }
-
 
   useFocusEffect(
     useCallback(() => {
@@ -60,7 +62,6 @@ const PatientOrder = ({ navigation }) => {
   )
 
   const syncData = async () => {
-    dispatch(loading())
     await dispatch(
       syncPatientOrder({ serverUrl: auth.serverUrl, body: state.orderPatient }),
     )
@@ -76,11 +77,20 @@ const PatientOrder = ({ navigation }) => {
       orderPatient: [],
       orderExtra: [],
     })
-    dispatch(loading())
+    dispatch(
+      getPatientOrder({
+        serverUrl: auth.serverUrl,
+        clientId: auth.user.selected_client,
+      }),
+    )
   }
 
-
   const _renderItem = ({ item }) => {
+    console.log(
+      state.orderPatient.filter(order => order.floor === item.floor_id).length,
+      state,
+      item.floor_id,
+    )
     return (
       <TouchableNativeFeedback
         background={TouchableNativeFeedback.Ripple('#ccc')}
@@ -90,23 +100,22 @@ const PatientOrder = ({ navigation }) => {
           })
         }>
         <View style={styles.card}>
-
           <Text style={[styles.cardText, { color: 'black' }]}>
             {item.floor_name}
           </Text>
           <View className="flex-row space-x-3">
-            <View style={styles.rightCard} className='bg-green-600'>
+            <View style={styles.rightCard} className="bg-green-600">
               <Text style={[styles.statusCardText, { color: 'white' }]}>
                 {state.orderPatient.length > 0
                   ? state.orderPatient.filter(
-                    order => order.floor === item.floor_id,
-                  ).length
+                      order => order.floor === item.floor_id,
+                    ).length
                   : 0}{' '}
                 Unsynced
               </Text>
             </View>
-            <View style={styles.rightCard} className='border border-green-600'>
-              <Text style={styles.statusCardText} className='text-green-600'>
+            <View style={styles.rightCard} className="border border-green-600">
+              <Text style={styles.statusCardText} className="text-green-600">
                 {item.pending_order} Pending
               </Text>
             </View>
@@ -121,7 +130,9 @@ const PatientOrder = ({ navigation }) => {
       const value = await AsyncStorage.getItem('orderPatient')
       if (value !== null) {
         const data = JSON.parse(value)
-        setState({ ...state, orderPatient: data })
+        console.log(data)
+        setState(prev => ({ ...prev, orderPatient: data }))
+        dispatch(updateCart(data))
       }
     } catch (error) {
       Alert.alert('Error Retrieving Data', error.toString())
@@ -133,7 +144,7 @@ const PatientOrder = ({ navigation }) => {
       const value = await AsyncStorage.getItem('orderExtra')
       if (value !== null) {
         const dataExtraFood = JSON.parse(value)
-        setState({ ...state, orderExtra: dataExtraFood })
+        setState(prev => ({ ...prev, orderExtra: dataExtraFood }))
       }
     } catch (error) {
       Alert.alert('Error Retrieving Data', error.toString())
@@ -142,23 +153,30 @@ const PatientOrder = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground source={BgMenu} style={{ flex: .2 }}>
-        <View className='z-[5] flex-1 justify-center items-center'>
-          <TextBold style={{
-            fontSize: ms(22),
-            color: 'white',
-          }}>PATIENT ORDER</TextBold>
-          <View className='flex-row space-x-2 items-center justify-center'>
+      <ImageBackground source={BgMenu} style={{ flex: 0.2 }}>
+        <View className="z-[5] flex-1 justify-center items-center">
+          <TextBold
+            style={{
+              fontSize: ms(22),
+              color: 'white',
+            }}>
+            PATIENT ORDER
+          </TextBold>
+          <View className="flex-row space-x-2 items-center justify-center">
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple('#ccc')}
               onPress={() => navigation.navigate('Home')}>
-              <IconAD name='arrowleft' size={ms(34)} color={'white'} />
+              <IconAD name="arrowleft" size={ms(34)} color={'white'} />
             </TouchableNativeFeedback>
-            <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
-              <IconAD name='search1' size={ms(16)} color={'gray'} />
-              <TextInput placeholder='Search' onChangeText={e=> setSearch(e)} className='w-[70%]' />
+            <View className="flex-row bg-white rounded-full justify-start items-center px-3">
+              <IconAD name="search1" size={ms(16)} color={'gray'} />
+              <TextInput
+                placeholder="Search"
+                onChangeText={e => setSearch(e)}
+                className="w-[70%]"
+              />
             </View>
-            <View className='w-5' />
+            <View className="w-5" />
           </View>
         </View>
         <Overlay color={'bg-green-700/70'} />
@@ -170,12 +188,8 @@ const PatientOrder = ({ navigation }) => {
           borderTopLeftRadius: ms(10),
           borderTopRightRadius: ms(10),
         }}>
-        <View
-          source={BgLantai}
-          style={{ zIndex: 4, flex: 1 }}
-        >
+        <View style={{ flex: 1 }}>
           <View style={styles.contentContainer}>
-
             {floor.isFetching || patientOrder.isFetching ? (
               <ActivityIndicator size={'large'} color={'#00ff00'} />
             ) : (
@@ -185,6 +199,38 @@ const PatientOrder = ({ navigation }) => {
                 renderItem={_renderItem}
               />
             )}
+          </View>
+          <View
+            style={{
+              zIndex: 99,
+              width: ms(50),
+              height: ms(50),
+              borderRadius: ms(50),
+              position: 'absolute',
+              bottom: ms(20),
+              right: ms(20),
+              backgroundColor: color.GREEN_PRIMARY,
+              justifyContent: 'center',
+              alignItems: 'center',
+              overflow: 'hidden',
+            }}>
+            <TouchableNativeFeedback
+              onPress={syncData}
+              disabled={floor.isFetching || patientOrder.isFetching}
+              background={TouchableNativeFeedback.Ripple('#ccc')}>
+              <View
+                style={{
+                  zIndex: 99,
+                  width: ms(50),
+                  height: ms(50),
+                  borderRadius: ms(50),
+                  backgroundColor: color.GREEN_PRIMARY,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <IconFA name="refresh" size={ms(30)} color={'white'} />
+              </View>
+            </TouchableNativeFeedback>
           </View>
         </View>
       </View>
@@ -226,7 +272,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     paddingHorizontal: ms(10),
     paddingVertical: ms(15),
-    borderRadius: ms(10)
+    borderRadius: ms(10),
   },
   leftCard: {
     backgroundColor: 'white',

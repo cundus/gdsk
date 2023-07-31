@@ -4,8 +4,9 @@ import {
   ImageBackground,
   Image,
   TouchableNativeFeedback,
+  Alert,
 } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { ms } from 'react-native-size-matters'
 import { BgMenu } from '../../assets/images/background'
 import Overlay from '../../components/Overlay'
@@ -14,15 +15,20 @@ import { TextBold, TextNormal } from '../../components/Text'
 import { FlatList } from 'react-native-gesture-handler'
 import color from '../../utils/color'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigation } from '@react-navigation/native'
+import { StackActions, useNavigation } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { updateCart } from '../../stores/reducers/cartPatientOrder'
 import Icon from 'react-native-vector-icons/AntDesign'
+import PopUpConfirmation from '../../components/PopUpConfirmation'
+import PopUpSuccess from '../../components/PopUpSuccess'
 
 const PatientOrderConfirmation = ({}) => {
   const navigation = useNavigation()
   const cart = useSelector(state => state.cartPatientOrder)
   const dispatch = useDispatch()
+  const [indexToRemove, setIndexToRemove] = useState(null)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [remove, setRemove] = useState(false)
 
   const _renderItem = ({ item, idx }) => {
     return (
@@ -60,16 +66,24 @@ const PatientOrderConfirmation = ({}) => {
             </View>
             <View className="ml-10">
               <TextBold style={{ fontSize: ms(16), color: 'black' }}>
-                {item?.name}
+                {item?.name?.length > 20
+                  ? item?.name?.substring(0, 20) + '....'
+                  : item?.name}
               </TextBold>
               <TextBold style={{ fontSize: ms(16), color: 'black' }}>
                 Rp.
-                {item?.service_client === null ? 0 : item?.service_client.price}
+                {item?.service_client === null
+                  ? 0
+                  : item?.service_client?.price}
               </TextBold>
             </View>
           </View>
           <View className="mt-5">
-            <TouchableNativeFeedback onPress={() => {}}>
+            <TouchableNativeFeedback
+              onPress={() => {
+                setIndexToRemove(item.id)
+                setRemove(true)
+              }}>
               <View
                 style={{
                   width: ms(20),
@@ -95,18 +109,56 @@ const PatientOrderConfirmation = ({}) => {
     )
   }
 
-  const removeItem = id => {
-    const cartTemp = cart.result
-    const itemIdx = cartTemp.detail.findIndex(item => item.id === id)
+  const removeItem = () => {
+    let cartTemp = cart.result
+
+    if (Array.isArray(cart.result.menu)) {
+      const itemIdx = cartTemp.detail.findIndex(
+        item => +item.id === +indexToRemove,
+      )
+      for (let item in cartTemp) {
+        if (Array.isArray(cartTemp[item])) {
+          cartTemp[item] = cartTemp[item].filter(
+            (_, index) => index !== itemIdx,
+          )
+        }
+      }
+      console.log(JSON.stringify(cartTemp, null, 1))
+      dispatch(updateCart(cartTemp))
+      return setIndexToRemove(null)
+    }
+
+    dispatch(
+      updateCart({
+        ...cartTemp,
+        menu_extra_id: 0,
+        menu: {},
+        price: 0,
+        quantity: 0,
+        total: 0,
+        remarks: '',
+      }),
+    )
   }
 
   const submit = async () => {
+    if (Array.isArray(cart.result.menu)) {
+      if (cart.result.menu.length < 1) {
+        return Alert.alert('Error', 'Tidak ada makanan yang dipilih!')
+      }
+    } else {
+      if (Object.keys(cart.result.menu).length < 1) {
+        return Alert.alert('Error', 'Tidak ada makanan yang dipilih!')
+      }
+    }
+
     await saveDataToStorage(cart.result)
-    navigation.navigate('PatientOrderHome')
-    dispatch(updateCart({}))
+
+    setShowSuccess(true)
   }
 
   const saveDataToStorage = async data => {
+    console.log(data)
     try {
       let order = []
       if (!Array.isArray(cart.result.menu)) {
@@ -139,7 +191,6 @@ const PatientOrderConfirmation = ({}) => {
   const totalPrice = () => {
     if (Array.isArray(cart.result.menu)) {
       return cart.result.detail.reduce((a, b) => {
-        console.log(b.service_client, b.id)
         if (!b.service_client) {
           return a + 0
         }
@@ -153,6 +204,10 @@ const PatientOrderConfirmation = ({}) => {
   const dataToRender = () => {
     if (Array.isArray(cart.result.menu)) {
       return cart.result.detail
+    }
+
+    if (Object.keys(cart?.result?.menu).length < 1) {
+      return []
     }
 
     return [cart.result.menu]
@@ -221,6 +276,24 @@ const PatientOrderConfirmation = ({}) => {
           </View>
         </View>
       </View>
+      <PopUpSuccess
+        show={showSuccess}
+        onPress={() => {
+          const popAction = StackActions.pop(2)
+          setShowSuccess(false)
+          dispatch(updateCart({}))
+
+          navigation.dispatch(popAction)
+        }}
+      />
+      <PopUpConfirmation
+        onConfirm={removeItem}
+        show={!!indexToRemove || remove}
+        onDecline={() => {
+          setIndexToRemove(null)
+          setRemove(false)
+        }}
+      />
     </View>
   )
 }
