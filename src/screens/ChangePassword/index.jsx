@@ -19,6 +19,10 @@ import { urlValidator } from '../../utils/regexValidator'
 const ChangePassword = ({ navigation }) => {
   const auth = useSelector(state => state.auth)
   const [server, setServer] = useState(auth.serverUrl)
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmNewPassword, setConfirmNewPassword] = useState('')
+  const [visibleNewPass, setVisibleNewPass] = useState(false)
+  const [visibleConfirmNewPass, setVisibleConfirmNewPass] = useState(false)
 
   const onSubmit = async () => {
     try {
@@ -46,31 +50,59 @@ const ChangePassword = ({ navigation }) => {
           <Icon name="arrowleft" size={ms(22)} color={'white'} />
         </TouchableNativeFeedback>
         <TextBold style={{ fontSize: ms(16), color: 'white' }}>
-          Change Server
+          Change Password
         </TextBold>
         <View style={{ width: ms(16) }}></View>
       </View>
       <View className="flex-[1]  items-center pt-10">
-        <TextInput
-          placeholder="Server url"
-          onChangeText={text => setServer(text)}
-          value={server}
-          style={{
-            backgroundColor: 'white',
-            width: '70%',
-            borderRadius: ms(10),
-            padding: ms(10),
-            fontSize: ms(12),
-            fontFamily: 'Avenir-Roman',
-            borderBottomColor: color.GREEN_PRIMARY,
-            borderBottomWidth: ms(1),
-          }}
-        />
+        <View className="my-3 w-full items-center">
+          <Text className="text-gray-400">New Password</Text>
+          <TextInput
+            placeholder="Enter Your New Password..."
+            onChangeText={text => setNewPassword(text)}
+            value={newPassword}
+            secureTextEntry={!visibleNewPass}
+            style={{
+              backgroundColor: 'white',
+              width: '70%',
+              borderRadius: ms(10),
+              padding: ms(10),
+              fontSize: ms(12),
+              fontFamily: 'Avenir-Roman',
+              borderBottomColor: color.GREEN_PRIMARY,
+              borderBottomWidth: ms(1),
+            }}
+          />
+        </View>
+        <View className="my-3 w-full items-center">
+          <Text className="text-gray-400 ">Confirm New Password</Text>
+          <TextInput
+            placeholder="Please Confirm Your New Password..."
+            onChangeText={text => setConfirmNewPassword(text)}
+            value={confirmNewPassword}
+            secureTextEntry={!visibleConfirmNewPass}
+            style={{
+              backgroundColor: 'white',
+              width: '70%',
+              borderRadius: ms(10),
+              padding: ms(10),
+              fontSize: ms(12),
+              fontFamily: 'Avenir-Roman',
+              borderBottomColor: color.GREEN_PRIMARY,
+              borderBottomWidth: ms(1),
+            }}
+          />
+          {confirmNewPassword.length > 1 &&
+            confirmNewPassword !== newPassword && (
+              <Text className="text-red-500">
+                Your Password Confirmation Doesn't Match!
+              </Text>
+            )}
+        </View>
         <TouchableNativeFeedback style={{ width: '50%' }} onPress={onSubmit}>
           <View
             style={{
               backgroundColor: color.GREEN_PRIMARY,
-              width: ms(100),
               justifyContent: 'center',
               alignItems: 'center',
               padding: ms(5),
@@ -78,7 +110,7 @@ const ChangePassword = ({ navigation }) => {
               marginTop: ms(10),
             }}>
             <TextBold style={{ color: 'white', fontSize: ms(14) }}>
-              Change
+              Change Password
             </TextBold>
           </View>
         </TouchableNativeFeedback>
@@ -88,5 +120,5 @@ const ChangePassword = ({ navigation }) => {
 }
 
 export default ChangePassword
- 
+
 const styles = StyleSheet.create({})
