@@ -40,7 +40,7 @@ const Setting = ({ navigation }) => {
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
+      {/* <TouchableOpacity onPress={() => navigation.navigate('ChangePassword')}>
         <View style={styles.button}>
           <View style={{ width: ms(10) }} />
           <TextBold
@@ -52,7 +52,7 @@ const Setting = ({ navigation }) => {
           </TextBold>
           <Icon name="logout" size={ms(16)} color="white" />
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity onPress={handleLogout}>
         <View style={styles.button}>

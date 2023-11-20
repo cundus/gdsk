@@ -105,7 +105,7 @@ const PopUpOrder = ({
             alignItems: 'center',
             padding: ms(50),
           }}>
-          <View className="bg-white flex-[1] w-full">
+          <View className="bg-white flex-[1] w-full rounded-lg overflow-hidden">
             <View className="flex-[1]">
               <Image
                 source={{ uri: data.image }}
@@ -114,7 +114,7 @@ const PopUpOrder = ({
               />
               <Overlay color={'bg-green-600/30'} />
             </View>
-            <View className="flex-[3] z-[10] w-full ">
+            <View className="flex-[2] z-[10] w-full ">
               <View
                 style={{
                   marginTop: -ms(20),

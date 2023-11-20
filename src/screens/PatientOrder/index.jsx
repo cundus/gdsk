@@ -33,6 +33,7 @@ import { updateCart } from '../../stores/reducers/cartPatientOrder'
 const PatientOrder = ({ navigation }) => {
   const { floor, auth, patientOrder } = useSelector(state => state)
   const dispatch = useDispatch()
+  console.log(JSON.stringify(patientOrder, null, 2))
 
   const [state, setState] = useState({
     orderPatient: [],

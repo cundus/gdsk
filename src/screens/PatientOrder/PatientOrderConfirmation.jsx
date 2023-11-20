@@ -142,12 +142,12 @@ const PatientOrderConfirmation = ({}) => {
   }
 
   const submit = async () => {
-    if (Array.isArray(cart.result.menu)) {
+    if (Array.isArray(cart?.result?.menu)) {
       if (cart.result.menu.length < 1) {
         return Alert.alert('Error', 'Tidak ada makanan yang dipilih!')
       }
     } else {
-      if (Object.keys(cart.result.menu).length < 1) {
+      if (Object.keys(cart?.result?.menu).length < 1) {
         return Alert.alert('Error', 'Tidak ada makanan yang dipilih!')
       }
     }
@@ -204,10 +204,6 @@ const PatientOrderConfirmation = ({}) => {
   const dataToRender = () => {
     if (Array.isArray(cart.result.menu)) {
       return cart.result.detail
-    }
-
-    if (Object.keys(cart?.result?.menu).length < 1) {
-      return []
     }
 
     return [cart.result.menu]

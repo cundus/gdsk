@@ -58,6 +58,7 @@ const ListMenu = ({ route, navigation }) => {
     }
 
     if (!isExist) {
+      console.log(JSON.stringify(cart.result, null, 2))
       cart.result.menu = [...cart.result.menu, data.id]
       cart.result.detail = [...cart.result.detail, data]
       cart.result.price = [
@@ -67,7 +68,10 @@ const ListMenu = ({ route, navigation }) => {
       cart.result.total = [...cart.result.total, 0]
       cart.result.quantity = [...cart.result.quantity, 1]
       cart.result.remarks = [...cart.result.remarks, '']
-      cart.result.order_choices = [...cart.result.order_choices, '']
+      if (cart.result.ala_carte_type == 1) {
+        cart.result.order_choices = [...cart?.result?.order_choices, '']
+      }
+
       dispatch(
         updateCart({
           ...cart.result,
@@ -114,7 +118,7 @@ const ListMenu = ({ route, navigation }) => {
   }
 
   const _renderItem = ({ item }) => {
-    const isChoosed = cart.result.menu.filter(menu => menu === item.id)
+    const isChoosed = cart.result?.menu?.filter(menu => menu === item.id)
     return (
       <View
         className="justify-end  m-2 "
@@ -146,7 +150,7 @@ const ListMenu = ({ route, navigation }) => {
               }}
               className="w-full h-full"
             />
-            {isChoosed.length > 0 && (
+            {isChoosed?.length > 0 && (
               <View
                 style={{
                   position: 'absolute',
@@ -171,11 +175,11 @@ const ListMenu = ({ route, navigation }) => {
             {item.service_client === null ? 0 : item.service_client.price}
           </TextNormal>
           <TouchableNativeFeedback
-            onPress={() => isChoosed.length < 1 && handleChoose(item)}
+            onPress={() => isChoosed?.length < 1 && handleChoose(item)}
             background={TouchableNativeFeedback.Ripple('#ccc')}>
             <View
               className={` w-full  justify-center items-center absolute bottom-0 ${
-                isChoosed.length > 0 ? 'bg-green-300' : 'bg-green-600'
+                isChoosed?.length > 0 ? 'bg-green-300' : 'bg-green-600'
               }`}
               style={{
                 borderRadius: ms(10),
@@ -321,7 +325,7 @@ const ListMenu = ({ route, navigation }) => {
             <IconAD name="shoppingcart" size={ms(20)} color={'white'} />
             <TextBold
               style={{ fontSize: ms(18), color: 'white', marginLeft: ms(5) }}>
-              {cart.result.menu.length} Menu Selected
+              {cart?.result?.menu?.length} Menu Selected
             </TextBold>
           </View>
         </TouchableNativeFeedback>

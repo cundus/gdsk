@@ -186,48 +186,41 @@ const PatientOrderMenu = ({ route, navigation }) => {
   }
 
   const _renderCategory = ({ item, index }) => {
-    // const animation = new Animated.Value(section !== index ? 0 : 1)
-
     const handleCollapse = () => {
-      // Animated.timing(animation, {
-      //   toValue: section === index ? 1 : 0,
-      //   duration: 300,
-      //   useNativeDriver: false
-      // }).start()
-
       setSection(index === section ? null : index)
     }
 
     return (
-      <View
-        className=""
-        style={{
-          backgroundColor: 'white',
-          marginVertical: ms(2),
-          elevation: 10,
-          borderRadius: ms(10),
-          height: 'auto',
-          overflow: 'hidden',
-        }}>
-        <Pressable onPress={() => handleCollapse(index)}>
-          <View
-            className="flex-row justify-between items-center"
-            style={{
-              height: ms(40),
-              paddingHorizontal: ms(10),
-              backgroundColor: color.GREEN_PRIMARY,
-            }}>
-            <TextBold style={{ fontSize: ms(18), color: 'white' }}>
-              {item.name}
-            </TextBold>
-            <IconAD
-              name={index === section ? 'up' : 'down'}
-              size={ms(20)}
-              color={'white'}
-            />
-          </View>
-        </Pressable>
-        {/* <Animated.View
+      filterMenu(item.menu).length > 1 && (
+        <View
+          className=""
+          style={{
+            backgroundColor: 'white',
+            marginVertical: ms(2),
+            elevation: 10,
+            borderRadius: ms(10),
+            height: 'auto',
+            overflow: 'hidden',
+          }}>
+          <Pressable onPress={() => handleCollapse(index)}>
+            <View
+              className="flex-row justify-between items-center"
+              style={{
+                height: ms(40),
+                paddingHorizontal: ms(10),
+                backgroundColor: color.GREEN_PRIMARY,
+              }}>
+              <TextBold style={{ fontSize: ms(18), color: 'white' }}>
+                {item.name}
+              </TextBold>
+              <IconAD
+                name={index === section ? 'up' : 'down'}
+                size={ms(20)}
+                color={'white'}
+              />
+            </View>
+          </Pressable>
+          {/* <Animated.View
           style={{
             height: animation.interpolate({
               inputRange: [0, 1],
@@ -235,37 +228,38 @@ const PatientOrderMenu = ({ route, navigation }) => {
             })
           }}
         > */}
-        {index === section && (
-          <FlatList
-            data={filterMenu(item.menu)}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={_renderItem}
-            collapsable
-            numColumns={4}
-            // ListFooterComponent={
-            //   <View style={{ justifyContent: 'center' }}>
-            //     <TouchableNativeFeedback>
-            //       <View
-            //         style={{
-            //           margin: ms(5),
-            //           justifyContent: 'center',
-            //           alignItems: 'center',
-            //           backgroundColor: color.GREEN_PRIMARY,
-            //         }}>
-            //         <TextBold>Additional Menu</TextBold>
-            //       </View>
-            //     </TouchableNativeFeedback>
-            //   </View>
-            // }
-            columnWrapperStyle={{
-              flex: 1 / 4,
-              justifyContent: 'flex-start',
-            }}
-            ListEmptyComponent={<TextBold>No Menu</TextBold>}
-          />
-        )}
-        {/* </Animated.View> */}
-      </View>
+          {index === section && (
+            <FlatList
+              data={filterMenu(item.menu)}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={_renderItem}
+              collapsable
+              numColumns={4}
+              // ListFooterComponent={
+              //   <View style={{ justifyContent: 'center' }}>
+              //     <TouchableNativeFeedback>
+              //       <View
+              //         style={{
+              //           margin: ms(5),
+              //           justifyContent: 'center',
+              //           alignItems: 'center',
+              //           backgroundColor: color.GREEN_PRIMARY,
+              //         }}>
+              //         <TextBold>Additional Menu</TextBold>
+              //       </View>
+              //     </TouchableNativeFeedback>
+              //   </View>
+              // }
+              columnWrapperStyle={{
+                flex: 1 / 4,
+                justifyContent: 'flex-start',
+              }}
+              ListEmptyComponent={<TextBold>No Menu</TextBold>}
+            />
+          )}
+          {/* </Animated.View> */}
+        </View>
+      )
     )
   }
 
@@ -322,7 +316,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
             <IconAD name="shoppingcart" size={ms(20)} color={'white'} />
             <TextBold
               style={{ fontSize: ms(18), color: 'white', marginLeft: ms(5) }}>
-              {cartPatientOrder.result.menu?.length}
+              {cartPatientOrder.result?.menu?.length}
               Menu Selected
             </TextBold>
           </View>

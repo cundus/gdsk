@@ -68,7 +68,7 @@ const AlacarteConfirmation = ({ navigation }) => {
     // console.log('Render Item: ', item)
     return (
       <View
-        className="flex-row m-5 bg-white rounded-xl justify-between px-5 pt-3 pb-4"
+        className="flex-row m-5 bg-white rounded-xl justify-between px-5 pt-3 pb-4 relative"
         style={{
           elevation: 10,
         }}>
@@ -97,7 +97,9 @@ const AlacarteConfirmation = ({ navigation }) => {
           </View>
           <View className="justify-center">
             <TextBold style={{ fontSize: ms(20), color: 'black', padding: 12 }}>
-              {item.name}
+              {item.name.length > 15
+                ? item.name.substring(0, 15) + '...'
+                : item.name}
             </TextBold>
             <View className="flex-row  items-center space-x-5 p-3">
               <Pressable onPress={() => handleMinus(item.id)}>
@@ -117,7 +119,7 @@ const AlacarteConfirmation = ({ navigation }) => {
           </View>
         </View>
         <Pressable onPress={() => onpressRemove(item.id)}>
-          <View className="rounded-full bg-green-500 p-0.5">
+          <View className="rounded-full bg-green-500 p-0.5 absolute">
             <Icon name="close" size={ms(16)} color="white" className="p-1" />
           </View>
         </Pressable>
