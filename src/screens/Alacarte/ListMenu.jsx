@@ -122,11 +122,11 @@ const ListMenu = ({ route, navigation }) => {
     return (
       <View
         className="justify-end  m-2 "
-        style={{ height: ms(200), flex: 1 / 4 }}>
+        style={{ height: ms(160), flex: 1 / 4 }}>
         <View
           className=" justify-start bg-white items-center "
           style={{
-            height: ms(160),
+            height: ms(120),
             elevation: 5,
             borderRadius: ms(10),
             paddingBottom: ms(20),

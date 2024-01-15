@@ -29,8 +29,9 @@ const PatientOrderConfirmation = ({}) => {
   const [indexToRemove, setIndexToRemove] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [remove, setRemove] = useState(false)
+  console.log('this is cart', JSON.stringify(cart, null, 2))
 
-  const _renderItem = ({ item, idx }) => {
+  const _renderItem = ({ item, index: idx }) => {
     return (
       <View
         style={{
@@ -41,7 +42,7 @@ const PatientOrderConfirmation = ({}) => {
         <View
           style={{
             paddingHorizontal: ms(10),
-            height: ms(100),
+            height: ms(80),
             flexDirection: 'row',
             justifyContent: 'space-between',
             elevation: 7,
@@ -51,9 +52,9 @@ const PatientOrderConfirmation = ({}) => {
           <View className="flex-row justify-center items-center">
             <View
               style={{
-                width: ms(80),
-                height: ms(80),
-                borderRadius: ms(80),
+                width: ms(60),
+                height: ms(60),
+                borderRadius: ms(60),
                 backgroundColor: 'white',
                 elevation: 5,
                 overflow: 'hidden',
@@ -65,16 +66,18 @@ const PatientOrderConfirmation = ({}) => {
               />
             </View>
             <View className="ml-10">
-              <TextBold style={{ fontSize: ms(16), color: 'black' }}>
+              <TextBold style={{ fontSize: ms(14), color: 'black' }}>
                 {item?.name?.length > 20
                   ? item?.name?.substring(0, 20) + '....'
-                  : item?.name}
+                  : item?.name}{' '}
+                {cart?.result.order_choices[idx] &&
+                  '- ' +
+                    cart?.result?.detail[idx]?.order_choice?.find(
+                      choice => choice.id === cart?.result?.order_choices[idx],
+                    )?.choice}
               </TextBold>
-              <TextBold style={{ fontSize: ms(16), color: 'black' }}>
-                Rp.
-                {item?.service_client === null
-                  ? 0
-                  : item?.service_client?.price}
+              <TextBold style={{ fontSize: ms(14), color: 'black' }}>
+                Kalori : -
               </TextBold>
             </View>
           </View>
@@ -125,6 +128,7 @@ const PatientOrderConfirmation = ({}) => {
       }
       console.log(JSON.stringify(cartTemp, null, 1))
       dispatch(updateCart(cartTemp))
+      setRemove(false)
       return setIndexToRemove(null)
     }
 

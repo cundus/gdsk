@@ -51,7 +51,6 @@ const PatientOrderListPatient = ({ route, navigation }) => {
           const { data: patientData } = await axios.get(
             `${state.serverUrl}/order-patient/patients?f=${room.floor_id}&r=${room.room_id}&rc=${room.room_class_id}`,
           )
-
           setData(patientData)
         } catch (error) {
           if (error.response && error.response.data.message) {
@@ -82,7 +81,9 @@ const PatientOrderListPatient = ({ route, navigation }) => {
             <TextBold style={{ fontSize: ms(18), color: 'black' }}>
               {item.patient_name.toUpperCase()}
             </TextBold>
-            <TextNormal style={{ fontSize: ms(12) }}>{item.status}</TextNormal>
+            <TextNormal style={{ fontSize: ms(12) }}>
+              {item.status} - {item.bed} - {item.diagnosis} - {item.remarks}
+            </TextNormal>
           </View>
 
           <View className="flex-row space-x-2">

@@ -40,7 +40,6 @@ const PopUpOrder = ({
   const dispatch = useDispatch()
   const navigation = useNavigation()
   const [form, setForm] = useState(intialValue)
-  console.log(JSON.stringify(cartPatientOrder.result, null, 2))
   const handleChangeForm = (name, value) => {
     setForm({ ...form, [name]: value })
   }
@@ -93,6 +92,8 @@ const PopUpOrder = ({
 
     handleClose()
   }
+
+  console.log(JSON.stringify(data, null, 2))
 
   return (
     <Modal animationType="slide" transparent={true} visible={show}>
@@ -198,6 +199,10 @@ const PopUpOrder = ({
                         textAlign: 'center',
                         marginBottom: ms(5),
                       }}
+                      value={form.menu_replacement}
+                      onChangeText={e =>
+                        setForm({ ...form, menu_replacement: e })
+                      }
                     />
                   </View>
 
@@ -214,6 +219,8 @@ const PopUpOrder = ({
                     </TextNormal>
                     <TextInput
                       placeholder="Menu Remarks"
+                      value={form.remarks}
+                      onChangeText={e => setForm({ ...form, remarks: e })}
                       style={{
                         width: '80%',
                         color: 'black',
@@ -239,6 +246,8 @@ const PopUpOrder = ({
                     </TextNormal>
                     <TextInput
                       placeholder="Menu Tak"
+                      value={form.menu_tak}
+                      onChangeText={e => setForm({ ...form, menu_tak: e })}
                       style={{
                         width: '80%',
                         color: 'black',
@@ -248,6 +257,62 @@ const PopUpOrder = ({
                         textAlign: 'center',
                       }}
                     />
+                  </View>
+                  <TextNormal
+                    style={{
+                      width: '100%',
+                      fontSize: ms(14),
+                      color: 'black',
+                      backgroundColor: '#e2e8f0',
+                      textAlign: 'center',
+                      marginTop: ms(5),
+                    }}>
+                    Order Choices
+                  </TextNormal>
+                  <View className="w-full flex-row items-center justify-center mt-5 space-x-5 max-w-[80%] flex-wrap">
+                    {data.order_choice?.map(choice => (
+                      <Pressable
+                        key={choice.id}
+                        onPress={() =>
+                          setForm({
+                            ...form,
+                            order_choices:
+                              form.order_choices === choice.id ? '' : choice.id,
+                          })
+                        }>
+                        {({ pressed }) => (
+                          <View
+                            style={{
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              flexDirection: 'row',
+                              paddingVertical: ms(5),
+                              paddingHorizontal: ms(10),
+                              marginBottom: ms(10),
+                              backgroundColor:
+                                form.order_choices === choice.id
+                                  ? 'green'
+                                  : 'white',
+                              elevation: 5,
+                              borderRadius: ms(10),
+                              borderWidth: 1,
+                              borderColor: '#ccc',
+                              transform: [{ scale: pressed ? 0.98 : 1 }],
+                            }}>
+                            <Text
+                              style={{
+                                fontSize: ms(14),
+                                color:
+                                  form.order_choices === choice.id
+                                    ? 'white'
+                                    : 'black',
+                              }}>
+                              {choice.choice}
+                            </Text>
+                          </View>
+                        )}
+                      </Pressable>
+                    ))}
                   </View>
                   <TouchableNativeFeedback
                     onPress={handleOnConfirm}

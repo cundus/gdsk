@@ -22,6 +22,7 @@ import PopUpSuccess from '../../components/PopUpSuccess'
 import Supscript from '../../components/Supscript'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  changeChoices,
   decreaseQuantity,
   increaseQuantity,
   removeItem,
@@ -64,6 +65,8 @@ const AlacarteConfirmation = ({ navigation }) => {
     setShow(false)
   }
 
+  console.log('Cart: ', JSON.stringify(cart.result, null, 1))
+
   const _renderItem = ({ item, index }) => {
     // console.log('Render Item: ', item)
     return (
@@ -75,10 +78,10 @@ const AlacarteConfirmation = ({ navigation }) => {
         <View className="flex-row space-x-5">
           <View
             style={{
-              width: ms(100),
-              height: ms(100),
+              width: ms(70),
+              height: ms(70),
               overflow: 'hidden',
-              borderRadius: ms(100),
+              borderRadius: ms(70),
               elevation: 5,
               backgroundColor: 'white',
             }}>
@@ -96,31 +99,86 @@ const AlacarteConfirmation = ({ navigation }) => {
             />
           </View>
           <View className="justify-center">
-            <TextBold style={{ fontSize: ms(20), color: 'black', padding: 12 }}>
+            <TextBold style={{ fontSize: ms(12), color: 'black' }}>
               {item.name.length > 15
                 ? item.name.substring(0, 15) + '...'
                 : item.name}
             </TextBold>
+
+            <TextBold style={{ fontSize: ms(12), color: 'black' }}>
+              Rp. {item.service_client ? item.service_client.price : 0}
+            </TextBold>
+
+            {item?.order_choice?.length > 0 && (
+              <View className="w-full flex-row items-center justify-center mt-5 space-x-5 max-w-[100%] flex-wrap">
+                {item.order_choice?.map(choice => (
+                  <Pressable
+                    key={choice.id}
+                    onPress={() => {
+                      dispatch(
+                        changeChoices({ id: item.id, choice: choice.id }),
+                      )
+                    }}>
+                    {({ pressed }) => (
+                      <View
+                        style={{
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          flexDirection: 'row',
+                          paddingVertical: ms(5),
+                          paddingHorizontal: ms(10),
+                          marginBottom: ms(10),
+                          backgroundColor:
+                            cart?.result?.order_choices[index] === choice.id
+                              ? 'green'
+                              : 'white',
+                          elevation: 5,
+                          borderRadius: ms(10),
+                          borderWidth: 1,
+                          borderColor: '#ccc',
+                          transform: [{ scale: pressed ? 0.98 : 1 }],
+                        }}>
+                        <Text
+                          style={{
+                            fontSize: ms(10),
+                            color:
+                              cart?.result?.order_choices[index] === choice.id
+                                ? 'white'
+                                : 'black',
+                          }}>
+                          {choice.choice}
+                        </Text>
+                      </View>
+                    )}
+                  </Pressable>
+                ))}
+              </View>
+            )}
+
             <View className="flex-row  items-center space-x-5 p-3">
               <Pressable onPress={() => handleMinus(item.id)}>
                 <View className="border-2 rounded-xl p-1">
-                  <Icon name="minus" size={ms(16)} color="black" />
+                  <Icon name="minus" size={ms(12)} color="black" />
                 </View>
               </Pressable>
-              <TextBold style={{ fontSize: ms(16), color: 'black' }}>
-                {cart.result.quantity[index]}
+              <TextBold style={{ fontSize: ms(12), color: 'black' }}>
+                {cart?.result?.quantity[index]}
               </TextBold>
               <Pressable onPress={() => handlePlus(item.id)}>
                 <View className="border-2 rounded-xl p-1">
-                  <Icon name="plus" size={ms(16)} color="black" />
+                  <Icon name="plus" size={ms(12)} color="black" />
                 </View>
               </Pressable>
+
+              <TextBold style={{ fontSize: ms(12), color: 'black' }}>
+                Rp. {cart?.result?.total[index]}
+              </TextBold>
             </View>
           </View>
         </View>
         <Pressable onPress={() => onpressRemove(item.id)}>
           <View className="rounded-full bg-green-500 p-0.5 absolute">
-            <Icon name="close" size={ms(16)} color="white" className="p-1" />
+            <Icon name="close" size={ms(12)} color="white" className="p-1" />
           </View>
         </Pressable>
       </View>
@@ -185,7 +243,7 @@ const AlacarteConfirmation = ({ navigation }) => {
         />
         <View className="border-t-8 flex-row justify-between border-green-500 mx-3">
           <View className="justify-between px-10 items-start">
-            <TextNormal style={{ fontSize: ms(22), color: 'black' }}>
+            <TextNormal style={{ fontSize: ms(18), color: 'black' }}>
               Total
             </TextNormal>
             <View className="flex-row items-center space-x-3">
@@ -194,8 +252,11 @@ const AlacarteConfirmation = ({ navigation }) => {
                 alt="cart"
                 style={{ width: ms(20), height: ms(20), resizeMode: 'contain' }}
               />
-              <TextNormal style={{ fontSize: ms(20), color: 'black' }}>
+              <TextNormal style={{ fontSize: ms(16), color: 'black' }}>
                 {cart.result?.quantity?.reduce((a, b) => a + b, 0)} item
+              </TextNormal>
+              <TextNormal style={{ fontSize: ms(16), color: 'black' }}>
+                - Rp {cart?.result?.grand_total}
               </TextNormal>
             </View>
           </View>
@@ -220,7 +281,7 @@ const AlacarteConfirmation = ({ navigation }) => {
               }}
               background={TouchableNativeFeedback.Ripple('#ccc')}>
               <View className="bg-green-500  px-10 rounded-xl">
-                <TextNormal className="text-white" style={{ fontSize: ms(22) }}>
+                <TextNormal className="text-white" style={{ fontSize: ms(16) }}>
                   Take Order
                 </TextNormal>
               </View>

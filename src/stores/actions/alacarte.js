@@ -36,12 +36,15 @@ export const submitAlacarteOrder = createAsyncThunk(
         body,
         header,
       )
-
+      console.log('RESPON SUBMIT ALACARTE', data)
       return data
     } catch (error) {
       if (error.response && error.response.data.message) {
+        console.log(error.response.data.message)
         return rejectWithValue(error.response.data.message)
       } else {
+        console.log(error.message)
+
         Alert.alert('error retrieving alacarte Order ', error.message)
         return rejectWithValue(error.message)
       }

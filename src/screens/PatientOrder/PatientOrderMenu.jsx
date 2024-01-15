@@ -28,11 +28,12 @@ import color from '../../utils/color'
 import { BgMenu } from '../../assets/images/background'
 import Overlay from '../../components/Overlay'
 import PopUpOrder from '../../components/PopUpOrder'
+import moment from 'moment'
 
 const PAGE_SIZE = 8
 
 const PatientOrderMenu = ({ route, navigation }) => {
-  const { type } = route.params
+  const { type, patient } = route.params
   const { menu, auth, cartPatientOrder } = useSelector(state => state)
   const [page, setPage] = useState(1)
   const [section, setSection] = useState(null)
@@ -45,6 +46,8 @@ const PatientOrderMenu = ({ route, navigation }) => {
     type: '',
   })
   const dispatch = useDispatch()
+
+  console.log('listMenu', JSON.stringify(listMenu, null, 2))
 
   const handleChoose = data => {
     setPopUp({ selectedMenu: data, open: true, type })
@@ -94,11 +97,11 @@ const PatientOrderMenu = ({ route, navigation }) => {
     return (
       <View
         className="justify-end  m-2 "
-        style={{ height: ms(200), flex: 1 / 4 }}>
+        style={{ height: ms(160), flex: 1 / 4 }}>
         <View
           className=" justify-start bg-white items-center "
           style={{
-            height: ms(160),
+            height: ms(130),
             elevation: 5,
             borderRadius: ms(10),
             paddingBottom: ms(20),
@@ -265,23 +268,58 @@ const PatientOrderMenu = ({ route, navigation }) => {
 
   return (
     <View className="flex-[1] justify-start">
-      <ImageBackground source={BgMenu} style={{ flex: 0.2 }}>
+      <ImageBackground source={BgMenu} style={{ flex: 0.3 }}>
         <View className="z-[5] flex-1 justify-center items-center">
+          <View className="flex-row space-x-2 mx-10 items-center justify-center mb-3">
+            <TextBold
+              style={{
+                fontSize: ms(12),
+                color: 'white',
+                padding: ms(5),
+                width: '50%',
+                textAlign: 'center',
+                overflow: 'hidden',
+                backgroundColor: color.GREEN_PRIMARY,
+                borderRadius: ms(5),
+              }}>
+              {patient.patient_name}, {patient.room_no}, {patient.class_name}
+            </TextBold>
+            <TextBold
+              style={{
+                fontSize: ms(12),
+                color: 'white',
+                padding: ms(5),
+                width: '50%',
+                textAlign: 'center',
+                overflow: 'hidden',
+                backgroundColor: color.GREEN_PRIMARY,
+                borderRadius: ms(5),
+              }}>
+              {moment().diff(moment(patient.dob), 'years')} Th,{' '}
+              {patient.diagnosis}, {patient.remarks}
+            </TextBold>
+          </View>
           <TextBold
             style={{
-              fontSize: ms(22),
+              fontSize: ms(12),
               color: 'white',
+              padding: ms(5),
+              width: '50%',
+              textAlign: 'center',
+              overflow: 'hidden',
+              backgroundColor: color.GREEN_PRIMARY,
+              borderRadius: ms(5),
             }}>
-            SELECT MENU
+            {patient.order.find(item => item.meal_time_id).meal_time}
           </TextBold>
-          <View className="flex-row space-x-2 items-center justify-center">
+          <View className="flex-row space-x-2 items-center justify-center mt-3">
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple('#ccc')}
               onPress={() => navigation.goBack()}>
-              <IconAD name="arrowleft" size={ms(34)} color={'white'} />
+              <IconAD name="arrowleft" size={ms(32)} color={'white'} />
             </TouchableNativeFeedback>
             <View className="flex-row bg-white rounded-full justify-start items-center px-3">
-              <IconAD name="search1" size={ms(16)} color={'gray'} />
+              <IconAD name="search1" size={ms(12)} color={'gray'} />
               <TextInput
                 placeholder="Search"
                 value={search}

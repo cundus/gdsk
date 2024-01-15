@@ -7,6 +7,15 @@ const cartSlice = createSlice({
     isFetching: false,
   },
   reducers: {
+    changeChoices: (state, action) => {
+      const { id, choice } = action.payload
+      let cartOrder = { ...state.result }
+      const itemIdx = cartOrder.detail.findIndex(item => item.id === id)
+      if (itemIdx !== -1) {
+        cartOrder.order_choices[itemIdx] = choice
+        state.result = cartOrder
+      }
+    },
     updateCart: (state, action) => {
       state.result = action.payload
     },
@@ -68,5 +77,6 @@ export const {
   clearCart,
   increaseQuantity,
   decreaseQuantity,
+  changeChoices,
 } = cartSlice.actions
 export default cartSlice.reducer

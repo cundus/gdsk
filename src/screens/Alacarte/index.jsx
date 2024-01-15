@@ -26,14 +26,18 @@ const AlacarteHome = ({ navigation }) => {
   const dispatch = useDispatch()
   const [search, setSearch] = useState('')
 
-  const filterMenu = (menus) => {
+  console.log('Alacarte: ', JSON.stringify(data[0], null, 2))
+
+  const filterMenu = menus => {
     if (search === '') {
       return menus
     }
-    return menus.filter(menu => menu.order_no.toLowerCase().includes(search.toLocaleLowerCase()) || menu?.patient?.name.toLowerCase().includes(search.toLocaleLowerCase()))
+    return menus.filter(
+      menu =>
+        menu.order_no.toLowerCase().includes(search.toLocaleLowerCase()) ||
+        menu?.patient?.name.toLowerCase().includes(search.toLocaleLowerCase()),
+    )
   }
-  
-
 
   const _renderItem = ({ item }) => {
     return (
@@ -50,27 +54,34 @@ const AlacarteHome = ({ navigation }) => {
             margin: ms(5),
           }}>
           <View>
-            <TextNormal style={{ color: 'black', fontSize: ms(18), fontWeight: '700' }}>
+            <TextNormal
+              style={{ color: 'black', fontSize: ms(18), fontWeight: '700' }}>
               #{item.order_no}
             </TextNormal>
             <TextNormal style={{ fontSize: ms(12), fontWeight: '700' }}>
               Type:{' '}
               {item.ala_carte_type === 1 ? 'Patient Guest' : 'Individual Guest'}
             </TextNormal>
+            <TextNormal style={{ fontSize: ms(12), fontWeight: '700' }}>
+              Total Qty: {item.menu.reduce((a, b) => a + b.quantity, 0)} Item
+            </TextNormal>
+            <TextNormal style={{ fontSize: ms(12), fontWeight: '700' }}>
+              Total Harga: Rp. {item.grand_total}
+            </TextNormal>
           </View>
           <View className="items-end">
-            <TextBold style={{ fontSize: ms(12), color: 'green', }}>
+            <TextBold style={{ fontSize: ms(12), color: 'green' }}>
               {item.ala_carte_type === 1
                 ? item?.patient?.name
                 : item.guest_name}
             </TextBold>
             {item.ala_carte_type === 1 && (
-              <TextBold style={{ fontSize: ms(12), color: 'green', }}>
+              <TextBold style={{ fontSize: ms(12), color: 'green' }}>
                 {item.floor_name} - {item.room_no}
               </TextBold>
             )}
             {item.ala_carte_type === 2 && (
-              <TextBold style={{ fontSize: ms(12), color: 'green', }}>
+              <TextBold style={{ fontSize: ms(12), color: 'green' }}>
                 {item.location}
               </TextBold>
             )}
@@ -93,23 +104,31 @@ const AlacarteHome = ({ navigation }) => {
 
   return (
     <View className="flex-[1]">
-      <ImageBackground source={BgMenu} className="flex-[0.2]" >
-        <View className='z-[5] flex-1 justify-center items-center'>
-          <TextBold style={{
-            fontSize: ms(26),
-            color: 'white',
-          }}>A L A  C A R T E</TextBold>
-          <View className='flex-row space-x-2 items-center justify-center'>
+      <ImageBackground source={BgMenu} className="flex-[0.2]">
+        <View className="z-[5] flex-1 justify-center items-center">
+          <TextBold
+            style={{
+              fontSize: ms(26),
+              color: 'white',
+            }}>
+            A L A C A R T E
+          </TextBold>
+          <View className="flex-row space-x-2 items-center justify-center">
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple('#ccc')}
               onPress={() => navigation.navigate('Home')}>
-              <Icon name='arrowleft' size={ms(34)} color={'white'} />
+              <Icon name="arrowleft" size={ms(34)} color={'white'} />
             </TouchableNativeFeedback>
-            <View className='flex-row bg-white rounded-full justify-start items-center px-3'>
-              <Icon name='search1' size={ms(16)} color={'gray'} />
-              <TextInput placeholder='Search' value={search} onChangeText={(e)=> setSearch(e)} className='w-[70%]' />
+            <View className="flex-row bg-white rounded-full justify-start items-center px-3">
+              <Icon name="search1" size={ms(16)} color={'gray'} />
+              <TextInput
+                placeholder="Search"
+                value={search}
+                onChangeText={e => setSearch(e)}
+                className="w-[70%]"
+              />
             </View>
-            <View className='w-5' />
+            <View className="w-5" />
           </View>
         </View>
         <Overlay color="bg-green-600/70" />
@@ -125,12 +144,12 @@ const AlacarteHome = ({ navigation }) => {
             bottom: ms(20),
             right: ms(20),
             zIndex: 99,
-            overflow:'hidden'
+            overflow: 'hidden',
           }}>
           <TouchableNativeFeedback
             background={TouchableNativeFeedback.Ripple('#ccc')}
             style={{
-              borderRadius: '100%'
+              borderRadius: '100%',
             }}
             onPress={() => navigation.navigate('AlacarteOption')}>
             <View
@@ -155,7 +174,7 @@ const AlacarteHome = ({ navigation }) => {
           <FlatList
             contentContainerStyle={{
               marginTop: ms(10),
-              paddingBottom: ms(10)
+              paddingBottom: ms(10),
             }}
             keyExtractor={(item, i) => i.toString()}
             data={filterMenu(data)}
