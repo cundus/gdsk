@@ -29,7 +29,6 @@ const PatientOrderConfirmation = ({}) => {
   const [indexToRemove, setIndexToRemove] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [remove, setRemove] = useState(false)
-  console.log('this is cart', JSON.stringify(cart, null, 2))
 
   const _renderItem = ({ item, index: idx }) => {
     return (
@@ -70,14 +69,16 @@ const PatientOrderConfirmation = ({}) => {
                 {item?.name?.length > 20
                   ? item?.name?.substring(0, 20) + '....'
                   : item?.name}{' '}
-                {cart?.result.order_choices[idx] &&
+                {Array.isArray(cart.result) &&
+                  cart?.result?.order_choices[idx] &&
                   '- ' +
                     cart?.result?.detail[idx]?.order_choice?.find(
                       choice => choice.id === cart?.result?.order_choices[idx],
                     )?.choice}
               </TextBold>
-              <TextBold style={{ fontSize: ms(14), color: 'black' }}>
-                Kalori : -
+              <TextBold style={{ fontSize: ms(12), color: 'black' }}>
+                Kalori :{' '}
+                {item?.composition?.reduce((a, b) => a + b.calories, 0)}
               </TextBold>
             </View>
           </View>
@@ -126,7 +127,6 @@ const PatientOrderConfirmation = ({}) => {
           )
         }
       }
-      console.log(JSON.stringify(cartTemp, null, 1))
       dispatch(updateCart(cartTemp))
       setRemove(false)
       return setIndexToRemove(null)
@@ -162,7 +162,6 @@ const PatientOrderConfirmation = ({}) => {
   }
 
   const saveDataToStorage = async data => {
-    console.log(data)
     try {
       let order = []
       if (!Array.isArray(cart.result.menu)) {
@@ -202,11 +201,13 @@ const PatientOrderConfirmation = ({}) => {
       }, 0)
     }
 
-    return cart.result.total
+    return isNaN(cart.result.total)
+      ? Intl.NumberFormat('id-ID').format(cart?.result?.price?.price)
+      : Intl.NumberFormat('id-ID').format(cart?.result?.total)
   }
 
   const dataToRender = () => {
-    if (Array.isArray(cart.result.menu)) {
+    if (Array.isArray(cart.result)) {
       return cart.result.detail
     }
 
@@ -256,7 +257,8 @@ const PatientOrderConfirmation = ({}) => {
                 style={{ resizeMode: 'contain', width: ms(30), height: ms(30) }}
               />
               <TextNormal style={{ fontSize: ms(20) }}>
-                {cart.result?.menu?.length} Item
+                {dataToRender().length}
+                Item
               </TextNormal>
             </View>
             <TouchableNativeFeedback onPress={submit}>

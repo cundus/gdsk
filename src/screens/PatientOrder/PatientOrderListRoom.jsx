@@ -62,9 +62,7 @@ const PatientOrderListRoom = ({ route, navigation }) => {
           const { data } = await axios.get(
             `${state.serverUrl}/order-patient/rooms?f=${floor.floor_id}`,
           )
-          console.log(
-            `${state.serverUrl}/order-patient/rooms?f=${floor.floor_id}`,
-          )
+
           setData(data)
         } catch (error) {
           if (error.response && error.response.data.message) {

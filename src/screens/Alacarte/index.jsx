@@ -26,7 +26,7 @@ const AlacarteHome = ({ navigation }) => {
   const dispatch = useDispatch()
   const [search, setSearch] = useState('')
 
-  console.log('Alacarte: ', JSON.stringify(data[0], null, 2))
+  // console.log('Alacarte: ', JSON.stringify(data[0], null, 2))
 
   const filterMenu = menus => {
     if (search === '') {

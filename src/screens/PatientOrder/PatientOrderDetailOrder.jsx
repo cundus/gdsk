@@ -310,18 +310,18 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
             <TextBold
               className={'text-center text-black'}
               style={{
-                fontSize: ms(16),
+                fontSize: ms(14),
               }}>
               Patient Order
             </TextBold>
             <View className="flex-row justify-between items-center">
               <View className="">
-                <TextNormal style={{ fontSize: ms(16), color: 'gray' }}>
+                <TextNormal style={{ fontSize: ms(14), color: 'gray' }}>
                   Patient
                 </TextNormal>
                 <TextNormal
                   style={{
-                    fontSize: ms(14),
+                    fontSize: ms(12),
                     color: 'black',
                     marginLeft: ms(5),
                   }}>
@@ -329,12 +329,12 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
                 </TextNormal>
               </View>
               <View className="">
-                <TextNormal style={{ fontSize: ms(16), color: 'gray' }}>
+                <TextNormal style={{ fontSize: ms(14), color: 'gray' }}>
                   Age
                 </TextNormal>
                 <TextNormal
                   style={{
-                    fontSize: ms(14),
+                    fontSize: ms(12),
                     color: 'black',
                     marginLeft: ms(5),
                   }}>
@@ -344,12 +344,12 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
             </View>
 
             <View className="">
-              <TextNormal style={{ fontSize: ms(16), color: 'gray' }}>
+              <TextNormal style={{ fontSize: ms(14), color: 'gray' }}>
                 Diagnosa
               </TextNormal>
               <TextNormal
                 style={{
-                  fontSize: ms(14),
+                  fontSize: ms(12),
                   color: 'black',
                   marginLeft: ms(5),
                 }}>
@@ -454,7 +454,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
                 </View>
               )}
             </View>
-            <View className="flex-1">
+            <View className="p-3">
               <TextNormal className="bg-green-500 mb-10 text-center text-3xl text-white">
                 Extra Food
               </TextNormal>

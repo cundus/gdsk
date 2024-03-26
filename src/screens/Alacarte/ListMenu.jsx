@@ -58,7 +58,7 @@ const ListMenu = ({ route, navigation }) => {
     }
 
     if (!isExist) {
-      console.log(JSON.stringify(cart.result, null, 2))
+      // console.log(JSON.stringify(cart.result, null, 2))
       cart.result.menu = [...cart.result.menu, data.id]
       cart.result.detail = [...cart.result.detail, data]
       cart.result.price = [

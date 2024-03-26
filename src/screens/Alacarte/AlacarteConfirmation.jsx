@@ -65,7 +65,7 @@ const AlacarteConfirmation = ({ navigation }) => {
     setShow(false)
   }
 
-  console.log('Cart: ', JSON.stringify(cart.result, null, 1))
+  console.log('Cart: ', JSON.stringify(cart, null, 1))
 
   const _renderItem = ({ item, index }) => {
     // console.log('Render Item: ', item)

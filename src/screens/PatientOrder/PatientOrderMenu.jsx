@@ -47,8 +47,6 @@ const PatientOrderMenu = ({ route, navigation }) => {
   })
   const dispatch = useDispatch()
 
-  console.log('listMenu', JSON.stringify(listMenu, null, 2))
-
   const handleChoose = data => {
     setPopUp({ selectedMenu: data, open: true, type })
   }

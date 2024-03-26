@@ -33,7 +33,6 @@ import { updateCart } from '../../stores/reducers/cartPatientOrder'
 const PatientOrder = ({ navigation }) => {
   const { floor, auth, patientOrder } = useSelector(state => state)
   const dispatch = useDispatch()
-  console.log(JSON.stringify(patientOrder, null, 2))
 
   const [state, setState] = useState({
     orderPatient: [],
@@ -87,11 +86,6 @@ const PatientOrder = ({ navigation }) => {
   }
 
   const _renderItem = ({ item }) => {
-    console.log(
-      state.orderPatient.filter(order => order.floor === item.floor_id).length,
-      state,
-      item.floor_id,
-    )
     return (
       <TouchableNativeFeedback
         background={TouchableNativeFeedback.Ripple('#ccc')}
@@ -131,7 +125,6 @@ const PatientOrder = ({ navigation }) => {
       const value = await AsyncStorage.getItem('orderPatient')
       if (value !== null) {
         const data = JSON.parse(value)
-        console.log(data)
         setState(prev => ({ ...prev, orderPatient: data }))
         dispatch(updateCart(data))
       }

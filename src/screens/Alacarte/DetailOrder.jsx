@@ -15,7 +15,7 @@ import Icon from 'react-native-vector-icons/AntDesign'
 
 const DetailOrder = ({ route, navigation }) => {
   const { data } = route.params
-  console.log(JSON.stringify(data, 0, 2))
+  // console.log(JSON.stringify(data, 0, 2))
   return (
     <ImageBackground
       source={BgMenu}

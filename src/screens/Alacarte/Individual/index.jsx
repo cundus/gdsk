@@ -85,7 +85,7 @@ const AlacarteIndividual = ({ navigation }) => {
             `${auth.serverUrl}/order-alacarte/booking`,
           )
 
-          console.log(data)
+          // console.log(data)
           setData(data)
         } catch (error) {
           if (error.response && error.response.data.message) {
@@ -158,7 +158,7 @@ const AlacarteIndividual = ({ navigation }) => {
                 textAlign: 'left',
               }}
               onSelect={(selected, index) => {
-                console.log(selected.id)
+                // console.log(selected.id)
                 handleChange('booking', selected.id)
               }}
               renderDropdownIcon={isOpened => {

@@ -89,11 +89,7 @@ const PatientOrderMenuExtra = ({ route, navigation }) => {
 
   const _renderItem = ({ item }) => {
     const isChoosed = cartPatientOrder.result?.menu_extra_id === item.id
-    console.log(
-      cartPatientOrder.result?.menu_extra_id,
-      item.id,
-      cartPatientOrder.result?.menu_extra_id === item.id,
-    )
+
     return (
       <View
         className="justify-end  m-2 "

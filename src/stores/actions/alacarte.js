@@ -31,6 +31,7 @@ export const submitAlacarteOrder = createAsyncThunk(
   'alacarteOrder/submit',
   async ({ serverUrl, body }, { rejectWithValue, dispatch }) => {
     try {
+      console.log(JSON.stringify(body, null, 2))
       const { data } = await axios.post(
         `${serverUrl}/order-alacarte`,
         body,

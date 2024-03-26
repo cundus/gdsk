@@ -93,7 +93,7 @@ const PopUpOrder = ({
     handleClose()
   }
 
-  console.log(JSON.stringify(data, null, 2))
+  // console.log(JSON.stringify(data, null, 2))
 
   return (
     <Modal animationType="slide" transparent={true} visible={show}>

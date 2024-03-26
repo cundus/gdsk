@@ -20,7 +20,6 @@ const SplashScreen = () => {
     const checkUser = async () => {
       const user = await AsyncStorage.getItem('user')
       const url = await AsyncStorage.getItem('serverUrl')
-      console.log(user)
       if (user) {
         dispatch(
           setLogin({
