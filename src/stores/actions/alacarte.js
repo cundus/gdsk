@@ -15,7 +15,7 @@ export const getAlacarteOrder = createAsyncThunk(
         header,
       )
 
-      return data
+      return data.reverse()
     } catch (error) {
       if (error.response && error.response.data.message) {
         return rejectWithValue(error.response.data.message)
