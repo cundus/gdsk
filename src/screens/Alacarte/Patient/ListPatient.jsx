@@ -110,12 +110,15 @@ const ListPatient = ({ route, navigation }) => {
     <View className="flex-[1]">
       <ImageBackground source={BgMenu} className="flex-[1]">
         <View className="z-[2]  justify-start items-center pb-7">
-          <Image
+          {/* <Image
             source={Logo}
             alt="logo"
             style={{ width: ms(150), height: ms(70) }}
             resizeMode="contain"
-          />
+          /> */}
+          <View 
+            style={{ width: ms(150), height: ms(70) }}
+            />
           <View className="flex-row justify-between w-full px-10 items-center">
             <Pressable onPress={() => navigation.goBack()}>
               <Icon name="arrowleft" color={'black'} size={ms(25)} />

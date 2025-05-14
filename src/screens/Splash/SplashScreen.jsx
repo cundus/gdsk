@@ -13,6 +13,7 @@ import { setLogin, turnOffSplash } from '../../stores/reducers/auth'
 import { Logo } from '../../assets/icons'
 import { Image } from 'react-native'
 import { s, ms, vs } from 'react-native-size-matters'
+import { TextBold } from '../../components/Text'
 
 const SplashScreen = () => {
   const dispatch = useDispatch()
@@ -50,7 +51,8 @@ const SplashScreen = () => {
           alignItems: 'center',
           zIndex: 3,
         }}>
-        <Image source={Logo} alt="logo" style={styles.logo} />
+        {/* <Image source={Logo} alt="logo" style={styles.logo} /> */}
+        <TextBold>LOGO</TextBold>
       </View>
       <View style={styles.overlay}></View>
     </ImageBackground>

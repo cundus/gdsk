@@ -14,22 +14,24 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <ImageBackground source={BgMenu} style={{ flex: 0.2 }} resizeMode="cover">
-        <View className="flex-row items-center justify-between flex-1 mx-20 z-50">
-          <View className="w-[30%] rounded-full overflow-hidden ">
-            <Image
+        <View className="items-center justify-center flex-1 mx-20 z-50">
+          {/* <View className="w-[30%] rounded-full overflow-hidden "> */}
+          {/* <Image
               source={require('../../assets/icons/logo_putih.png')}
               style={{ width: '100%', height: '100%' }}
               resizeMode="contain"
-            />
-          </View>
+            /> */}
+          {/* </View> */}
           <TextBold
             style={{
               fontSize: ms(20),
-              width: ms(210),
               fontWeight: 'extrabold',
             }}
-            className=" text-white">
-            G-POS SYSTEM GDSK POINT OF SALES
+            className=" text-white text-center">
+            App POS
+          </TextBold>
+          <TextBold style={{ fontSize: ms(20), fontWeight: 'extrabold text-white' }}>
+            Point of Sales
           </TextBold>
         </View>
         <View className="absolute top-0 left-0 bottom-0 right-0 bg-green-500/80"></View>

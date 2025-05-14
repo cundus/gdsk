@@ -111,9 +111,9 @@ const DetailOrder = ({ route, navigation }) => {
               </View>
             </TouchableNativeFeedback>
           </View>
-          <ImageBackground
+          {/* <ImageBackground
             source={require('../../assets/icons/ornament_alacarte.png')}
-            className="flex-[1]"></ImageBackground>
+            className="flex-[1]"></ImageBackground> */}
         </View>
       </View>
     </ImageBackground>

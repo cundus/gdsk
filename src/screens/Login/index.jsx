@@ -23,6 +23,7 @@ import { s, ms, vs } from 'react-native-size-matters'
 import { isLandscape } from '../../utils/dimensions'
 import { useCallback } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
+import { TextBold } from '../../components/Text'
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -85,7 +86,8 @@ const Login = () => {
       <KeyboardAvoidingView style={{ flex: 1 }}>
         <View style={styles.content}>
           <View>
-            <Image source={Logo} alt="logo" style={styles.logo} />
+            {/* <Image source={Logo} alt="logo" style={styles.logo} /> */}
+            <TextBold>LOGO</TextBold>
           </View>
           <View style={styles.form}>
             <TextInput
