@@ -143,6 +143,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
       {
         meal_time: tabMenu.meal_time_id,
         type: val,
+        patient,
       },
     )
   }

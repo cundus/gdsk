@@ -280,7 +280,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
                 backgroundColor: color.GREEN_PRIMARY,
                 borderRadius: ms(5),
               }}>
-              {patient.patient_name}, {patient.room_no}, {patient.class_name}
+              {patient?.patient_name}, {patient?.room_no}, {patient?.class_name}
             </TextBold>
             <TextBold
               style={{
@@ -293,8 +293,8 @@ const PatientOrderMenu = ({ route, navigation }) => {
                 backgroundColor: color.GREEN_PRIMARY,
                 borderRadius: ms(5),
               }}>
-              {moment().diff(moment(patient.dob), 'years')} Th,{' '}
-              {patient.diagnosis}, {patient.remarks}
+              {moment().diff(moment(patient?.dob), 'years')} Th,{' '}
+              {patient?.diagnosis}, {patient?.remarks}
             </TextBold>
           </View>
           <TextBold
@@ -308,7 +308,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
               backgroundColor: color.GREEN_PRIMARY,
               borderRadius: ms(5),
             }}>
-            {patient.order.find(item => item.meal_time_id).meal_time}
+            {patient?.order.find(item => item.meal_time_id).meal_time}
           </TextBold>
           <View className="flex-row space-x-2 items-center justify-center mt-3">
             <TouchableNativeFeedback
