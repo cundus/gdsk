@@ -1,4 +1,4 @@
-package com.gdsk.newarchitecture.components;
+package com.acspos.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

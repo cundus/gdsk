@@ -1,4 +1,4 @@
-package com.gdsk.newarchitecture;
+package com.acspos.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.fabric.ReactNativeConfig;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.gdsk.BuildConfig;
-import com.gdsk.newarchitecture.components.MainComponentsRegistry;
-import com.gdsk.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.acspos.BuildConfig;
+import com.acspos.newarchitecture.components.MainComponentsRegistry;
+import com.acspos.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

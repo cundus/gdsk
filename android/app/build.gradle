@@ -135,7 +135,7 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.gdsk"
+        applicationId "com.acspos"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -235,7 +235,7 @@ android {
     applicationVariants.all { variant ->
         if (variant.buildType.name == "release") {
             variant.outputs.all {
-                outputFileName = "gdsk-${variant.versionName}.apk"
+                outputFileName = "acspos-${variant.versionName}.apk"
             }
         }
         variant.outputs.each { output ->
