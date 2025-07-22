@@ -24,6 +24,7 @@ import { isLandscape } from '../../utils/dimensions'
 import { useCallback } from 'react'
 import { useFocusEffect } from '@react-navigation/native'
 import { TextBold } from '../../components/Text'
+import { BlurView } from '@react-native-community/blur'
 
 const Login = () => {
   const dispatch = useDispatch()
@@ -84,10 +85,10 @@ const Login = () => {
 
       <StatusBar hidden />
       <KeyboardAvoidingView style={{ flex: 1 }}>
-        <View style={styles.content}>
+        <View style={styles.content} className="space-y-6">
           <View>
-            {/* <Image source={Logo} alt="logo" style={styles.logo} /> */}
-            <TextBold>LOGO</TextBold>
+            <Image source={Logo} alt="logo" style={styles.logo} />
+            {/* <TextBold>LOGO</TextBold> */}
           </View>
           <View style={styles.form}>
             <TextInput
@@ -123,7 +124,12 @@ const Login = () => {
           </View>
           <View className="h-32"></View>
         </View>
-        <View style={styles.overlay}></View>
+        <BlurView
+          style={styles.overlay}
+          blurAmount={1}
+          // blurRadius={5}
+          // blurType="light" // Options: 'dark', 'light', 'xlight', 'prominent', 'regular', etc.
+          ></BlurView>
       </KeyboardAvoidingView>
     </ImageBackground>
   )
@@ -139,13 +145,13 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     right: 0,
-    backgroundColor: 'rgba(10,10,10,0.6)',
+    // backgroundColor: 'rgba(0,0,0,0.5)',
     zIndex: 1,
   },
   content: {
     flex: 1,
     zIndex: 2,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
   },
   logo: {

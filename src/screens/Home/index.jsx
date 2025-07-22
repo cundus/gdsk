@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native'
 import { ms } from 'react-native-size-matters'
 import { Image } from 'react-native'
 import { TextBold } from '../../components/Text'
-import { IconProfile } from '../../assets/icons'
+import { IconProfile, Logo } from '../../assets/icons'
 
 const Home = () => {
   const { user } = useSelector(state => state.auth)
@@ -15,26 +15,30 @@ const Home = () => {
     <View style={styles.container}>
       <ImageBackground source={BgMenu} style={{ flex: 0.2 }} resizeMode="cover">
         <View className="items-center justify-center flex-1 mx-20 z-50">
-          {/* <View className="w-[30%] rounded-full overflow-hidden "> */}
-          {/* <Image
-              source={require('../../assets/icons/logo_putih.png')}
-              style={{ width: '100%', height: '100%' }}
+          <View className="w-[50%] h-16 overflow-hidden">
+            <Image
+              source={Logo}
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
               resizeMode="contain"
-            /> */}
-          {/* </View> */}
-          <TextBold
+            />
+          </View>
+          {/* <TextBold
             style={{
               fontSize: ms(20),
               fontWeight: 'extrabold',
             }}
             className=" text-white text-center">
             App POS
-          </TextBold>
-          <TextBold style={{ fontSize: ms(20), fontWeight: 'extrabold text-white' }}>
+          </TextBold> */}
+          <TextBold
+            style={{ fontSize: ms(20), fontWeight: 'extrabold text-white' }}>
             Point of Sales
           </TextBold>
         </View>
-        <View className="absolute top-0 left-0 bottom-0 right-0 bg-green-500/80"></View>
+        <View className="absolute top-0 left-0 bottom-0 right-0 bg-white/90 "></View>
       </ImageBackground>
       <View style={styles.content}>
         <Image

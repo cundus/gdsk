@@ -49,10 +49,10 @@ const SplashScreen = () => {
           flex: 1,
           justifyContent: 'center',
           alignItems: 'center',
-          zIndex: 3,
+          zIndex: 5,
         }}>
-        {/* <Image source={Logo} alt="logo" style={styles.logo} /> */}
-        <TextBold>LOGO</TextBold>
+        <Image source={Logo} alt="logo" style={styles.logo} />
+        {/* <TextBold>LOGO</TextBold> */}
       </View>
       <View style={styles.overlay}></View>
     </ImageBackground>
@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   logo: {
-    width: vs(350),
-    height: vs(300),
+    width: vs(250),
+    height: vs(200),
     resizeMode: 'contain',
   },
 })

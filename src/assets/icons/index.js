@@ -1,4 +1,4 @@
-import Logo from './logo.png'
+import Logo from './logo_acs.png'
 import IconProfile from './icon_profile.png'
 import LogoWhite from './logo_putih.png'
 import LogoAlacarte from './alacarte.png'
