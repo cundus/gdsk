@@ -18,16 +18,13 @@ export const getMenu = createAsyncThunk(
     try {
       const params = {
         c: clientId,
-        room_class_name: patient.class_name,
-        meal_time_id: meal_time,
-        diet_category_id: patient.diet_category_id,
-        diet_type_id: patient.diet_type_id,
-        order_patient_detail_id: order_patient_detail_id,
+        opd: order_patient_detail_id,
       }
-      const { data, request } = await axios.get(`${serverUrl}/menu`, {
+      const { data } = await axios.get(`${serverUrl}/menu`, {
         ...config,
         params,
       })
+
 
       return data
     } catch (error) {
