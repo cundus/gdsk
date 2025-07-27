@@ -61,6 +61,7 @@ const PatientOrder = ({ navigation }) => {
     }, []),
   )
 
+
   const syncData = async () => {
     await dispatch(
       syncPatientOrder({ serverUrl: auth.serverUrl, body: state.orderPatient }),

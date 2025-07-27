@@ -344,7 +344,7 @@ const PatientOrderMenuExtra = ({ route, navigation }) => {
         }}
         show={popUp.open}
         typeMenu={popUp.type}
-        onOrder={() => {}}
+        onOrder={() => {setPopUp({ open: false, selectedMenu: {}, type: '' })}}
         handleClose={() =>
           setPopUp({ open: false, selectedMenu: {}, type: '' })
         }

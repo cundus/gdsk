@@ -207,7 +207,6 @@ const PatientOrderConfirmation = ({}) => {
   }
 
   const dataToRender = () => {
-    console.log("isArray", Array.isArray(cart.result),cart.result);
     if (Array.isArray(cart.result.menu)) {
       
       return cart.result.detail

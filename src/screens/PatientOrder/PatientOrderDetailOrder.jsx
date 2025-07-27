@@ -54,6 +54,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
     type: '',
   })
 
+
   const currentTab = useMemo(
     () => dataAfter.filter(item => item.meal_time_id === tabMenu.meal_time_id),
     [tabMenu, patient, dataAfter],
@@ -256,12 +257,14 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
           getMenu({
             serverUrl: auth.serverUrl,
             clientId: auth.user.selected_client,
+            patient,
           }),
         )
         dispatch(
           getMenuExtra({
             serverUrl: auth.serverUrl,
             clientId: auth.user.selected_client,
+            patient,
           }),
         )
       }
@@ -339,7 +342,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
                     color: 'black',
                     marginLeft: ms(5),
                   }}>
-                  {moment().diff(patient.patient_dob, 'year')}
+                  {moment().diff(patient.dob, 'year')}
                 </TextNormal>
               </View>
             </View>
@@ -354,7 +357,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
                   color: 'black',
                   marginLeft: ms(5),
                 }}>
-                {patient.patient_diagnosis}
+                {patient.diagnosis}
               </TextNormal>
             </View>
           </View>

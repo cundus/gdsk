@@ -57,10 +57,15 @@ const PopUpOrder = ({
   }
 
   const handleOnClose = () => {
-    setForm(intialValue)
+    setForm({ ...intialValue })
+    console.log('Close', form)
     handleClose()
   }
+
+
   const handleOnConfirm = () => {
+    console.log(typeMenu);
+    
     let cart = cartPatientOrder.result
     if (typeMenu === 'extra') {
       cart.id = cart.id
@@ -73,7 +78,7 @@ const PopUpOrder = ({
 
       dispatch(updateCart(cart))
 
-      return handleClose()
+      return handleOnClose()
     }
 
     cart.id = cart.id
@@ -85,12 +90,11 @@ const PopUpOrder = ({
     cart.remarks = [...cart.remarks, form.remarks]
     cart.menu_tak = [...cart.menu_tak, form.menu_tak]
     cart.menu_replacement = [...cart.menu_replacement, form.menu_replacement]
+    handleOnClose()
 
     Alert.alert(`${data.name} berhasil ditambahkan!`)
-
     dispatch(updateCart({ ...cart }))
 
-    handleClose()
   }
 
   // console.log(JSON.stringify(data, null, 2))

@@ -58,6 +58,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
           getMenu({
             serverUrl: auth.serverUrl,
             clientId: auth.user.selected_client,
+            patient: patient,
           }),
         )
       }

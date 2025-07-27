@@ -64,6 +64,10 @@ const AlacartePatient = ({ navigation }) => {
         floor_name: item.floor_name,
         room_no: item.room_no,
         bed: item.bed,
+        class_name: item.class_name,
+        diet_type_id: item.diet_type_id,
+        diet_category_id: item.diet_category_id,
+
       },
       client_id: auth.user.selected_client,
       user_id: auth.user.id,
