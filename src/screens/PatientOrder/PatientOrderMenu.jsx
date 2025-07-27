@@ -51,6 +51,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
     setPopUp({ selectedMenu: data, open: true, type })
   }
 
+
   useFocusEffect(
     useCallback(() => {
       if (navigation.isFocused()) {
@@ -59,6 +60,8 @@ const PatientOrderMenu = ({ route, navigation }) => {
             serverUrl: auth.serverUrl,
             clientId: auth.user.selected_client,
             patient: patient,
+            meal_time: cartPatientOrder.result.meal_time_id,
+            order_patient_detail_id: cartPatientOrder.result.order_patient_detail_id,
           }),
         )
       }

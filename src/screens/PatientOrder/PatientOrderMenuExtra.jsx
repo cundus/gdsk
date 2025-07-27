@@ -50,18 +50,18 @@ const PatientOrderMenuExtra = ({ route, navigation }) => {
     setPopUp({ selectedMenu: data, open: true, type })
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      if (navigation.isFocused()) {
-        dispatch(
-          getMenu({
-            serverUrl: auth.serverUrl,
-            clientId: auth.user.selected_client,
-          }),
-        )
-      }
-    }, []),
-  )
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     if (navigation.isFocused()) {
+  //       dispatch(
+  //         getMenu({
+  //           serverUrl: auth.serverUrl,
+  //           clientId: auth.user.selected_client,
+  //         }),
+  //       )
+  //     }
+  //   }, []),
+  // )
 
   useMemo(() => {
     if (menu.menuData.length > 0) {

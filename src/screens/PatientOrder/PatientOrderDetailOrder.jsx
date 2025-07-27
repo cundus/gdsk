@@ -41,6 +41,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
     state => state,
   )
 
+
   const dispatch = useDispatch()
   const [tabMenu, setTabMenu] = useState({})
   const [dataAfter, setDataAfter] = useState([])
@@ -53,7 +54,6 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
     selectedMenu: {},
     type: '',
   })
-
 
   const currentTab = useMemo(
     () => dataAfter.filter(item => item.meal_time_id === tabMenu.meal_time_id),
@@ -88,6 +88,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
           created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
           patient_id: patient.patient_id,
           meal_time_id: tabMenu.meal_time_id,
+          order_patient_detail_id: tabMenu.order_patient_detail_id,
         }),
       )
     } else if (val === 'extra') {
@@ -105,6 +106,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
           total: 0,
           remarks: '',
           created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+          order_patient_detail_id: tabMenu.order_patient_detail_id,
         }),
       )
     }
@@ -129,12 +131,14 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
       dispatch(
         updateCart({
           ...currentTab[0],
+          order_patient_detail_id: tabMenu.order_patient_detail_id,
         }),
       )
     } else if (val === 'extra') {
       dispatch(
         updateCart({
           ...currentTabExtra,
+          order_patient_detail_id: tabMenu.order_patient_detail_id,
         }),
       )
     }
@@ -264,7 +268,6 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
           getMenuExtra({
             serverUrl: auth.serverUrl,
             clientId: auth.user.selected_client,
-            patient,
           }),
         )
       }
