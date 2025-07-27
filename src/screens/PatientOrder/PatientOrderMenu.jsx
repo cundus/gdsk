@@ -312,7 +312,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
               backgroundColor: color.GREEN_PRIMARY,
               borderRadius: ms(5),
             }}>
-            {patient?.order.find(item => item.meal_time_id).meal_time}
+            {patient?.order.find(item => item.meal_time_id === cartPatientOrder.result.meal_time_id).meal_time}
           </TextBold>
           <View className="flex-row space-x-2 items-center justify-center mt-3">
             <TouchableNativeFeedback
