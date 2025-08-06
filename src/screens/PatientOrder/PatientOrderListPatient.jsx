@@ -66,6 +66,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
   )
 
   const _renderItem = ({ item }) => {
+    console.log(JSON.stringify(item, null, 2))
     // return item.order.map(order => (
     return (
       <Pressable
@@ -82,7 +83,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
               {item.patient_name.toUpperCase()}
             </TextBold>
             <TextNormal style={{ fontSize: ms(12) }}>
-              {item.status} - {item.bed} - {item.diagnosis} - {item.remarks}
+              {item.status}{item.diagnosis && ` - ${item.diagnosis}`} {item.dietCategoryName && ` - ${item.dietCategoryName} ${item.dietTypeName && `(${item.dietTypeName})`}`}
             </TextNormal>
           </View>
 
@@ -141,13 +142,16 @@ const PatientOrderListPatient = ({ route, navigation }) => {
             </View>
           </View>
           <TextNormal style={{ fontSize: ms(18) }} className="text-green-600">
-            {room.room_name}
+            {/* {room.room_name} */}
+            {item.bed}
           </TextNormal>
         </View>
       </Pressable>
     )
     // ))
   }
+
+  console.log(JSON.stringify(room,null,2), "data")
 
   return (
     <View className="flex-[1]">
@@ -159,7 +163,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
               fontSize: ms(22),
               color: 'white',
             }}>
-            {room.room_name.toUpperCase()}
+            {room.room_no} - {room.room_class_name}
           </TextBold>
           <View className="flex-row space-x-2 items-center justify-center">
             <TouchableNativeFeedback

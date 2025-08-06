@@ -51,7 +51,6 @@ const PatientOrderMenu = ({ route, navigation }) => {
     setPopUp({ selectedMenu: data, open: true, type })
   }
 
-
   useFocusEffect(
     useCallback(() => {
       if (navigation.isFocused()) {
@@ -61,7 +60,8 @@ const PatientOrderMenu = ({ route, navigation }) => {
             clientId: auth.user.selected_client,
             patient: patient,
             meal_time: cartPatientOrder.result.meal_time_id,
-            order_patient_detail_id: cartPatientOrder.result.order_patient_detail_id,
+            order_patient_detail_id:
+              cartPatientOrder.result.order_patient_detail_id,
           }),
         )
       }
@@ -96,6 +96,7 @@ const PatientOrderMenu = ({ route, navigation }) => {
     const isChoosed = cartPatientOrder.result?.menu?.filter(
       menu => menu === item.id,
     )
+
     return (
       <View
         className="justify-end  m-2 "
@@ -195,8 +196,10 @@ const PatientOrderMenu = ({ route, navigation }) => {
       setSection(index === section ? null : index)
     }
 
+    console.log(JSON.stringify(item.name, null, 2), 'menu :' + item.menu.length)
+
     return (
-      filterMenu(item.menu).length > 1 && (
+      filterMenu(item.menu).length > 0 && (
         <View
           className=""
           style={{
@@ -272,47 +275,49 @@ const PatientOrderMenu = ({ route, navigation }) => {
     <View className="flex-[1] justify-start">
       <ImageBackground source={BgMenu} style={{ flex: 0.3 }}>
         <View className="z-[5] flex-1 justify-center items-center">
-          <View className="flex-row space-x-2 mx-10 items-center justify-center mb-3">
-            <TextBold
+          <View className="flex-row space-x-2 mx-10 items-center justify-center mt-3">
+            <TextNormal
               style={{
                 fontSize: ms(12),
                 color: 'white',
-                padding: ms(5),
-                width: '50%',
                 textAlign: 'center',
+                paddingHorizontal: ms(5),
                 overflow: 'hidden',
                 backgroundColor: color.GREEN_PRIMARY,
                 borderRadius: ms(5),
               }}>
-              {patient?.patient_name}, {patient?.room_no}, {patient?.class_name}
-            </TextBold>
-            <TextBold
-              style={{
-                fontSize: ms(12),
-                color: 'white',
-                padding: ms(5),
-                width: '50%',
-                textAlign: 'center',
-                overflow: 'hidden',
-                backgroundColor: color.GREEN_PRIMARY,
-                borderRadius: ms(5),
-              }}>
-              {moment().diff(moment(patient?.dob), 'years')} Th,{' '}
-              {patient?.diagnosis}, {patient?.remarks}
-            </TextBold>
+              {patient?.patient_name} - {patient?.dietCategoryName} (
+              {patient?.dietTypeName})
+            </TextNormal>
           </View>
+          <TextNormal
+            style={{
+              fontSize: ms(12),
+              color: 'white',
+              textAlign: 'center',
+              overflow: 'hidden',
+              width: '80%',
+              backgroundColor: color.GREEN_PRIMARY,
+              borderRadius: ms(5),
+            }}>
+            Remarks: {patient?.remarks || '-'}
+          </TextNormal>
           <TextBold
             style={{
               fontSize: ms(12),
               color: 'white',
-              padding: ms(5),
               width: '50%',
               textAlign: 'center',
               overflow: 'hidden',
               backgroundColor: color.GREEN_PRIMARY,
               borderRadius: ms(5),
             }}>
-            {patient?.order.find(item => item.meal_time_id === cartPatientOrder.result.meal_time_id).meal_time}
+            {
+              patient?.order.find(
+                item =>
+                  item.meal_time_id === cartPatientOrder.result.meal_time_id,
+              ).meal_time
+            }
           </TextBold>
           <View className="flex-row space-x-2 items-center justify-center mt-3">
             <TouchableNativeFeedback

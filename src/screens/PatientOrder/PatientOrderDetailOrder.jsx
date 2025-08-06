@@ -41,7 +41,6 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
     state => state,
   )
 
-
   const dispatch = useDispatch()
   const [tabMenu, setTabMenu] = useState({})
   const [dataAfter, setDataAfter] = useState([])
@@ -314,17 +313,10 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
               paddingVertical: ms(5),
               paddingHorizontal: ms(10),
             }}>
-            <TextBold
-              className={'text-center text-black'}
-              style={{
-                fontSize: ms(14),
-              }}>
-              Patient Order
-            </TextBold>
             <View className="flex-row justify-between items-center">
-              <View className="">
+              <View className="flex-row items-center">
                 <TextNormal style={{ fontSize: ms(14), color: 'gray' }}>
-                  Patient
+                  Patient:
                 </TextNormal>
                 <TextNormal
                   style={{
@@ -335,9 +327,9 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
                   {patient.patient_name}
                 </TextNormal>
               </View>
-              <View className="">
+              <View className="flex-row items-center">
                 <TextNormal style={{ fontSize: ms(14), color: 'gray' }}>
-                  Age
+                  Age:
                 </TextNormal>
                 <TextNormal
                   style={{
@@ -349,10 +341,24 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
                 </TextNormal>
               </View>
             </View>
-
-            <View className="">
+            <View className="flex-row justify-between items-center">
+              <View className="flex-row items-center">
+                <TextNormal style={{ fontSize: ms(14), color: 'gray' }}>
+                  Diet:
+                </TextNormal>
+                <TextNormal
+                  style={{
+                    fontSize: ms(12),
+                    color: 'black',
+                    marginLeft: ms(5),
+                  }}>
+                  {patient.dietCategoryName} ({patient.dietTypeName})
+                </TextNormal>
+              </View>
+            </View>
+            <View className="flex-row">
               <TextNormal style={{ fontSize: ms(14), color: 'gray' }}>
-                Diagnosa
+                Diagnosa:
               </TextNormal>
               <TextNormal
                 style={{
@@ -360,7 +366,20 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
                   color: 'black',
                   marginLeft: ms(5),
                 }}>
-                {patient.diagnosis}
+                {patient.diagnosis ? patient.diagnosis : '-'}
+              </TextNormal>
+            </View>
+            <View className="flex-row">
+              <TextNormal style={{ fontSize: ms(14), color: 'gray' }}>
+                Remarks:
+              </TextNormal>
+              <TextNormal
+                style={{
+                  fontSize: ms(12),
+                  color: 'black',
+                  marginLeft: ms(5),
+                }}>
+                {patient.remarks ? patient.remarks : '-'}
               </TextNormal>
             </View>
           </View>

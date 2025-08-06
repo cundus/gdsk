@@ -90,7 +90,7 @@ const PatientOrderListRoom = ({ route, navigation }) => {
           style={{ elevation: 6, borderRadius: ms(10) }}>
           <View className="flex-1">
             <TextBold style={{ fontSize: ms(16), color: 'black' }}>
-              {item.room_name} {item.room_no}
+              {item.room_no}
             </TextBold>
             <TextNormal style={{ fontSize: ms(12) }}>
               {item.bed.length > 15
