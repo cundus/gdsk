@@ -369,7 +369,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
                 {patient.diagnosis ? patient.diagnosis : '-'}
               </TextNormal>
             </View>
-            <View className="flex-row">
+            <View className="flex-row max-w-[90%]">
               <TextNormal style={{ fontSize: ms(14), color: 'gray' }}>
                 Remarks:
               </TextNormal>
@@ -378,6 +378,7 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
                   fontSize: ms(12),
                   color: 'black',
                   marginLeft: ms(5),
+                  flexShrink: 1,
                 }}>
                 {patient.remarks ? patient.remarks : '-'}
               </TextNormal>
@@ -385,38 +386,42 @@ const PatientOrderDetailOrder = ({ route, navigation }) => {
           </View>
 
           {/* Tab Menu */}
-          <View className="flex-row justify-center px-8">
-            {patient?.order?.map((item, id) => (
-              <TouchableNativeFeedback
-                onPress={() => setTabMenu(item)}
-                key={id}>
-                <View
-                  className="flex-1 justify-center items-center border border-green-400"
-                  style={{
-                    height: ms(30),
-                    backgroundColor:
-                      tabMenu.meal_time_id === item.meal_time_id
-                        ? 'rgb(34,197,94)'
-                        : 'transparent',
-                    borderTopLeftRadius: id === 0 ? ms(30) : 0,
-                    borderBottomLeftRadius: id === 0 ? ms(30) : 0,
-                    borderTopRightRadius:
-                      id === patient.order.length - 1 ? ms(30) : 0,
-                    borderBottomRightRadius:
-                      id === patient.order.length - 1 ? ms(30) : 0,
-                  }}>
-                  <TextBold
-                    style={{ fontSize: ms(10) }}
-                    className={`${
-                      tabMenu.meal_time_id === item.meal_time_id
-                        ? 'text-white'
-                        : 'text-green-500'
-                    } text-center`}>
-                    {item.meal_time}
-                  </TextBold>
-                </View>
-              </TouchableNativeFeedback>
-            ))}
+          <View>
+            <ScrollView horizontal className="px-1 " showsHorizontalScrollIndicator={false}>
+              {patient?.order?.map((item, id) => (
+                <TouchableNativeFeedback
+                  onPress={() => setTabMenu(item)}
+                  key={id}>
+                  <View
+                    className="flex-1 min-w-[80px] px-3 justify-center items-center border border-green-400"
+                    style={{
+                      height: ms(30),
+                      backgroundColor:
+                        tabMenu.meal_time_id === item.meal_time_id
+                          ? 'rgb(34,197,94)'
+                          : 'transparent',
+                      // borderTopLeftRadius: id === 0 ? ms(30) : 0,
+                      // borderBottomLeftRadius: id === 0 ? ms(30) : 0,
+                      // borderTopRightRadius:
+                      //   id === patient.order.length - 1 ? ms(30) : 0,
+                      // borderBottomRightRadius:
+                      //   id === patient.order.length - 1 ? ms(30) : 0,
+                      borderRadius: ms(30),
+                      marginHorizontal: ms(5),
+                    }}>
+                    <TextBold
+                      style={{ fontSize: ms(10) }}
+                      className={`${
+                        tabMenu.meal_time_id === item.meal_time_id
+                          ? 'text-white'
+                          : 'text-green-500'
+                      } text-center`}>
+                      {item.meal_time}
+                    </TextBold>
+                  </View>
+                </TouchableNativeFeedback>
+              ))}
+            </ScrollView>
           </View>
           <View className="flex-1">
             <View className="flex-1">

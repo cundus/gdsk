@@ -59,9 +59,10 @@ const PatientOrderListRoom = ({ route, navigation }) => {
     useCallback(() => {
       const getRoom = async () => {
         try {
-          const { data } = await axios.get(
+          const { data, request } = await axios.get(
             `${state.serverUrl}/order-patient/rooms?f=${floor.floor_id}`,
           )
+
 
           setData(data)
         } catch (error) {
@@ -112,6 +113,9 @@ const PatientOrderListRoom = ({ route, navigation }) => {
       </Pressable>
     )
   }
+
+
+  console.log(JSON.stringify(data, null, 2), "data room")
 
   return (
     <View className="flex-[1]">

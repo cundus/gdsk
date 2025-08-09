@@ -274,8 +274,8 @@ const PatientOrderMenu = ({ route, navigation }) => {
   return (
     <View className="flex-[1] justify-start">
       <ImageBackground source={BgMenu} style={{ flex: 0.3 }}>
-        <View className="z-[5] flex-1 justify-center items-center">
-          <View className="flex-row space-x-2 mx-10 items-center justify-center mt-3">
+        <View className="z-[5] flex-1 justify-center items-center gap-1">
+          <View className="flex-row items-center justify-center mt-3">
             <TextNormal
               style={{
                 fontSize: ms(12),
@@ -290,18 +290,20 @@ const PatientOrderMenu = ({ route, navigation }) => {
               {patient?.dietTypeName})
             </TextNormal>
           </View>
-          <TextNormal
-            style={{
-              fontSize: ms(12),
-              color: 'white',
-              textAlign: 'center',
-              overflow: 'hidden',
-              width: '80%',
-              backgroundColor: color.GREEN_PRIMARY,
-              borderRadius: ms(5),
-            }}>
-            Remarks: {patient?.remarks || '-'}
-          </TextNormal>
+          {patient?.remarks && (
+            <TextNormal
+              style={{
+                fontSize: ms(12),
+                color: 'white',
+                textAlign: 'center',
+                overflow: 'hidden',
+                width: '80%',
+                backgroundColor: color.GREEN_PRIMARY,
+                borderRadius: ms(5),
+              }}>
+              Remarks: {patient?.remarks}
+            </TextNormal>
+          )}
           <TextBold
             style={{
               fontSize: ms(12),
