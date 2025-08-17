@@ -80,7 +80,7 @@ const PatientOrderListPatient = ({ route, navigation }) => {
           style={{ elevation: 6, borderRadius: ms(10) }}>
           <View>
             <TextBold style={{ fontSize: ms(18), color: 'black' }}>
-              {item.patient_name.toUpperCase()}
+              {item.patient_name.toUpperCase().substring(0, 15) + '...'}
             </TextBold>
             <TextNormal style={{ fontSize: ms(12) }}>
               {item.status}{item.diagnosis && ` - ${item.diagnosis}`} {item.dietCategoryName && ` - ${item.dietCategoryName} ${item.dietTypeName && `(${item.dietTypeName})`}`}

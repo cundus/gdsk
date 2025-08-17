@@ -134,15 +134,15 @@ const PopUpOrder = ({
                   contentContainerStyle={{
                     justifyContent: 'flex-start',
                     alignItems: 'center',
+                    
                   }}>
                   <View
-                    className="flex-row justify-between pt-5 px-10 w-full"
+                    className="flex-row relative justify-center pt-5 px-10 w-full"
                     style={{}}>
-                    <View className="w-10" />
-                    <TextBold style={{ fontSize: ms(16), color: 'black' }}>
+                    <TextBold style={{ fontSize: ms(16), color: 'black',textAlign: 'center' }}>
                       {data.name}
                     </TextBold>
-                    <Pressable onPress={handleOnClose}>
+                    <Pressable onPress={handleOnClose} className="absolute top-5 right-5">
                       <Icon name="close" size={ms(20)} />
                     </Pressable>
                   </View>

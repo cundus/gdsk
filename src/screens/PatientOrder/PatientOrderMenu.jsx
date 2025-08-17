@@ -98,86 +98,89 @@ const PatientOrderMenu = ({ route, navigation }) => {
     )
 
     return (
-      <View
-        className="justify-end  m-2 "
+      <Pressable
+        onPress={() => handleChoose(item)}
+        className="justify-end  m-2"
         style={{ height: ms(160), flex: 1 / 4 }}>
-        <View
-          className=" justify-start bg-white items-center "
-          style={{
-            height: ms(130),
-            elevation: 5,
-            borderRadius: ms(10),
-            paddingBottom: ms(20),
-          }}>
-          {isChoosed.length > 0 && (
+        <View>
+          <View
+            className=" justify-start bg-white items-center "
+            style={{
+              height: ms(130),
+              elevation: 5,
+              borderRadius: ms(10),
+              paddingBottom: ms(20),
+            }}>
+            {isChoosed.length > 0 && (
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: ms(0),
+                  zIndex: 50,
+                }}>
+                <IconAD
+                  name="checkcircle"
+                  color={color.GREEN_PRIMARY}
+                  size={ms(20)}
+                />
+              </View>
+            )}
             <View
               style={{
-                position: 'absolute',
-                top: 0,
-                right: ms(0),
-                zIndex: 50,
+                width: ms(60),
+                height: ms(60),
+                overflow: 'hidden',
+                borderRadius: ms(60),
+                marginTop: -ms(30),
+                backgroundColor: 'white',
+                elevation: 7,
+                position: 'relative',
               }}>
-              <IconAD
-                name="checkcircle"
-                color={color.GREEN_PRIMARY}
-                size={ms(20)}
+              <Image
+                source={{
+                  uri: `${auth.serverUrl.replace('api', '')}app/menu/${
+                    item.image
+                  }`,
+                }}
+                className="w-full h-full"
               />
             </View>
-          )}
-          <View
-            style={{
-              width: ms(60),
-              height: ms(60),
-              overflow: 'hidden',
-              borderRadius: ms(60),
-              marginTop: -ms(30),
-              backgroundColor: 'white',
-              elevation: 7,
-              position: 'relative',
-            }}>
-            <Image
-              source={{
-                uri: `${auth.serverUrl.replace('api', '')}app/menu/${
-                  item.image
-                }`,
-              }}
-              className="w-full h-full"
-            />
-          </View>
-          <TextBold
-            className=""
-            style={{
-              fontSize: ms(12),
-              textAlign: 'center',
-              color: 'black',
-              marginHorizontal: ms(5),
-            }}>
-            {item.name.length > 14
-              ? item.name.substring(0, 15) + '...'
-              : item.name}
-          </TextBold>
-          {/* <TextBold style={{ fontSize: ms(10) }}>PLACEHOLDER</TextBold> */}
-          <TextNormal style={{ fontSize: ms(10), textAlign: 'center' }}>
-            {item.service_client === null ? 0 : item.service_client.price}
-          </TextNormal>
-          <TouchableNativeFeedback
-            disabled={isChoosed?.length > 0}
-            onPress={() => handleChoose(item)}
-            background={TouchableNativeFeedback.Ripple('#ccc')}>
-            <View
-              className={` w-full  justify-center items-center absolute bottom-0 bg-green-600
-                ${isChoosed?.length > 0 ? 'bg-green-300' : 'bg-green-600'}`}
+            <TextBold
+              className=""
               style={{
-                borderRadius: ms(10),
-                height: ms(30),
+                fontSize: ms(12),
+                textAlign: 'center',
+                color: 'black',
+                marginHorizontal: ms(5),
               }}>
-              <TextNormal style={{ color: 'white', fontSize: ms(16) }}>
-                Choose
-              </TextNormal>
-            </View>
-          </TouchableNativeFeedback>
+              {item.name.length > 14
+                ? item.name.substring(0, 15) + '...'
+                : item.name}
+            </TextBold>
+            {/* <TextBold style={{ fontSize: ms(10) }}>PLACEHOLDER</TextBold> */}
+            <TextNormal style={{ fontSize: ms(10), textAlign: 'center' }}>
+              {item.service_client === null ? 0 : item.service_client.price}
+            </TextNormal>
+            <TouchableNativeFeedback
+              disabled={isChoosed?.length > 0}
+              onPress={() => handleChoose(item)}
+              background={TouchableNativeFeedback.Ripple('#ccc')}>
+              <View
+                className={` w-full  justify-center items-center absolute bottom-0 bg-green-600
+                ${isChoosed?.length > 0 ? 'bg-green-300' : 'bg-green-600'}`}
+                style={{
+                  borderRadius: ms(10),
+                  height: ms(30),
+                }}>
+                <TextNormal style={{ color: 'white', fontSize: ms(16) }}>
+                  Choose
+                </TextNormal>
+              </View>
+            </TouchableNativeFeedback>
+          </View>
         </View>
-      </View>
+      </Pressable>
     )
   }
 
@@ -321,53 +324,47 @@ const PatientOrderMenu = ({ route, navigation }) => {
               ).meal_time
             }
           </TextBold>
-          <View className="flex-row space-x-2 items-center justify-center mt-3">
+          <View className="flex-row items-center justify-between mt-3 px-4">
             <TouchableNativeFeedback
               background={TouchableNativeFeedback.Ripple('#ccc')}
               onPress={() => navigation.goBack()}>
               <IconAD name="arrowleft" size={ms(32)} color={'white'} />
             </TouchableNativeFeedback>
-            <View className="flex-row bg-white rounded-full justify-start items-center px-3">
+            <View className="flex-row bg-white rounded-full justify-start items-center px-3 flex-1 mx-3">
               <IconAD name="search1" size={ms(12)} color={'gray'} />
               <TextInput
                 placeholder="Search"
                 value={search}
                 onChangeText={e => setSearch(e)}
-                className="w-[70%]"
+                className="flex-1 ml-2"
               />
             </View>
-            <View className="w-5" />
+            <TouchableNativeFeedback
+              onPress={() => navigation.navigate('PatientOrderConfirmation')}
+              background={TouchableNativeFeedback.Ripple('#ccc')}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  backgroundColor: color.GREEN_PRIMARY,
+                  alignItems: 'center',
+                  paddingHorizontal: ms(12),
+                  paddingVertical: ms(8),
+                  borderRadius: ms(20),
+                  elevation: 5,
+                }}>
+                <IconAD name="shoppingcart" size={ms(18)} color={'white'} />
+                <TextBold
+                  style={{ fontSize: ms(14), color: 'white', marginLeft: ms(4) }}>
+                  {cartPatientOrder.result?.menu?.length}
+                </TextBold>
+              </View>
+            </TouchableNativeFeedback>
           </View>
         </View>
         <Overlay color={'bg-green-700/70'} />
       </ImageBackground>
 
       <View className="flex-[1] px-10">
-        <TouchableNativeFeedback
-          onPress={() => navigation.navigate('PatientOrderConfirmation')}
-          background={TouchableNativeFeedback.Ripple('#ccc')}>
-          <View
-            style={{
-              flexDirection: 'row',
-              position: 'absolute',
-              bottom: ms(20),
-              right: 20,
-              backgroundColor: color.GREEN_PRIMARY,
-              alignItems: 'center',
-              paddingHorizontal: ms(10),
-              paddingVertical: ms(5),
-              borderRadius: ms(8),
-              zIndex: 99,
-              elevation: 10,
-            }}>
-            <IconAD name="shoppingcart" size={ms(20)} color={'white'} />
-            <TextBold
-              style={{ fontSize: ms(18), color: 'white', marginLeft: ms(5) }}>
-              {cartPatientOrder.result?.menu?.length}
-              Menu Selected
-            </TextBold>
-          </View>
-        </TouchableNativeFeedback>
         {menu.isFetching ? (
           <ActivityIndicator size={'large'} color={'green'} />
         ) : (

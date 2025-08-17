@@ -306,7 +306,7 @@ const PatientOrderMenuExtra = ({ route, navigation }) => {
             style={{
               flexDirection: 'row',
               position: 'absolute',
-              bottom: ms(20),
+              bottom: ms(10),
               right: 20,
               backgroundColor: color.GREEN_PRIMARY,
               alignItems: 'center',
